@@ -286,7 +286,7 @@ function Slider() {
               >
                 <Image
                   src={st.photo}
-                  alt=""
+                  alt={`${st.person}, ${st.role} at ${st.company}, a Checkgrow growth marketing customer`}
                   fill
                   sizes="64px"
                   className={`object-cover ${st.focus ?? "object-top"}`}

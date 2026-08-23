@@ -65,8 +65,7 @@ export function FinalCta() {
         <div ref={boxRef} className="cta-box flex flex-col items-center text-center">
           <Image
             src="/brand/logos/symbol-transparent-light.svg"
-            alt=""
-            aria-hidden
+            alt="Checkgrow growth marketing platform logo"
             width={56}
             height={56}
             className="mx-auto"

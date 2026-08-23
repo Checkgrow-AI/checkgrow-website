@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Checkgrow · The go-to-market engine that learns your business",
   description:
-    "Growth shouldn't depend on who's in the room. Checkgrow is the growth operating system that keeps everything your company knows working for every team. Join the waitlist.",
+    "Checkgrow is a growth marketing platform connecting knowledge, campaigns and reporting to help teams grow faster. Join the waitlist for early access today.",
   applicationName: "Checkgrow",
   category: "Marketing software",
   keywords: [

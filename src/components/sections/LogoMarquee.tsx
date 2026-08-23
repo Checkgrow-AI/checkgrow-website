@@ -5,15 +5,60 @@ import { Reveal } from "@/components/Reveal";
    row-width (CSS .logo-marquee in globals). */
 
 const CLIENT_LOGOS = [
-  { src: "/client-logos-strip/witrina.svg", name: "Witrina", cls: "h-10 sm:h-11" },
-  { src: "/client-logos-strip/qubinets.svg", name: "Qubinets", cls: "h-10 sm:h-11" },
-  { src: "/client-logos-strip/wespa.svg", name: "WESPA", cls: "h-10 sm:h-11" },
-  { src: "/client-logos-strip/minka.svg", name: "Minka", cls: "h-10 sm:h-11" },
-  { src: "/client-logos-strip/woodoz.svg", name: "Woodoz", cls: "h-5 sm:h-[22px]" },
-  { src: "/client-logos-strip/barner.svg", name: "Barner", cls: "h-10 sm:h-11" },
-  { src: "/client-logos-strip/drooms.svg", name: "Drooms", cls: "h-10 sm:h-11" },
-  { src: "/client-logos-strip/engasco.svg", name: "Engasco", cls: "h-10 sm:h-11" },
-  { src: "/client-logos-strip/optika-anda.svg", name: "Optika Anda", cls: "h-10 sm:h-11" },
+  {
+    src: "/client-logos-strip/witrina.svg",
+    name: "Witrina",
+    alt: "Witrina logo, a Checkgrow growth marketing customer",
+    cls: "h-10 sm:h-11",
+  },
+  {
+    src: "/client-logos-strip/qubinets.svg",
+    name: "Qubinets",
+    alt: "Qubinets logo, a Checkgrow growth marketing customer",
+    cls: "h-10 sm:h-11",
+  },
+  {
+    src: "/client-logos-strip/wespa.svg",
+    name: "WESPA",
+    alt: "WESPA logo, a Checkgrow growth marketing customer",
+    cls: "h-10 sm:h-11",
+  },
+  {
+    src: "/client-logos-strip/minka.svg",
+    name: "Minka",
+    alt: "Minka logo, a Checkgrow growth marketing customer",
+    cls: "h-10 sm:h-11",
+  },
+  {
+    src: "/client-logos-strip/woodoz.svg",
+    name: "Woodoz",
+    alt: "Woodoz logo, a Checkgrow growth marketing customer",
+    cls: "h-5 sm:h-[22px]",
+  },
+  {
+    src: "/client-logos-strip/barner.svg",
+    name: "Barner",
+    alt: "Barner logo, a Checkgrow growth marketing customer",
+    cls: "h-10 sm:h-11",
+  },
+  {
+    src: "/client-logos-strip/drooms.svg",
+    name: "Drooms",
+    alt: "Drooms logo, a Checkgrow growth marketing customer",
+    cls: "h-10 sm:h-11",
+  },
+  {
+    src: "/client-logos-strip/engasco.svg",
+    name: "Engasco",
+    alt: "Engasco logo, a Checkgrow growth marketing customer",
+    cls: "h-10 sm:h-11",
+  },
+  {
+    src: "/client-logos-strip/optika-anda.svg",
+    name: "Optika Anda",
+    alt: "Optika Anda logo, a Checkgrow growth marketing customer",
+    cls: "h-10 sm:h-11",
+  },
 ];
 
 export function LogoMarquee() {
@@ -37,7 +82,7 @@ export function LogoMarquee() {
                     <img
                       key={`${copy}-${l.name}`}
                       src={l.src}
-                      alt={copy === 0 ? `${l.name} logo` : ""}
+                      alt={l.alt}
                       className={`mx-7 w-auto object-contain ${l.cls}`}
                       style={{ filter: "brightness(0)", opacity: 0.65 }}
                       loading="lazy"

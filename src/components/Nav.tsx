@@ -119,7 +119,7 @@ export function Nav() {
         <div className="flex items-center gap-3">
           <a
             href="#waitlist"
-            className={`hidden items-center rounded-full bg-ink text-sm font-medium text-cream transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] hover:bg-ink-soft sm:inline-flex ${
+            className={`hidden items-center rounded-full border border-[#6373FF] bg-transparent text-sm font-medium text-[#6373FF] transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] hover:bg-[#6373FF] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6373FF] focus-visible:ring-offset-2 sm:inline-flex ${
               pill ? "min-h-9 px-5" : "min-h-11 px-6"
             }`}
           >
@@ -149,7 +149,7 @@ export function Nav() {
           <a
             href="#waitlist"
             onClick={() => setOpen(false)}
-            className="mb-4 flex min-h-12 items-center justify-center rounded-full bg-ink text-sm font-medium text-cream"
+            className="mb-4 flex min-h-12 items-center justify-center rounded-full border border-[#6373FF] bg-transparent text-sm font-medium text-[#6373FF] transition-colors duration-200 hover:bg-[#6373FF] hover:text-white active:bg-[#6373FF] active:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6373FF] focus-visible:ring-offset-2"
           >
             Join the waitlist
           </a>

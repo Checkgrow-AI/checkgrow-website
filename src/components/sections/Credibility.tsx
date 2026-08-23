@@ -25,7 +25,13 @@ export function Credibility() {
               <span key={m.name} className="flex items-center gap-2 text-sm font-medium">
                 {m.icon ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={m.icon} alt="" aria-hidden width={18} height={18} className="size-4.5" />
+                  <img
+                    src={m.icon}
+                    alt={`${m.name} logo, supported by Checkgrow AI marketing tools`}
+                    width={18}
+                    height={18}
+                    className="size-4.5"
+                  />
                 ) : (
                   <span className="size-1.5 rounded-full bg-lavender" aria-hidden />
                 )}

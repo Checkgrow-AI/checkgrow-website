@@ -357,7 +357,7 @@ function HeroChat() {
         Model:
         <Image
           src={CHAT_MODELS[model].src}
-          alt=""
+          alt={`${CHAT_MODELS[model].name} model in the Checkgrow AI marketing assistant`}
           width={14}
           height={14}
           className="size-3.5"
