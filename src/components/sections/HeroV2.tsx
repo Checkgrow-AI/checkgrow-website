@@ -945,30 +945,30 @@ export function HeroV2() {
         <canvas ref={canvasRef} className="absolute inset-0" aria-hidden />
 
         {/* Scene 1 · the brain and the USP */}
-        <div ref={l1Ref} className="absolute inset-0 flex items-center">
-          <div className="wrap w-full pt-16">
-            <div className="max-w-xl lg:max-w-2xl">
-              <p className="text-label flex items-center gap-2.5 text-ink-soft">
+        <div ref={l1Ref} className="hero-intro absolute inset-0 flex items-center">
+          <div className="hero-intro-wrap wrap w-full pt-16">
+            <div className="hero-intro-copy max-w-xl lg:max-w-2xl">
+              <p className="hero-intro-label text-label flex items-center gap-2.5 text-ink-soft">
                 <span className="dot-marker" aria-hidden />
                 AI Native Growth Marketing
               </p>
-              <h1 className="text-display mt-6 text-balance" style={{ fontWeight: 400 }}>
+              <h1 className="hero-intro-title text-display mt-6 text-balance" style={{ fontWeight: 400 }}>
                 The go-to-market engine that learns your{" "}
                 <span className="relative whitespace-nowrap">
                   <RotatingWord />
                 </span>
                 .
               </h1>
-              <p className="mt-7 max-w-xl text-lg leading-relaxed text-ink-soft">
+              <p className="hero-intro-body mt-7 max-w-xl text-lg leading-relaxed text-ink-soft">
                 Growth shouldn&apos;t depend on who&apos;s in the room.
                 Checkgrow keeps everything your company knows in one growth
                 operating system: learning, improving, and working for every
                 team. It turns knowledge into customers and recognition.
               </p>
-              <div className="mt-8">
+              <div className="hero-intro-trust mt-8">
                 <Trustpilot />
               </div>
-              <div className="mt-4">
+              <div className="hero-intro-form mt-4">
                 <WaitlistForm id="hero" />
               </div>
             </div>
@@ -978,10 +978,12 @@ export function HeroV2() {
         {/* the AI Assistant resting on the brain's centre */}
         <div
           ref={chatRef}
-          className="pointer-events-none absolute hidden lg:block"
-          style={{ left: "calc(70% - 210px)", top: "50%", width: 420, transform: "translateY(-50%)" }}
+          className="hero-chat pointer-events-none absolute hidden lg:block"
+          style={{ left: "calc(70% - 210px)", top: "50%", width: 420 }}
         >
-          <HeroChat />
+          <div className="hero-chat-scale">
+            <HeroChat />
+          </div>
         </div>
 
         {!reduced && (
@@ -1161,7 +1163,7 @@ export function HeroV2() {
             {/* scroll hint */}
             <div
               ref={hintRef}
-              className="pointer-events-none absolute inset-x-0 bottom-6 flex flex-col items-center gap-1.5 text-ink-soft"
+              className="hero-scroll-hint pointer-events-none absolute inset-x-0 bottom-6 flex flex-col items-center gap-1.5 text-ink-soft"
             >
               <span className="text-label">Scroll</span>
               <svg width="12" height="8" viewBox="0 0 12 8" aria-hidden className="animate-bounce">

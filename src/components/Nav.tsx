@@ -27,6 +27,15 @@ export function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const closeAtDesktop = () => {
+      if (desktop.matches) setOpen(false);
+    };
+    desktop.addEventListener("change", closeAtDesktop);
+    return () => desktop.removeEventListener("change", closeAtDesktop);
+  }, []);
+
   /* each desktop link carries a purple line that fills while the user
      scrolls through its section (a link's range runs to the next link's
      section, so the page always maps onto exactly one filling line) */
@@ -94,7 +103,7 @@ export function Nav() {
           />
         </Link>
         <div
-          className={`hidden items-center transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] md:flex ${
+          className={`hidden items-center transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] lg:flex ${
             pill ? "gap-6" : "gap-8"
           }`}
         >
@@ -130,7 +139,7 @@ export function Nav() {
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen(!open)}
-            className="flex size-11 items-center justify-center rounded-md md:hidden"
+            className="flex size-11 items-center justify-center rounded-md lg:hidden"
           >
             <span className="relative block h-3 w-5">
               <span
@@ -145,7 +154,7 @@ export function Nav() {
         </nav>
       </div>
       {open && (
-        <div className="border-t border-cream-3 bg-cream px-6 pb-6 pt-4 md:hidden">
+        <div className="border-t border-cream-3 bg-cream px-6 pb-6 pt-4 lg:hidden">
           <a
             href="#waitlist"
             onClick={() => setOpen(false)}

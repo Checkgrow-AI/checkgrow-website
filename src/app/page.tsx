@@ -9,7 +9,7 @@ import { Shift } from "@/components/sections/Shift";
 import { CaseStudies } from "@/components/sections/CaseStudies";
 import { UseCases } from "@/components/sections/UseCases";
 import { Roles } from "@/components/sections/Roles";
-import { Replaces } from "@/components/sections/Replaces";
+import { Pricing } from "@/components/sections/Pricing";
 import { Integrations } from "@/components/sections/Integrations";
 import { Faq } from "@/components/sections/Faq";
 import { FinalCta } from "@/components/sections/FinalCta";
@@ -31,7 +31,7 @@ export default function Home() {
         <UseCases />
         <Integrations />
         <Roles />
-        <Replaces />
+        <Pricing />
         <Faq />
         <FinalCta />
       </main>

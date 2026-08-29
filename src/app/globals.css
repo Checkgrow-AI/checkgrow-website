@@ -82,6 +82,131 @@ body {
   padding-inline: 24px;
 }
 
+/* The opening scene normally sits in the vertical centre. Short laptop
+   viewports and browser zoom can make that composition taller than the
+   available stage, which used to push the eyebrow underneath the fixed
+   navigation. These height-aware modes keep every conversion element in
+   normal reading order and reserve an explicit safe area for the header. */
+.hero-chat {
+  transform: translateY(-50%);
+}
+
+.hero-chat-scale {
+  transform-origin: center;
+}
+
+@media (min-width: 1024px) and (max-height: 700px) {
+  .hero-intro {
+    align-items: flex-start;
+  }
+
+  .hero-intro-wrap {
+    padding-top: 4.75rem;
+  }
+
+  .hero-intro-title {
+    margin-top: 0.875rem;
+    font-size: clamp(3.05rem, 5vw, 3.75rem);
+    line-height: 0.95;
+  }
+
+  .hero-intro-body {
+    margin-top: 0.875rem;
+    max-width: 36rem;
+    font-size: 1rem;
+    line-height: 1.42;
+  }
+
+  .hero-intro-trust {
+    margin-top: 1rem;
+  }
+
+  .hero-intro-form {
+    margin-top: 0.625rem;
+  }
+
+  .hero-chat-scale {
+    transform: scale(0.9);
+  }
+
+  .hero-scroll-hint {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 540px) {
+  .hero-intro-wrap {
+    padding-top: 4.5rem;
+  }
+
+  .hero-intro-copy {
+    max-width: 36rem;
+  }
+
+  .hero-intro-title {
+    margin-top: 0.625rem;
+    font-size: clamp(2.65rem, 4vw, 2.95rem);
+  }
+
+  .hero-intro-body {
+    margin-top: 0.625rem;
+    max-width: 34rem;
+    font-size: 0.90625rem;
+    line-height: 1.35;
+  }
+
+  .hero-intro-trust {
+    margin-top: 0.625rem;
+  }
+
+  .hero-intro-form {
+    margin-top: 0.5rem;
+  }
+
+  .hero-intro-form form > :last-child {
+    display: none;
+  }
+
+  .hero-chat-scale {
+    transform: scale(0.82);
+  }
+}
+
+@media (max-width: 1023px) and (max-height: 760px) {
+  .hero-intro {
+    align-items: flex-start;
+  }
+
+  .hero-intro-wrap {
+    padding-top: 4.5rem;
+  }
+
+  .hero-intro-title {
+    margin-top: 0.875rem;
+    font-size: clamp(2.15rem, 8.5vw, 3.25rem);
+    line-height: 0.96;
+  }
+
+  .hero-intro-body {
+    margin-top: 0.875rem;
+    font-size: 0.9375rem;
+    line-height: 1.4;
+  }
+
+  .hero-intro-trust {
+    margin-top: 0.875rem;
+  }
+
+  .hero-intro-form {
+    margin-top: 0.625rem;
+  }
+
+  .hero-intro-form form > :last-child,
+  .hero-scroll-hint {
+    display: none;
+  }
+}
+
 /* Signature motif: the Checkgrow dot */
 .dot-marker {
   display: inline-block;
