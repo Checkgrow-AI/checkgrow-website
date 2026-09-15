@@ -13,7 +13,7 @@ const rand01 = (seed: number) => {
   return v - Math.floor(v);
 };
 
-const SPARK_COLORS = ["#6373FF", "#9BA6FF", "#A492E1"];
+const SPARK_OPACITIES = [0.95, 0.72, 0.5];
 
 /* Rotating hero verb with a fade-glow typewriter: characters light up in
    accent with a soft glow and settle into ink, while a handful of tiny
@@ -52,8 +52,8 @@ export function RotatingWord() {
             <span key={`${word}-${i}`} className="relative inline-block">
               <motion.span
                 className="inline-block"
-                initial={{ opacity: 0, color: "#9BA6FF", textShadow: "0 0 26px rgba(155,166,255,0.95)" }}
-                animate={{ opacity: 1, color: "#181818", textShadow: "0 0 0px rgba(155,166,255,0)" }}
+                initial={{ opacity: 0, color: "var(--color-accent)", textShadow: "0 0 26px var(--color-brand)" }}
+                animate={{ opacity: 1, color: "var(--color-foreground)", textShadow: "0 0 0px transparent" }}
                 transition={{ delay, duration: 0.34, ease: [0, 0, 0.2, 1] }}
               >
                 {ch}
@@ -74,11 +74,11 @@ export function RotatingWord() {
                       top: `${18 + rand01(seed + 3) * 30}%`,
                       width: size,
                       height: size,
-                      backgroundColor: SPARK_COLORS[(i + k) % SPARK_COLORS.length],
+                      backgroundColor: "var(--color-brand)",
                     }}
                     initial={{ opacity: 0, x: 0, y: 2, scale: 0 }}
                     animate={{
-                      opacity: [0, 0.95, 0],
+                      opacity: [0, SPARK_OPACITIES[(i + k) % SPARK_OPACITIES.length], 0],
                       x: [0, dx * 0.6, dx],
                       y: [2, dy * 0.65, dy],
                       scale: [0, 1, 0.3],

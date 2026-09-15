@@ -12,6 +12,33 @@
   </defs>
 
   <style>
+/* Website dark palette. Keep this branch-local skin separate from the
+       shared light mockup sources; geometry, media and timing stay intact. */
+    svg { color-scheme: dark; }
+    rect[fill="#FFFFFF"], circle[fill="#FFFFFF"], ellipse[fill="#FFFFFF"],
+    rect[fill="#F7F7F5"], circle[fill="#F7F7F5"] { fill: #262526; }
+    [fill="#F2F2EF"], [fill="#F3F3F0"], [fill="#F5F5F2"] { fill: #181818; }
+    [fill="#ECECE9"], [fill="#D8D8D4"], [fill="#DBDBD7"],
+    [fill="#E8E8E4"], [fill="#DCDCD8"] { fill: #454247; }
+    [stroke="#ECECE9"], [stroke="#DBDBD7"], [stroke="#D8D8D4"],
+    [stroke="#E8E8E4"] { stroke: #454247; }
+    [fill="#181818"] { fill: #F7F7F5; }
+    text[fill="#FFFFFF"] { fill: #000000; }
+    [stroke="#181818"] { stroke: #F7F7F5; }
+    [fill="#404040"], [fill="#9B9B9B"] { fill: #B7B5BB; }
+    [stroke="#404040"], [stroke="#9B9B9B"] { stroke: #B7B5BB; }
+    [fill="#E4EAFD"], [fill="#EDF1FE"], [fill="#EBEEFE"] { fill: #30324F; }
+    [fill="#5B67D8"] { fill: #9BA6FF; }
+    [stroke="#5B67D8"] { stroke: #9BA6FF; }
+    [fill="#D4F0E3"], [fill="#E8F5EE"] { fill: #18372B; }
+    [fill="#DEDEDA"], [fill="#DEDEDa"] { fill: #454247; }
+    [fill="#FEF3D8"] { fill: #3A301C; }
+    [fill="#A06A00"] { fill: #E9C77D; }
+    [fill="#FDEAEA"] { fill: #421F23; }
+    [fill="#C0252A"] { fill: #FFB4AB; }
+    [fill="#1E7A4F"], [fill="#3DAA74"] { fill: #75D9A5; }
+    [stroke="#1E7A4F"], [stroke="#3DAA74"] { stroke: #75D9A5; }
+    [flood-color="#181818"] { flood-color: #000000; flood-opacity: 0.35; }
     .a { animation-duration: 10s; animation-iteration-count: infinite; animation-timing-function: linear; }
 
     @keyframes haloIn { 0% {opacity:0} 8% {opacity:1} 96% {opacity:1} 100% {opacity:0} }

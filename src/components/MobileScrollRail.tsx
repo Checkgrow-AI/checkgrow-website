@@ -121,16 +121,16 @@ export function MobileScrollRail() {
           }}
         >
           <span
-            className={`pointer-events-none absolute left-full ml-2.5 whitespace-nowrap rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-semibold shadow-soft ring-1 ring-cream-3 transition-all duration-200 ${
+            className={`pointer-events-none absolute left-full ml-2.5 whitespace-nowrap rounded-full bg-raised/90 px-2 py-0.5 text-[10px] font-semibold shadow-soft ring-1 ring-line transition-all duration-200 ${
               active ? "translate-x-0 opacity-100" : "-translate-x-1.5 opacity-0"
-            } ${current === i ? "text-[#6373FF]" : "text-ink-soft"}`}
+            } ${current === i ? "text-accent" : "text-muted"}`}
           >
             {s.label}
           </span>
           <span
             aria-hidden
             className={`block h-[2.5px] rounded-full transition-all duration-300 ${
-              current === i ? "w-5 bg-[#6373FF]" : "w-3 bg-ink/25"
+              current === i ? "w-5 bg-[#6373FF]" : "w-3 bg-foreground/25"
             }`}
           />
         </button>

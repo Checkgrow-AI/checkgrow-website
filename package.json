@@ -6,7 +6,8 @@
     "dev": "next dev -p 8030",
     "build": "next build",
     "start": "next start -p 8030",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:team-orbit": "node --test tests/teamOrbit.test.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.5.7",

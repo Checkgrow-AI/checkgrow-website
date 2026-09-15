@@ -12,7 +12,7 @@ Every release remains approval-gated: show the complete working-tree manifest an
 
 | | |
 |---|---|
-| Repository | `https://github.com/checkgrowdev/checkgrow-website.git` (`origin`); SSH equivalent `git@github.com:checkgrowdev/checkgrow-website.git` |
+| Repository | `https://github.com/Checkgrow-AI/checkgrow-website.git` (`origin`); SSH equivalent `git@github.com:Checkgrow-AI/checkgrow-website.git` |
 | Ship and production branch | `main` |
 | Production | Easy Panel builds `Dockerfile` and proxies the standalone Next.js server on port 3000 |
 | Local development | `pnpm dev` at `http://localhost:8030` |

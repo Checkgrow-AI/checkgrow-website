@@ -49,8 +49,8 @@ export function Trustpilot() {
         </span>
       </span>
 
-      <span className="text-sm text-ink-soft" aria-hidden>
-        <strong className="font-semibold text-ink">4.4</strong> Excellent ·
+      <span className="text-sm text-muted" aria-hidden>
+        <strong className="font-semibold text-foreground">4.4</strong> Excellent ·
         12 reviews
       </span>
     </a>

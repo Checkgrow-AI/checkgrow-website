@@ -1,18 +1,24 @@
 @import "tailwindcss";
 
 /* ==========================================================
-   Checkgrow design tokens — mapped 1:1 from the Brand Pack
-   (Projects/brand/checkgrow, v0.5.4). Do not invent values.
+   Checkgrow dark palette. The approved website override and
+   component rules are documented in docs/dark-design.md.
    ========================================================== */
 
 @theme {
   /* Primitive palette */
-  --color-cream: #f7f7f5; /* background */
-  --color-cream-2: #f2f2ef; /* background-secondary */
-  --color-cream-3: #ecece9; /* background-tertiary */
-  --color-ink: #181818; /* dark */
-  --color-ink-soft: #404040; /* dark-grey */
-  --color-ink-raised: #242424; /* elevated dark surface */
+  --color-canvas: #000000;
+  --color-surface: #181818;
+  --color-raised: #262526;
+  --color-line: #363536;
+  --color-control-line: #77747b;
+  --color-foreground: #f7f7f5;
+  --color-muted: #b7b5bb;
+  --color-brand: #6373ff;
+  --color-brand-strong: #5262e8;
+  --color-brand-hover: #4959d8;
+  --color-success: #75d9a5;
+  --color-error: #ffb4ab;
   --color-accent: #9ba6ff; /* accent-purple */
   --color-tint: #e4eafd; /* light-blue-purple */
   --color-lavender: #cfc3d9; /* light-purple */
@@ -24,8 +30,8 @@
   --radius-xl: 24px;
 
   /* Shadows */
-  --shadow-soft: 0 12px 40px rgba(24, 24, 24, 0.08);
-  --shadow-raised: 0 24px 72px rgba(24, 24, 24, 0.12);
+  --shadow-soft: 0 12px 40px rgba(0, 0, 0, 0.22);
+  --shadow-raised: 0 24px 72px rgba(0, 0, 0, 0.5);
 
   /* Motion */
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
@@ -38,12 +44,40 @@
 
 :root {
   --grid-max: 1200px;
+  color-scheme: dark;
+  background: var(--color-canvas);
+  scrollbar-color: #66636b var(--color-canvas);
+}
+
+/* Only monochrome marks receive the inverse treatment. Photography,
+   video and multi-colour partner logos retain their original colours. */
+img[src^="/brand/icons/"],
+img[src="/brand-icons/openai.svg"] {
+  filter: brightness(0) invert(1);
+}
+
+input {
+  caret-color: var(--color-accent);
+}
+
+input:autofill {
+  box-shadow: 0 0 0 1000px var(--color-raised) inset;
+  -webkit-text-fill-color: var(--color-foreground);
+}
+
+input[aria-invalid="true"] {
+  outline: 1px solid var(--color-error);
+  outline-offset: -1px;
+}
+
+button:not(:disabled), a, summary {
+  -webkit-tap-highlight-color: rgba(155, 166, 255, 0.18);
 }
 
 
 body {
-  background: var(--color-cream);
-  color: var(--color-ink);
+  background: var(--color-canvas);
+  color: var(--color-foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
@@ -227,10 +261,10 @@ body {
   width: 6px;
   height: 6px;
   border-radius: 999px;
-  background: #9ba6ff;
+  background: var(--color-brand);
   box-shadow:
-    0 0 5px 1.5px rgba(155, 166, 255, 0.85),
-    0 0 12px 4px rgba(155, 166, 255, 0.3);
+    0 0 5px 1.5px color-mix(in srgb, var(--color-brand) 85%, transparent),
+    0 0 12px 4px color-mix(in srgb, var(--color-brand) 30%, transparent);
   opacity: 0;
   pointer-events: none;
   /* stacking: track (z-0) < light (z-5) < chips (z-10): the light rides
@@ -262,14 +296,14 @@ body {
 .orb-m1 { animation: flow-orb-m1 5.6s linear infinite; }
 .orb-m2 { animation: flow-orb-m2 5.6s linear infinite; }
 
-/* Chip dots: at rest they keep their own colour; the blink scales them
-   up and flashes accent purple with a glow as the light passes. */
+/* Chip dots keep the same purple hue; the blink scales them up and
+   strengthens their glow as the light passes. */
 @keyframes flow-dot-blink {
   0%, 14%, 100% { transform: scale(1); }
   5% {
     transform: scale(1.85);
-    background-color: #9ba6ff;
-    box-shadow: 0 0 12px 3px rgba(155, 166, 255, 0.85);
+    background-color: var(--color-brand);
+    box-shadow: 0 0 12px 3px color-mix(in srgb, var(--color-brand) 85%, transparent);
   }
 }
 .flow-dot { animation: flow-dot-blink 5.6s linear infinite; }
@@ -402,9 +436,9 @@ body {
   border-radius: 9999px;
   background: radial-gradient(
     ellipse at center,
-    rgba(99, 115, 255, 0.75) 0%,
-    rgba(164, 146, 225, 0.5) 45%,
-    rgba(99, 115, 255, 0) 74%
+    color-mix(in srgb, var(--color-brand) 20%, transparent) 0%,
+    color-mix(in srgb, var(--color-brand) 10%, transparent) 45%,
+    color-mix(in srgb, var(--color-brand) 0%, transparent) 74%
   );
   filter: blur(36px);
   pointer-events: none;
@@ -441,7 +475,7 @@ body {
 
 ::selection {
   background: var(--color-accent);
-  color: var(--color-ink);
+  color: var(--color-canvas);
 }
 
 :focus-visible {

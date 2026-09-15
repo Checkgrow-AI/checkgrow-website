@@ -71,9 +71,9 @@ export function Nav() {
       <div
         className={`mx-auto transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] ${
           pill
-            ? "mt-3 w-[calc(100%-24px)] max-w-4xl rounded-full bg-white/60 shadow-soft ring-1 ring-white/50 backdrop-blur-xl backdrop-saturate-150"
+            ? "mt-3 w-[calc(100%-24px)] max-w-4xl rounded-full bg-surface/90 shadow-soft ring-1 ring-line backdrop-blur-xl"
             : "mt-0 w-full max-w-full rounded-none bg-transparent ring-0" +
-              (open ? " bg-cream" : "")
+              (open ? " bg-canvas" : "")
         }`}
       >
         <nav
@@ -92,7 +92,7 @@ export function Nav() {
           }}
         >
           <Image
-            src="/brand/logos/wordmark-dark.svg"
+            src="/brand/logos/wordmark-light.svg"
             alt="Checkgrow"
             width={152}
             height={27}
@@ -111,7 +111,7 @@ export function Nav() {
             <a
               key={l.href}
               href={l.href}
-              className="relative text-sm text-ink-soft transition-colors duration-200 hover:text-ink"
+              className="relative text-sm text-muted transition-colors duration-200 hover:text-foreground"
             >
               {l.label}
               <span
@@ -128,7 +128,7 @@ export function Nav() {
         <div className="flex items-center gap-3">
           <a
             href="#waitlist"
-            className={`hidden items-center rounded-full border border-[#6373FF] bg-transparent text-sm font-medium text-[#6373FF] transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] hover:bg-[#6373FF] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6373FF] focus-visible:ring-offset-2 sm:inline-flex ${
+            className={`hidden items-center rounded-full border border-[#6373FF] bg-transparent text-sm font-medium text-accent transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] hover:bg-brand-strong hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6373FF] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas sm:inline-flex ${
               pill ? "min-h-9 px-5" : "min-h-11 px-6"
             }`}
           >
@@ -143,10 +143,10 @@ export function Nav() {
           >
             <span className="relative block h-3 w-5">
               <span
-                className={`absolute left-0 top-0 h-0.5 w-5 bg-ink transition-transform duration-200 ${open ? "top-1.5 rotate-45" : ""}`}
+                className={`absolute left-0 top-0 h-0.5 w-5 bg-foreground transition-transform duration-200 ${open ? "top-1.5 rotate-45" : ""}`}
               />
               <span
-                className={`absolute bottom-0 left-0 h-0.5 w-5 bg-ink transition-transform duration-200 ${open ? "bottom-1 -rotate-45" : ""}`}
+                className={`absolute bottom-0 left-0 h-0.5 w-5 bg-foreground transition-transform duration-200 ${open ? "bottom-1 -rotate-45" : ""}`}
               />
             </span>
           </button>
@@ -154,11 +154,11 @@ export function Nav() {
         </nav>
       </div>
       {open && (
-        <div className="border-t border-cream-3 bg-cream px-6 pb-6 pt-4 lg:hidden">
+        <div className="border-t border-line bg-canvas px-6 pb-6 pt-4 lg:hidden">
           <a
             href="#waitlist"
             onClick={() => setOpen(false)}
-            className="mb-4 flex min-h-12 items-center justify-center rounded-full border border-[#6373FF] bg-transparent text-sm font-medium text-[#6373FF] transition-colors duration-200 hover:bg-[#6373FF] hover:text-white active:bg-[#6373FF] active:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6373FF] focus-visible:ring-offset-2"
+            className="mb-4 flex min-h-12 items-center justify-center rounded-full border border-[#6373FF] bg-transparent text-sm font-medium text-accent transition-colors duration-200 hover:bg-brand-strong hover:text-white active:bg-brand-strong active:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6373FF] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
           >
             Join the waitlist
           </a>
@@ -168,7 +168,7 @@ export function Nav() {
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="flex min-h-12 items-center border-b border-cream-3 text-base text-ink"
+                className="flex min-h-12 items-center border-b border-line text-base text-foreground"
               >
                 {l.label}
               </a>

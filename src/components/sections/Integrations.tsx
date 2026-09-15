@@ -63,14 +63,14 @@ export function Integrations() {
     <section className="py-24 md:py-32" id="integrations">
       <div className="wrap">
         <Reveal className="max-w-2xl">
-          <p className="text-label flex items-center gap-2.5 text-ink-soft">
+          <p className="text-label flex items-center gap-2.5 text-muted">
             <span className="dot-marker" aria-hidden />
             Integrations
           </p>
           <h2 className="text-h1 mt-6 text-balance">
             Plugs into the channels you already run.
           </h2>
-          <p className="mt-6 text-lg leading-relaxed text-ink-soft">
+          <p className="mt-6 text-lg leading-relaxed text-muted">
             Connect analytics, paid and social once. Every module reads the
             same live data, and what you learn flows back into the next
             campaign.
@@ -79,7 +79,7 @@ export function Integrations() {
         <RevealStagger className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-3" gap={0.06}>
           {integrations.map((t) => (
             <RevealItem key={t.name}>
-              <article className="flex h-full items-start gap-4 rounded-lg bg-white p-5 ring-1 ring-cream-3">
+              <article className="flex h-full flex-col items-start gap-3 rounded-lg bg-raised p-4 ring-1 ring-line sm:flex-row sm:gap-4 sm:p-5">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={t.icon}
@@ -91,7 +91,7 @@ export function Integrations() {
                 />
                 <div>
                   <h3 className="text-sm font-semibold">{t.name}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-ink-soft max-sm:hidden">
+                  <p className="mt-1 text-sm leading-relaxed text-muted max-sm:hidden">
                     {t.role}
                   </p>
                 </div>
@@ -100,7 +100,7 @@ export function Integrations() {
           ))}
         </RevealStagger>
         <Reveal delay={0.1}>
-          <p className="mt-8 text-sm leading-relaxed text-ink-soft">
+          <p className="mt-8 text-sm leading-relaxed text-muted">
             Plus a research layer across Google News, Perplexity and Gemini,
             and your choice of OpenAI, Gemini or Claude for every AI job.
           </p>

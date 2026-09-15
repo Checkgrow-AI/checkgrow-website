@@ -60,7 +60,7 @@ export function FinalCta() {
   }, []);
 
   return (
-    <section className="bg-ink py-24 text-cream md:py-32" id="waitlist">
+    <section className="border-t border-line bg-surface py-24 text-foreground md:py-32" id="waitlist">
       <div className="wrap">
         <div ref={boxRef} className="cta-box flex flex-col items-center text-center">
           <Image
@@ -74,7 +74,7 @@ export function FinalCta() {
             Products are easy to build now. Checkgrow makes them easier to
             sell.
           </h2>
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-tint/90">
+          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted">
             Join the waitlist and be first in when new workspaces open, with
             an onboarding session to set up your knowledge base.
           </p>

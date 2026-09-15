@@ -116,20 +116,20 @@ export function Problem() {
       />
       <div className="wrap relative grid items-center gap-14 md:grid-cols-2 md:gap-16">
         <Reveal>
-          <p className="text-label flex items-center gap-2.5 text-ink-soft">
+          <p className="text-label flex items-center gap-2.5 text-muted">
             <span className="dot-marker" aria-hidden />
             The problem
           </p>
           <h2 className="text-h1 mt-6 max-w-md">
             Every marketing tool starts from zero.
           </h2>
-          <p className="mt-6 max-w-md text-lg leading-relaxed text-ink-soft">
+          <p className="mt-6 max-w-md text-lg leading-relaxed text-muted">
             Five tools means explaining your business five times, then again
             for every new campaign, hire and AI prompt. Nothing carries
             forward. Nothing remembers what actually worked. You shouldn&apos;t
             need a data analyst to read your own funnel.
           </p>
-          <p className="mt-4 text-sm text-ink-soft">
+          <p className="mt-4 text-sm text-muted">
             Tap a tool to see what really goes wrong inside it.
           </p>
         </Reveal>
@@ -176,22 +176,22 @@ export function Problem() {
                     initial={{ rotate: t.rot }}
                     whileHover={{ rotate: 0, y: -5, scale: 1.03 }}
                     transition={spring}
-                    className="card-ring group w-40 cursor-pointer rounded-lg bg-white p-4 shadow-soft ring-1 ring-cream-3 transition-shadow duration-200 hover:shadow-raised hover:ring-[1.5px] hover:ring-accent/60"
+                    className="card-ring group w-40 cursor-pointer rounded-lg bg-raised p-4 shadow-soft ring-1 ring-line transition-shadow duration-200 hover:shadow-raised hover:ring-[1.5px] hover:ring-accent/60"
                     style={{ "--ring-delay": `${-tools.indexOf(t) * 0.6}s` } as CSSProperties}
                   >
                     <div className="flex items-start justify-between">
                       <p className="text-sm font-semibold">{t.name}</p>
                       <span
                         aria-hidden
-                        className="text-sm leading-none text-ink-soft/50 transition-colors duration-200 group-hover:text-accent"
+                        className="text-sm leading-none text-muted transition-colors duration-200 group-hover:text-accent"
                       >
                         +
                       </span>
                     </div>
-                    <p className="text-label mt-2 normal-case tracking-normal text-ink-soft">
+                    <p className="text-label mt-2 normal-case tracking-normal text-muted">
                       ↻ {t.state}
                     </p>
-                    <div className="mt-2.5 h-1 overflow-hidden rounded bg-cream-3">
+                    <div className="mt-2.5 h-1 overflow-hidden rounded bg-line">
                       <div className="h-full w-[14%] rounded bg-lavender" />
                     </div>
                   </motion.div>
@@ -208,12 +208,12 @@ export function Problem() {
                   key={activeTool.id}
                   layoutId={activeTool.id}
                   transition={spring}
-                  className="pointer-events-auto w-[290px] rounded-xl bg-white p-5 shadow-raised ring-[1.5px] ring-accent/50"
+                  className="pointer-events-auto w-[290px] rounded-xl bg-raised p-5 shadow-raised ring-[1.5px] ring-accent/50"
                 >
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="text-sm font-semibold">{activeTool.name}</p>
-                      <p className="text-label mt-1 normal-case tracking-normal text-ink-soft">
+                      <p className="text-label mt-1 normal-case tracking-normal text-muted">
                         ↻ {activeTool.state}
                       </p>
                     </div>
@@ -221,7 +221,7 @@ export function Problem() {
                       type="button"
                       aria-label="Close"
                       onClick={() => setActive(null)}
-                      className="flex size-6 items-center justify-center rounded-full text-ink-soft transition-colors duration-200 hover:bg-cream-2 hover:text-ink"
+                      className="flex size-6 items-center justify-center rounded-full text-muted transition-colors duration-200 hover:bg-surface hover:text-foreground"
                     >
                       <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
                         <path
@@ -239,14 +239,14 @@ export function Problem() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.22, delay: 0.12, ease: [0, 0, 0.2, 1] }}
                   >
-                    <p className="mt-4 border-t border-cream-3 pt-3.5 text-[13px] font-semibold">
+                    <p className="mt-4 border-t border-line pt-3.5 text-[13px] font-semibold">
                       {activeTool.heading}
                     </p>
                     <ul className="mt-2.5 flex flex-col gap-2">
                       {activeTool.bullets.map((b) => (
                         <li
                           key={b}
-                          className="flex items-start gap-2.5 text-xs leading-relaxed text-ink-soft"
+                          className="flex items-start gap-2.5 text-xs leading-relaxed text-muted"
                         >
                           <svg
                             width="9"
@@ -277,7 +277,7 @@ export function Problem() {
             <motion.p
               animate={active ? { filter: "blur(4px)", opacity: 0.35 } : { filter: "blur(0px)", opacity: 1 }}
               transition={{ duration: 0.25 }}
-              className="text-label w-32 leading-relaxed text-ink-soft"
+              className="text-label w-32 leading-relaxed text-muted"
             >
               Five stacks.
               <br />

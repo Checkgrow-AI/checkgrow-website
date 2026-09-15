@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import { MotionProvider } from "@/components/MotionProvider";
@@ -10,6 +10,11 @@ import {
   videosJsonLd,
   SITE_URL,
 } from "@/lib/seo";
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  colorScheme: "dark",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

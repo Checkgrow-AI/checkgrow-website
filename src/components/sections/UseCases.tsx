@@ -85,17 +85,17 @@ const cases: UseCase[] = [
 
 export function UseCases() {
   return (
-    <section className="border-t border-cream-3 bg-cream-2 py-24 md:py-32" id="use-cases">
+    <section className="border-t border-line bg-surface py-24 md:py-32" id="use-cases">
       <div className="wrap">
         <Reveal className="max-w-2xl">
-          <p className="text-label flex items-center gap-2.5 text-ink-soft">
+          <p className="text-label flex items-center gap-2.5 text-muted">
             <span className="dot-marker" aria-hidden />
             In practice
           </p>
           <h2 className="text-h1 mt-6 text-balance">
             What a week inside Checkgrow looks like.
           </h2>
-          <p className="mt-6 text-lg leading-relaxed text-ink-soft">
+          <p className="mt-6 text-lg leading-relaxed text-muted">
             Real workflows from the platform, each one grounded in your
             knowledge base, each one feeding the next.
           </p>
@@ -123,13 +123,13 @@ export function UseCases() {
                 </div>
               </Reveal>
               <Reveal delay={0.08} className={i % 2 === 1 ? "md:order-1" : ""}>
-                <p className="text-label flex items-center gap-2 text-ink-soft">
+                <p className="text-label flex items-center gap-2 text-muted">
                   <span className="size-1.5 rounded-full bg-accent" aria-hidden />
                   {c.eyebrow}
                 </p>
                 <h3 className="text-h2 mt-4 text-balance">{c.title}</h3>
                 <p className="mt-4 font-medium leading-relaxed">{c.scenario}</p>
-                <p className="mt-3 leading-relaxed text-ink-soft">{c.body}</p>
+                <p className="mt-3 leading-relaxed text-muted">{c.body}</p>
                 <ul className="mt-6 flex flex-col gap-3">
                   {c.points.map((p) => (
                     <li key={p} className="flex items-start gap-3 text-sm leading-relaxed">

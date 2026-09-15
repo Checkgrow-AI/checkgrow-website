@@ -3,9 +3,9 @@ import { PrivacySettingsLink } from "@/components/PrivacySettingsLink";
 
 export function Footer() {
   return (
-    <footer className="-mt-px bg-ink pb-10 pt-4 text-cream">
+    <footer className="-mt-px bg-surface pb-10 pt-4 text-foreground">
       <div className="wrap">
-        <div className="flex flex-col justify-between gap-8 border-t border-ink-soft pt-10 md:flex-row md:items-center">
+        <div className="flex flex-col justify-between gap-8 border-t border-line pt-10 md:flex-row md:items-center">
           <div>
             <Image
               src="/brand/logos/wordmark-light.svg"
@@ -13,33 +13,33 @@ export function Footer() {
               width={152}
               height={27}
             />
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-tint/80">
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">
               AI Native Growth Marketing. One system where knowledge,
               research, execution and measurement connect and compound.
             </p>
           </div>
-          <nav className="flex flex-wrap gap-x-8 gap-y-3 text-sm text-tint/90">
-            <a href="#platform" className="transition-colors duration-200 hover:text-cream">
+          <nav className="flex flex-wrap gap-x-8 gap-y-3 text-sm text-muted">
+            <a href="#platform" className="transition-colors duration-200 hover:text-foreground">
               Platform
             </a>
-            <a href="#solution" className="transition-colors duration-200 hover:text-cream">
+            <a href="#solution" className="transition-colors duration-200 hover:text-foreground">
               Solution
             </a>
-            <a href="#stories" className="transition-colors duration-200 hover:text-cream">
+            <a href="#stories" className="transition-colors duration-200 hover:text-foreground">
               Real stories
             </a>
-            <a href="#use-cases" className="transition-colors duration-200 hover:text-cream">
+            <a href="#use-cases" className="transition-colors duration-200 hover:text-foreground">
               Features
             </a>
-            <a href="#pricing" className="transition-colors duration-200 hover:text-cream">
+            <a href="#pricing" className="transition-colors duration-200 hover:text-foreground">
               Pricing
             </a>
-            <a href="#faq" className="transition-colors duration-200 hover:text-cream">
+            <a href="#faq" className="transition-colors duration-200 hover:text-foreground">
               FAQ
             </a>
             <a
               href="mailto:bruno@checkgrow.com"
-              className="transition-colors duration-200 hover:text-cream"
+              className="transition-colors duration-200 hover:text-foreground"
             >
               Contact
             </a>
@@ -47,7 +47,7 @@ export function Footer() {
               href="https://doc.checkgrow.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors duration-200 hover:text-cream"
+              className="transition-colors duration-200 hover:text-foreground"
             >
               Documentation
             </a>
@@ -55,17 +55,17 @@ export function Footer() {
               href="https://doc.checkgrow.com/changelog"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors duration-200 hover:text-cream"
+              className="transition-colors duration-200 hover:text-foreground"
             >
               Changelog
             </a>
           </nav>
         </div>
-        <div className="mt-10 flex flex-col justify-between gap-6 text-xs text-tint/60 sm:flex-row sm:items-end">
+        <div className="mt-10 flex flex-col justify-between gap-6 text-xs text-muted sm:flex-row sm:items-end">
           <p>© Copyright Checkgrow · checkgrow.com</p>
           <div className="flex flex-col items-start gap-4 sm:items-end">
-            <div className="flex items-center gap-6">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-tint/50">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+              <span className="w-full text-[10px] font-semibold uppercase tracking-[0.14em] text-muted sm:w-auto">
                 Backed by
               </span>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -93,7 +93,7 @@ export function Footer() {
               href="https://ai.checkgrow.com/privacy-policy"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors duration-200 hover:text-cream"
+              className="transition-colors duration-200 hover:text-foreground"
             >
               Privacy Policy
             </a>
@@ -101,15 +101,15 @@ export function Footer() {
               href="https://ai.checkgrow.com/terms"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors duration-200 hover:text-cream"
+              className="transition-colors duration-200 hover:text-foreground"
             >
               Terms of Service
             </a>
-            <PrivacySettingsLink className="transition-colors duration-200 hover:text-cream" />
+            <PrivacySettingsLink className="transition-colors duration-200 hover:text-foreground" />
             </div>
           </div>
         </div>
-        <p className="mt-8 text-[8px] leading-relaxed text-tint/45">
+        <p className="mt-8 text-[11px] leading-relaxed text-muted">
           Checkgrow d.o.o., registered in Zagreb, Croatia, VAT ID:
           HR16006061302, operates in accordance with applicable Croatian and
           European Union regulations. We do not collect, process, or store any

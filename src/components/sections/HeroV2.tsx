@@ -23,6 +23,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import { pinProgress } from "@/lib/scrollProgress";
 import { useStableVh } from "@/lib/useStableVh";
+import { createTeamOrbit, teamOrbitPoint } from "@/lib/teamOrbit";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { Trustpilot } from "@/components/Trustpilot";
 import { RotatingWord } from "@/components/RotatingWord";
@@ -166,15 +167,17 @@ const CHANNELS: Array<{ src: string; alt: string; x: number; y: number }> = [
   { src: "/brand-icons/tiktok.svg", alt: "TikTok", x: 21, y: 50 },
 ];
 
-const TEAM: Array<{ img?: string; label?: string; alt: string }> = [
+const TEAM: Array<{ img: string; alt: string }> = [
   { img: "/case-studies/ivo-witrina.avif", alt: "Founder" },
+  { img: "/people/fabian-analytics.png", alt: "Fabian, analytics" },
   { img: "/case-studies/milena-wespa.avif", alt: "CFO" },
-  { label: "KA", alt: "Marketing lead" },
+  { img: "/people/sofia-campaign-manager.png", alt: "Sofia, campaign manager" },
   { img: "/case-studies/amir-qubinets.avif", alt: "Founder" },
-  { label: "+ you", alt: "You" },
+  { img: "/people/roberta-go-to-market.png", alt: "Roberta, go-to-market" },
   { img: "/case-studies/vikram-minka.avif", alt: "CPO" },
-  { label: "JS", alt: "Growth lead" },
+  { img: "/people/mikai-marketing-manager.png", alt: "Mikai, marketing manager" },
   { img: "/case-studies/petar-curic.jpg", alt: "CEO" },
+  { img: "/people/thomas.png", alt: "Thomas" },
 ];
 
 const URL_TEXT = "yourwebsite.com";
@@ -204,21 +207,20 @@ const rand01 = (seed: number) => {
   return v - Math.floor(v);
 };
 
+/* The brand token is a six-digit hex colour. Alpha-only stops keep even
+   the brightest centre purple instead of bleaching it towards white. */
 function makeSprite(color: string, size = 64) {
   const c = document.createElement("canvas");
   c.width = c.height = size;
   const ctx = c.getContext("2d")!;
   const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
   g.addColorStop(0, color);
-  g.addColorStop(0.35, color.replace("1)", "0.55)"));
-  g.addColorStop(1, color.replace("1)", "0)"));
+  g.addColorStop(0.35, `${color}8c`);
+  g.addColorStop(1, `${color}00`);
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, size, size);
   return c;
 }
-
-/* deeper, full-contrast tones for the crisp dots */
-const SHARP_COLORS = ["rgba(110,125,242,", "rgba(148,138,178,", "rgba(128,142,255,"];
 
 type P = {
   ax: number; ay: number; az: number; // brain
@@ -229,7 +231,6 @@ type P = {
   delay: number;
   size: number;
   alpha: number;
-  sprite: number;
   phase: number;
   sharp: boolean;
   solid: boolean;                     // fully formed, no transparency
@@ -298,7 +299,6 @@ function buildParticles(count: number): P[] {
           ? 7 + Math.random() * 7
           : 2 + Math.random() * 3.4,
       alpha: solid ? 1 : sharp ? 0.5 + Math.random() * 0.45 : 0.35 + Math.random() * 0.5,
-      sprite: Math.floor(Math.random() * 3),
       phase: Math.random() * Math.PI * 2,
       sharp,
       solid,
@@ -342,18 +342,18 @@ function HeroChat() {
   }, []);
 
   return (
-    <div className="rounded-2xl bg-white/95 p-4 shadow-raised ring-1 ring-cream-3 backdrop-blur-sm">
+    <div className="rounded-2xl bg-raised/95 p-4 shadow-raised ring-1 ring-line backdrop-blur-sm">
       <div className="flex items-start gap-3">
-        <CheckLoader dotColor="#181818" className="mt-0.5 shrink-0" />
+        <CheckLoader dotColor="var(--color-foreground)" className="mt-0.5 shrink-0" />
         <div className="min-w-0 flex-1">
-          <p className="text-label text-ink-soft">AI Assistant</p>
+          <p className="text-label text-muted">AI Assistant</p>
           <p className="mt-1.5 min-h-6 text-[15px] font-medium leading-snug">
             {text}
             <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse rounded bg-accent align-middle" />
           </p>
         </div>
       </div>
-      <div className="mt-2.5 flex items-center justify-end gap-1.5 text-[11px] text-ink-soft">
+      <div className="mt-2.5 flex items-center justify-end gap-1.5 text-[11px] text-muted">
         Model:
         <Image
           src={CHAT_MODELS[model].src}
@@ -362,7 +362,7 @@ function HeroChat() {
           height={14}
           className="size-3.5"
         />
-        <span className="font-semibold text-ink">{CHAT_MODELS[model].name}</span>
+        <span className="font-semibold text-foreground">{CHAT_MODELS[model].name}</span>
       </div>
     </div>
   );
@@ -396,20 +396,20 @@ function TipContent({ index }: { index: number }) {
   }, [text]);
 
   return (
-    <div className="rounded-2xl bg-white/95 p-3.5 shadow-raised ring-1 ring-cream-3 backdrop-blur-sm">
+    <div className="rounded-2xl bg-raised/95 p-3.5 shadow-raised ring-1 ring-line backdrop-blur-sm">
       <div className="flex items-start gap-2.5">
         <span className="block shrink-0" style={{ width: 28, height: 28 }} aria-hidden>
-          <CheckLoader dotColor="#181818" className="origin-top-left scale-[0.7]" />
+          <CheckLoader dotColor="var(--color-foreground)" className="origin-top-left scale-[0.7]" />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="text-label text-ink-soft">{NODES[index]}</p>
+          <p className="text-label text-muted">{NODES[index]}</p>
           <p className="mt-1 min-h-9 text-sm font-medium leading-snug">
             {tipSegments(tip).map((seg, i) => {
               const take = Math.max(0, Math.min(seg.text.length, chars - seg.offset));
               if (take === 0) return null;
               const slice = seg.text.slice(0, take);
               return seg.marked ? (
-                <strong key={i} className="font-bold" style={{ color: "#6373FF" }}>
+                <strong key={i} className="font-bold" style={{ color: "var(--color-accent)" }}>
                   {slice}
                 </strong>
               ) : (
@@ -468,10 +468,14 @@ export function HeroV2() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const isMobile = window.innerWidth < 1024;
-    const ringK = isMobile ? 1.45 : 1;
+    const particleColor = getComputedStyle(canvas).getPropertyValue("--color-brand").trim();
+    const sprite = makeSprite(particleColor);
+
+    let isMobile = window.innerWidth < 1024;
+    let isNarrow = window.innerWidth < 375;
+    let ringK = isMobile ? 1.45 : 1;
     /* extra vertical stretch so the phone ring clears the heading + CTA */
-    const ringKy = isMobile ? 1.4 : 1;
+    let ringKy = isMobile ? (isNarrow ? 1.8 : 1.4) : 1;
     const particles = buildParticles(isMobile ? 480 : 1000);
     /* ambient dust spread over the whole viewport, alive in every scene;
        a share of it fully formed at full contrast */
@@ -483,7 +487,6 @@ export function HeroV2() {
         y: Math.random(),
         ph: Math.random() * Math.PI * 2,
         sz: 0.6 + Math.random() * 1.3,
-        sp: Math.floor(Math.random() * 3),
         a: solid ? 0.95 : 0.2 + Math.random() * 0.5,
         sharp,
         solid,
@@ -498,25 +501,33 @@ export function HeroV2() {
       sz: 1.1 + Math.random() * 0.5,
       spd: 0.5 + Math.random() * 0.8,
     }));
-    const sprites = [
-      makeSprite("rgba(155,166,255,1)"),
-      makeSprite("rgba(207,195,217,1)"),
-      makeSprite("rgba(180,189,255,1)"),
-    ];
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     let w = 0, h = 0, S = 0;
     let cxA = 0, cyA = 0, cxB = 0, cyB = 0;
+    let teamOrbit: ReturnType<typeof createTeamOrbit> | null = null;
+    const currentTeam = () => teamRefs.current.filter((el): el is HTMLDivElement => el !== null && el.isConnected);
+    const updateTeamOrbit = () => {
+      const team = currentTeam();
+      teamOrbit = createTeamOrbit({
+        viewportWidth: w,
+        contentWidth: wrap.clientWidth,
+        height: h,
+        count: team.length,
+        portraitSize: team[0]?.offsetWidth ?? 48,
+      });
+    };
     const labelPos = NODES.map(() => ({ x: 0, y: 0 }));
     const labelO = NODES.map(() => 0);
     /* on the phone, mid-height icons step aside so the verticals stay legible */
-    const iconPos = CHANNELS.map((c) => {
+    const channelPosition = (c: (typeof CHANNELS)[number]) => {
       if (!isMobile) return { x: c.x, y: c.y };
       let x = 50 + (c.x - 50) * 1.5;
       let y = c.y;
       if (y > 35 && y < 65) y = y < 50 ? y - 18 : y + 18;
       x = Math.min(86, Math.max(14, x));
       return { x, y };
-    });
+    };
+    const iconPos = CHANNELS.map(channelPosition);
 
     const resize = () => {
       const nw = window.innerWidth;
@@ -525,6 +536,12 @@ export function HeroV2() {
       if (nw === w && nh === h) return;
       w = nw;
       h = nh;
+      // Keep the particle ring and its portraits in the same responsive mode.
+      isMobile = w < 1024;
+      isNarrow = w < 375;
+      ringK = isMobile ? 1.45 : 1;
+      ringKy = isMobile ? (isNarrow ? 1.8 : 1.4) : 1;
+      CHANNELS.forEach((channel, i) => { iconPos[i] = channelPosition(channel); });
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       canvas.style.width = `${w}px`;
@@ -533,8 +550,9 @@ export function HeroV2() {
       S = Math.min(w, h) * (isMobile ? 0.34 : 0.4);
       cxA = isMobile ? w * 0.5 : w * 0.7;
       cyA = isMobile ? h * 0.36 : h * 0.5;
-      cxB = w * 0.5;
+      cxB = isNarrow ? wrap.clientWidth * 0.5 : w * 0.5;
       cyB = h * 0.5;
+      updateTeamOrbit();
     };
     resize();
     window.addEventListener("resize", resize);
@@ -624,15 +642,15 @@ export function HeroV2() {
             ? 0.4 + 0.6 * (0.5 + 0.5 * Math.sin(t * (0.7 + (am.ph % 1)) + am.ph))
             : 0.55 + 0.45 * Math.sin(t * 1.3 + am.ph);
         const a = am.a * tw * (isMobile && !am.solid ? 0.6 : 1);
+        ctx.globalAlpha = a;
         if (am.sharp) {
-          ctx.fillStyle = `${SHARP_COLORS[am.sp]}${a.toFixed(3)})`;
+          ctx.fillStyle = particleColor;
           ctx.beginPath();
           ctx.arc(ax, ay, am.sz, 0, Math.PI * 2);
           ctx.fill();
         } else {
-          ctx.globalAlpha = a;
           const r = am.sz * 3;
-          ctx.drawImage(sprites[am.sp], ax - r, ay - r, r * 2, r * 2);
+          ctx.drawImage(sprite, ax - r, ay - r, r * 2, r * 2);
         }
       }
       ctx.globalAlpha = 1;
@@ -644,11 +662,13 @@ export function HeroV2() {
         const blink = prefersReduced
           ? 0.8
           : 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * st.spd + st.ph));
-        ctx.fillStyle = `rgba(99,115,255,${blink.toFixed(3)})`;
+        ctx.globalAlpha = blink;
+        ctx.fillStyle = particleColor;
         ctx.beginPath();
         ctx.arc(sx, sy, st.sz, 0, Math.PI * 2);
         ctx.fill();
       }
+      ctx.globalAlpha = 1;
 
       /* breathing particle halos around the visible bullets */
       if (labelsA > 0.01) {
@@ -665,7 +685,7 @@ export function HeroV2() {
             const oy = Math.sin(ang) * (orbitR * 0.42 + 4 * Math.cos(t * 0.7 + k * 1.3));
             ctx.globalAlpha = labelO[i] * (0.3 + 0.25 * Math.sin(t * 2.2 + k * 1.9 + i));
             const s = 1.8 + 1.1 * Math.sin(t * 1.5 + k + i * 0.8);
-            ctx.drawImage(sprites[2], lx + ox - s, ly + oy - s, s * 2, s * 2);
+            ctx.drawImage(sprite, lx + ox - s, ly + oy - s, s * 2, s * 2);
           }
         }
         ctx.globalAlpha = 1;
@@ -737,14 +757,15 @@ export function HeroV2() {
           : 0.78 + 0.22 * Math.sin(t * 2 + pt.phase);
         const mobileDim = isMobile && e1 < 0.5 ? 0.35 : 1;
         if (pt.sharp) {
-          ctx.fillStyle = `${SHARP_COLORS[pt.sprite]}${(pt.alpha * tw * mobileDim).toFixed(3)})`;
+          ctx.globalAlpha = pt.alpha * tw * mobileDim;
+          ctx.fillStyle = particleColor;
           ctx.beginPath();
           ctx.arc(x, y, pt.size * (0.8 + 0.4 * depth), 0, Math.PI * 2);
           ctx.fill();
         } else {
           ctx.globalAlpha = pt.alpha * tw * (0.55 + 0.45 * depth) * mobileDim;
           const r = pt.size * (0.7 + 0.5 * depth);
-          ctx.drawImage(sprites[pt.sprite], x - r, y - r, r * 2, r * 2);
+          ctx.drawImage(sprite, x - r, y - r, r * 2, r * 2);
         }
       }
       ctx.globalAlpha = 1;
@@ -885,26 +906,19 @@ export function HeroV2() {
         });
       });
 
-      /* team avatars drift organically around the ring: each with its
-         own angular sway, breathing radius, wobble and scale pulse */
-      teamRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const o = ramp(p, 0.9 + i * 0.006, 0.945 + i * 0.006);
-        const angle =
-          -Math.PI / 2 +
-          i * ((Math.PI * 2) / TEAM.length) +
-          ringSpin +
-          Math.sin(t * 0.4 + i * 1.9) * 0.06;
-        const rr = 0.8 * (1 + 0.055 * Math.sin(t * 0.6 + i * 2.3));
-        const x =
-          cxB + Math.cos(angle) * rr * S * ringK + Math.sin(t * 0.5 + i * 1.1) * 5;
-        const y =
-          cyB +
-          Math.sin(angle) * rr * S * 0.86 * ringK * ringKy +
-          Math.cos(t * 0.45 + i * 1.4) * 5;
+      /* Read the mounted portraits, not a captured TEAM length: local
+         refreshes can replace the list while preserving these refs. */
+      const team = currentTeam();
+      if (!teamOrbit || teamOrbit.count !== team.length) updateTeamOrbit();
+      const orbit = teamOrbit!;
+      team.forEach((el, i) => {
+        /* Keep the full group visible before the scene finishes, even
+           when more portraits are added to the ring. */
+        const revealDelay = (i / Math.max(team.length - 1, 1)) * 0.03;
+        const o = ramp(p, 0.9 + revealDelay, 0.945 + revealDelay);
+        const { x, y } = teamOrbitPoint(orbit, i, t, prefersReduced);
         el.style.opacity = String(o);
-        const br = 1 + 0.045 * Math.sin(t * 0.9 + i * 1.6);
-        el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${(0.6 + 0.4 * smooth(o)) * br})`;
+        el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${(0.6 + 0.4 * smooth(o)) * orbit.portraitScale})`;
       });
     };
     raf = requestAnimationFrame(frame);
@@ -948,7 +962,7 @@ export function HeroV2() {
         <div ref={l1Ref} className="hero-intro absolute inset-0 flex items-center">
           <div className="hero-intro-wrap wrap w-full pt-16">
             <div className="hero-intro-copy max-w-xl lg:max-w-2xl">
-              <p className="hero-intro-label text-label flex items-center gap-2.5 text-ink-soft">
+              <p className="hero-intro-label text-label flex items-center gap-2.5 text-muted">
                 <span className="dot-marker" aria-hidden />
                 AI Native Growth Marketing
               </p>
@@ -959,7 +973,7 @@ export function HeroV2() {
                 </span>
                 .
               </h1>
-              <p className="hero-intro-body mt-7 max-w-xl text-lg leading-relaxed text-ink-soft">
+              <p className="hero-intro-body mt-7 max-w-xl text-lg leading-relaxed text-muted">
                 Growth shouldn&apos;t depend on who&apos;s in the room.
                 Checkgrow keeps everything your company knows in one growth
                 operating system: learning, improving, and working for every
@@ -994,7 +1008,7 @@ export function HeroV2() {
                 <h2 className="text-h1 text-balance">
                   Start onboarding your brand.
                 </h2>
-                <div className="mt-6 flex min-h-12 w-full max-w-xs items-center rounded-full bg-white px-5 shadow-soft ring-1 ring-cream-3 sm:max-w-sm">
+                <div className="mt-6 flex min-h-12 w-full max-w-xs items-center rounded-full bg-raised px-5 shadow-soft ring-1 ring-line sm:max-w-sm">
                   <span className="text-base font-medium">
                     <span ref={typedRef} />
                     <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse rounded bg-accent align-middle" />
@@ -1020,7 +1034,7 @@ export function HeroV2() {
                   ref={(el) => {
                     labelRefs.current[i] = el;
                   }}
-                  className={`bullet-ring absolute left-0 top-0 cursor-pointer whitespace-nowrap rounded-full bg-white/90 font-semibold text-ink shadow-soft ring-1 ring-cream-3 ${LABEL_SIZE[LABEL_LAYOUT[i].s]}`}
+                  className={`bullet-ring absolute left-0 top-0 cursor-pointer whitespace-nowrap rounded-full bg-raised/90 font-semibold text-foreground shadow-soft ring-1 ring-line ${LABEL_SIZE[LABEL_LAYOUT[i].s]}`}
                   style={{ opacity: 0, pointerEvents: "none", "--ring-delay": `${-i * 0.45}s` } as CSSProperties}
                   onPointerDown={(e) => {
                     pointerType.current = e.pointerType;
@@ -1060,7 +1074,7 @@ export function HeroV2() {
                   className="absolute left-0 top-0"
                   style={{ opacity: 0 }}
                 >
-                  <span className="flex size-14 items-center justify-center rounded-full bg-white shadow-soft ring-1 ring-cream-3 sm:size-17">
+                  <span className="flex size-14 items-center justify-center rounded-full bg-raised shadow-soft ring-1 ring-line sm:size-17">
                     <Image src={c.src} alt={c.alt} width={36} height={36} className="size-7 sm:size-9" />
                   </span>
                 </div>
@@ -1098,7 +1112,7 @@ export function HeroV2() {
                         ref={(el) => {
                           satRefs.current[i][j] = el;
                         }}
-                        className="pointer-events-auto absolute whitespace-nowrap text-sm font-bold text-ink-soft sm:text-base"
+                        className="pointer-events-auto absolute whitespace-nowrap text-sm font-bold text-muted sm:text-base"
                         style={{ ...SAT_POS[j % SAT_POS.length], opacity: 0 }}
                       >
                         <span className="inline-block cursor-default transition-transform duration-300 ease-out hover:scale-125">
@@ -1114,11 +1128,10 @@ export function HeroV2() {
             {/* Scene 4 · one learning brain, one team */}
             <div ref={l4Ref} className="absolute inset-0" style={{ opacity: 0, pointerEvents: "none" }}>
               <div className="absolute inset-0 flex items-center justify-center px-6">
-                <div className="max-w-[230px] text-center sm:max-w-md" style={{ transform: "translateY(2vh)" }}>
+                <div className="max-w-[160px] text-center min-[375px]:max-w-[230px] sm:max-w-md" style={{ transform: "translateY(2vh)" }}>
                   <h2
-                    className="text-balance"
+                    className="text-balance text-[clamp(1.6rem,4.8vw,3.5rem)] max-[374px]:text-[1.375rem]"
                     style={{
-                      fontSize: "clamp(1.6rem, 4.8vw, 3.5rem)",
                       lineHeight: 1.05,
                       fontWeight: 600,
                       letterSpacing: "-0.045em",
@@ -1128,7 +1141,7 @@ export function HeroV2() {
                   </h2>
                   <a
                     href="#waitlist"
-                    className="mt-7 inline-flex min-h-12 items-center rounded-full bg-ink px-7 text-sm font-medium text-cream transition-colors duration-200 hover:bg-ink-soft"
+                    className="mt-7 inline-flex min-h-12 items-center rounded-full bg-foreground px-7 text-sm font-medium text-canvas transition-colors duration-200 hover:bg-accent max-[374px]:mt-6 max-[374px]:px-5"
                   >
                     Join the waitlist
                   </a>
@@ -1136,26 +1149,20 @@ export function HeroV2() {
               </div>
               {TEAM.map((m, i) => (
                 <div
-                  key={i}
+                  key={m.img}
                   ref={(el) => {
                     teamRefs.current[i] = el;
                   }}
                   className="absolute left-0 top-0"
                   style={{ opacity: 0 }}
                 >
-                  {m.img ? (
-                    <Image
-                      src={m.img}
-                      alt={m.alt}
-                      width={48}
-                      height={48}
-                      className="size-11 rounded-full object-cover shadow-raised ring-2 ring-white sm:size-12"
-                    />
-                  ) : (
-                    <span className="flex size-11 items-center justify-center rounded-full bg-ink text-[10px] font-semibold text-cream shadow-raised ring-2 ring-white sm:size-12">
-                      {m.label}
-                    </span>
-                  )}
+                  <Image
+                    src={m.img}
+                    alt={m.alt}
+                    width={48}
+                    height={48}
+                    className="size-11 rounded-full object-cover shadow-raised ring-2 ring-line max-[374px]:size-8 sm:size-12"
+                  />
                 </div>
               ))}
             </div>
@@ -1163,7 +1170,7 @@ export function HeroV2() {
             {/* scroll hint */}
             <div
               ref={hintRef}
-              className="hero-scroll-hint pointer-events-none absolute inset-x-0 bottom-6 flex flex-col items-center gap-1.5 text-ink-soft"
+              className="hero-scroll-hint pointer-events-none absolute inset-x-0 bottom-6 flex flex-col items-center gap-1.5 text-muted"
             >
               <span className="text-label">Scroll</span>
               <svg width="12" height="8" viewBox="0 0 12 8" aria-hidden className="animate-bounce">

@@ -31,17 +31,17 @@ function Chip({ label, lead, delay, tone }: { label: string; lead: boolean; dela
   const looks =
     tone === "ink"
       ? lead
-        ? "bg-cream text-ink"
-        : "bg-ink-soft/70 text-cream ring-1 ring-lavender/30"
+        ? "bg-foreground text-canvas"
+        : "bg-raised text-foreground ring-1 ring-line"
       : lead
-        ? "bg-ink text-cream"
-        : "bg-white text-ink shadow-soft ring-1 ring-cream-3";
+        ? "bg-foreground text-canvas"
+        : "bg-raised text-foreground shadow-soft ring-1 ring-line";
   return (
     <span
-      className={`relative z-10 flex min-h-10 shrink-0 items-center gap-2 rounded-full px-3.5 text-xs font-medium sm:min-h-11 sm:gap-2.5 sm:px-5 sm:text-sm ${looks}`}
+      className={`relative z-10 flex min-h-10 shrink-0 items-center gap-2 rounded-full px-3.5 text-xs font-medium max-[374px]:gap-1.5 max-[374px]:px-2 sm:min-h-11 sm:gap-2.5 sm:px-5 sm:text-sm ${looks}`}
     >
       <span
-        className={`flow-dot size-1.5 rounded-full ${lead ? "bg-accent" : "bg-lavender"}`}
+        className={`flow-dot size-1.5 rounded-full ${lead ? "bg-brand" : "bg-brand/60"}`}
         style={{ animationDelay: `${delay}s` }}
         aria-hidden
       />
@@ -54,8 +54,8 @@ function Track({ tone }: { tone: Tone }) {
   return (
     <span
       aria-hidden
-      className={`relative z-0 mx-0.5 block h-[2.5px] w-7 shrink-0 rounded-full sm:mx-1 sm:w-10 ${
-        tone === "ink" ? "bg-lavender/25" : "bg-cream-3"
+      className={`relative z-0 mx-0.5 block h-[2.5px] w-7 shrink-0 rounded-full max-[374px]:w-4 sm:mx-1 sm:w-10 ${
+        tone === "ink" ? "bg-lavender/25" : "bg-line"
       }`}
     />
   );
@@ -69,11 +69,11 @@ const stepIn = (order: number) => ({
 });
 
 export function FlowStrip({ tone = "light" }: { tone?: Tone }) {
-  const note = tone === "ink" ? "text-tint/80" : "text-ink-soft";
+  const note = "text-muted";
   return (
     <>
       {/* Desktop / tablet: one row, one light */}
-      <div className="hidden items-center sm:flex">
+      <div className="hidden items-center lg:flex">
         <div className="relative flex items-center">
           <span className="flow-orb orb-x" aria-hidden />
           {DESKTOP.map((step, i) => (
@@ -90,7 +90,7 @@ export function FlowStrip({ tone = "light" }: { tone?: Tone }) {
 
       {/* Mobile: two tidy rows; the light crosses row one, fades, and
           re-emerges at the start of row two */}
-      <div className="flex flex-col items-start gap-2.5 sm:hidden">
+      <div className="flex flex-col items-start gap-2.5 lg:hidden">
         <div className="relative flex items-center">
           <span className="flow-orb orb-m1" aria-hidden />
           {MOBILE_ROW_1.map((step, i) => (

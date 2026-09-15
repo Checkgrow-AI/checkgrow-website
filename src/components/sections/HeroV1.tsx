@@ -20,7 +20,7 @@ export function HeroV1() {
         className="pointer-events-none absolute inset-x-0 top-0 h-105"
         style={{
           backgroundImage:
-            "radial-gradient(circle, #ECECE9 1.5px, transparent 1.5px)",
+            "radial-gradient(circle, #363536 1.5px, transparent 1.5px)",
           backgroundSize: "28px 28px",
           maskImage:
             "linear-gradient(to bottom, rgba(0,0,0,0.9), transparent 85%)",
@@ -33,7 +33,7 @@ export function HeroV1() {
           <div>
             <motion.p
               {...enter(0)}
-              className="text-label flex items-center gap-2.5 text-ink-soft"
+              className="text-label flex items-center gap-2.5 text-muted"
             >
               <span className="dot-marker" aria-hidden />
               AI Native Growth Marketing
@@ -56,7 +56,7 @@ export function HeroV1() {
 
             <motion.p
               {...enter(0.12)}
-              className="mt-7 max-w-xl text-lg leading-relaxed text-ink-soft"
+              className="mt-7 max-w-xl text-lg leading-relaxed text-muted"
             >
               Growth shouldn&apos;t depend on who&apos;s in the room.
               Checkgrow keeps everything your company knows in one system:

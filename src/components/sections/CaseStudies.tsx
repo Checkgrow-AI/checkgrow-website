@@ -136,7 +136,7 @@ function Slider() {
         if (n !== readWordsRef.current) {
           readWordsRef.current = n;
           spans.forEach((el, i) => {
-            el.style.color = i < n ? "#6373FF" : "";
+            el.style.color = i < n ? "var(--color-accent)" : "";
           });
         }
       }
@@ -168,7 +168,7 @@ function Slider() {
         pausedRef.current = false;
       }}
     >
-      <div className="relative overflow-hidden rounded-xl bg-white shadow-soft ring-1 ring-cream-3">
+      <div className="relative overflow-hidden rounded-xl bg-raised shadow-soft ring-1 ring-line">
         <div className="grid md:grid-cols-[minmax(0,340px)_1fr] lg:grid-cols-[minmax(0,400px)_1fr]">
           {/* portrait */}
           <div className="relative aspect-[4/3] md:aspect-auto md:min-h-95">
@@ -224,7 +224,7 @@ function Slider() {
               </AnimatePresence>
             </div>
 
-            <div className="mt-8 border-t border-cream-3 pt-5">
+            <div className="mt-8 border-t border-line pt-5">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={s.id}
@@ -236,7 +236,7 @@ function Slider() {
                 >
                   <div>
                     <p className="font-semibold">{s.person}</p>
-                    <p className="text-sm text-ink-soft">
+                    <p className="text-sm text-muted">
                       {s.role} · {s.company}
                     </p>
                   </div>
@@ -244,7 +244,7 @@ function Slider() {
                     {s.metrics.map((m) => (
                       <span
                         key={m}
-                        className="rounded-full bg-tint px-3 py-1.5 text-xs font-semibold"
+                        className="rounded-full bg-brand/10 px-3 py-1.5 text-xs font-semibold"
                       >
                         {m}
                       </span>
@@ -257,7 +257,7 @@ function Slider() {
         </div>
 
         {/* progress line */}
-        <div className="absolute inset-x-0 bottom-0 h-1 bg-cream-3">
+        <div className="absolute inset-x-0 bottom-0 h-1 bg-line">
           <div
             ref={barRef}
             className="h-full origin-left bg-accent"
@@ -280,7 +280,7 @@ function Slider() {
               className="group flex w-20 flex-col items-center text-center"
             >
               <span
-                className={`relative block size-14 overflow-hidden rounded-full ring-2 ring-offset-2 ring-offset-cream transition-all duration-300 sm:size-16 ${
+                className={`relative block size-14 overflow-hidden rounded-full ring-2 ring-offset-2 ring-offset-canvas transition-all duration-300 sm:size-16 ${
                   active ? "ring-accent" : "ring-transparent opacity-60 group-hover:opacity-100"
                 }`}
               >
@@ -294,12 +294,12 @@ function Slider() {
               </span>
               <span
                 className={`mt-2.5 text-xs font-semibold transition-colors duration-200 ${
-                  active ? "text-ink" : "text-ink-soft"
+                  active ? "text-foreground" : "text-muted"
                 }`}
               >
                 {st.person}
               </span>
-              <span className="text-[10.5px] text-ink-soft">{st.company}</span>
+              <span className="text-[10.5px] text-muted">{st.company}</span>
             </button>
           );
         })}
@@ -314,12 +314,12 @@ function DemoCard() {
   return (
     <div
       className="relative mt-20 overflow-hidden rounded-xl p-8 text-white md:p-12"
-      style={{ backgroundColor: "#6373FF" }}
+      style={{ backgroundColor: "var(--color-raised)" }}
     >
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-1/2 h-[80%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[110px]"
-        style={{ backgroundColor: "rgba(164, 146, 225, 0.6)" }}
+        style={{ backgroundColor: "rgba(99, 115, 255, 0.12)" }}
       />
       <div className="relative">
         <div className="mx-auto max-w-2xl text-center">
@@ -333,7 +333,7 @@ function DemoCard() {
               type="button"
               onClick={() => setOpen(!open)}
               aria-expanded={open}
-              className="inline-flex min-h-12 items-center gap-2.5 rounded-full bg-white px-7 text-sm font-semibold text-ink transition-colors duration-200 hover:bg-tint"
+              className="inline-flex min-h-12 items-center gap-2.5 rounded-full bg-foreground px-7 text-sm font-semibold text-canvas transition-colors duration-200 hover:bg-accent"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
                 {open ? (
@@ -346,7 +346,7 @@ function DemoCard() {
             </button>
             <a
               href="#waitlist"
-              className="inline-flex min-h-12 items-center rounded-full bg-ink px-7 text-sm font-semibold text-cream transition-colors duration-200 hover:bg-ink-raised"
+              className="inline-flex min-h-12 items-center rounded-full border border-accent/50 bg-transparent px-7 text-sm font-semibold text-accent transition-colors duration-200 hover:bg-brand-strong hover:text-white"
             >
               Join the waitlist
             </a>
@@ -364,7 +364,7 @@ function DemoCard() {
               transition={{ duration: 0.45, ease: [0.2, 0, 0, 1] }}
               className="overflow-hidden"
             >
-              <div className="relative mx-auto mt-9 max-w-3xl overflow-hidden rounded-xl bg-ink shadow-[0_30px_60px_-15px_rgba(24,24,24,0.5)]">
+              <div className="relative mx-auto mt-9 max-w-3xl overflow-hidden rounded-xl bg-canvas shadow-[0_30px_60px_-15px_rgba(24,24,24,0.5)]">
                 <video
                   src="/videos/checkgrow-demo-review.mp4"
                   autoPlay
@@ -375,7 +375,7 @@ function DemoCard() {
                   poster="/videos/checkgrow-demo-review-poster.jpg"
                   className="aspect-video w-full object-cover"
                 />
-                <span className="pointer-events-none absolute left-4 top-4 rounded-full bg-ink/70 px-3 py-1.5 text-xs font-medium text-cream">
+                <span className="pointer-events-none absolute left-4 top-4 rounded-full bg-canvas/70 px-3 py-1.5 text-xs font-medium text-foreground">
                   2:41 · real demo, no cuts
                 </span>
               </div>
@@ -393,17 +393,17 @@ function DemoCard() {
 
 export function CaseStudies() {
   return (
-    <section className="border-t border-cream-3 py-24 md:py-32" id="stories">
+    <section className="border-t border-line py-24 md:py-32" id="stories">
       <div className="wrap">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="text-label flex items-center justify-center gap-2.5 text-ink-soft">
+          <p className="text-label flex items-center justify-center gap-2.5 text-muted">
             <span className="dot-marker" aria-hidden />
             Real stories
           </p>
           <h2 className="text-h1 mt-6 text-balance">
             100+ marketing experts already grow with Checkgrow.
           </h2>
-          <p className="mt-5 text-lg leading-relaxed text-ink-soft">
+          <p className="mt-5 text-lg leading-relaxed text-muted">
             Founders, CMOs and operators who ran their growth through
             Checkgrow, in their own words.
           </p>

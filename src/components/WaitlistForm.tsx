@@ -1,7 +1,7 @@
 "use client";
 
-/* The waitlist form as a three-step story, identical in the hero (light)
-   and the final CTA (ink), only the colours differ:
+/* The waitlist form as a three-step story, shared by the hero and final
+   CTA. Both use the dark palette; the closing form has an accent border:
      1 · work email + "Join the waitlist"
      2 · the pill morphs into a First name / Last name double field
      3 · a personalised success card: tokens reserved, confirm the opt-in
@@ -102,18 +102,16 @@ export function WaitlistForm({
     ? firstName.trim().charAt(0).toUpperCase() + firstName.trim().slice(1)
     : "";
 
-  const inputCls = `min-h-12 w-full min-w-0 rounded-full px-5 text-base outline-none max-sm:ring-1 ${
+  const inputCls = `min-h-12 w-full min-w-0 rounded-full px-5 text-base outline-none focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 max-sm:ring-1 ${
     ink
-      ? "bg-transparent text-cream placeholder:text-tint/70 max-sm:bg-ink-raised max-sm:ring-lavender/40"
-      : "bg-transparent text-ink placeholder:text-ink-soft/60 max-sm:bg-white max-sm:shadow-soft max-sm:ring-cream-3"
+      ? "bg-transparent text-foreground placeholder:text-muted max-sm:bg-raised max-sm:ring-accent/70"
+      : "bg-transparent text-foreground placeholder:text-muted max-sm:bg-raised max-sm:shadow-soft max-sm:ring-control-line"
   }`;
-  const buttonCls = `min-h-12 shrink-0 rounded-full px-7 text-base font-medium transition-colors duration-200 disabled:opacity-60 max-sm:w-full ${
-    ink ? "bg-cream text-ink hover:bg-cream-3" : "bg-ink text-cream hover:bg-ink-soft"
-  }`;
+  const buttonCls = "min-h-12 shrink-0 rounded-full bg-foreground px-7 text-base font-medium text-canvas transition-colors duration-200 hover:bg-accent disabled:opacity-60 max-sm:w-full";
   const pillCls = `sm:flex sm:items-center sm:gap-2 sm:rounded-full sm:p-1.5 ${
     ink
-      ? "sm:bg-ink-raised sm:ring-1 sm:ring-lavender/40"
-      : "sm:bg-white sm:shadow-soft sm:ring-1 sm:ring-cream-3"
+      ? "sm:bg-raised sm:ring-1 sm:ring-accent/70"
+      : "sm:bg-raised sm:shadow-soft sm:ring-1 sm:ring-control-line"
   }`;
 
   if (step === "done") {
@@ -124,8 +122,8 @@ export function WaitlistForm({
         transition={{ duration: 0.4, ease: [0.2, 0, 0, 1] }}
         className={`w-full max-w-md rounded-2xl p-6 ${
           ink
-            ? "bg-ink-raised text-cream ring-1 ring-lavender/25"
-            : "bg-white text-ink shadow-soft ring-1 ring-cream-3"
+            ? "bg-raised text-foreground ring-1 ring-lavender/25"
+            : "bg-raised text-foreground shadow-soft ring-1 ring-line"
         }`}
         role="status"
         aria-live="polite"
@@ -138,7 +136,7 @@ export function WaitlistForm({
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
               <motion.path
                 d="M3.5 9.5 L7.5 13.5 L14.5 4.5"
-                stroke={ink ? "#181818" : "#181818"}
+                stroke="var(--color-canvas)"
                 strokeWidth="2.2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -155,13 +153,13 @@ export function WaitlistForm({
             </p>
             <p
               className={`mt-1.5 text-sm leading-relaxed ${
-                ink ? "text-tint/85" : "text-ink-soft"
+                "text-muted"
               }`}
             >
               Your{" "}
               <mark
                 className="rounded-sm px-1 font-medium text-white"
-                style={{ backgroundColor: "#6373FF" }}
+                style={{ backgroundColor: "var(--color-brand-strong)" }}
               >
                 Free access
               </mark>{" "}
@@ -204,13 +202,13 @@ export function WaitlistForm({
                       transition={{ duration: 0.22, ease: [0.2, 0, 0, 1] }}
                       role="alert"
                       className="absolute bottom-full left-4 z-20 mb-3 whitespace-nowrap rounded-lg px-3.5 py-2 text-sm font-medium text-white shadow-raised"
-                      style={{ backgroundColor: "#6373FF" }}
+                      style={{ backgroundColor: "var(--color-brand-strong)" }}
                     >
                       {COMPANY_EMAIL_MESSAGE}
                       <span
                         aria-hidden
                         className="absolute -bottom-1 left-6 size-2.5 rotate-45"
-                        style={{ backgroundColor: "#6373FF" }}
+                        style={{ backgroundColor: "var(--color-brand-strong)" }}
                       />
                     </motion.div>
                   )}
@@ -251,7 +249,7 @@ export function WaitlistForm({
                 />
                 <span
                   aria-hidden
-                  className={`hidden h-6 w-px shrink-0 sm:block ${ink ? "bg-lavender/30" : "bg-cream-3"}`}
+                  className={`hidden h-6 w-px shrink-0 sm:block ${ink ? "bg-lavender/30" : "bg-line"}`}
                 />
                 <label htmlFor={`${id}-last`} className="sr-only">
                   Last name
@@ -278,28 +276,28 @@ export function WaitlistForm({
         {step === "email" &&
         errors.email &&
         errors.email.message !== COMPANY_EMAIL_MESSAGE ? (
-          <p role="alert" className={ink ? "text-lavender" : "text-ink-soft"}>
+          <p role="alert" className={"text-error"}>
             ⚠ {errors.email.message}
           </p>
         ) : step === "names" && (errors.firstName || errors.lastName) ? (
-          <p role="alert" className={ink ? "text-lavender" : "text-ink-soft"}>
+          <p role="alert" className={"text-error"}>
             ⚠ {errors.firstName?.message ?? errors.lastName?.message}
           </p>
         ) : serverError ? (
-          <p role="alert" className={ink ? "text-lavender" : "text-ink-soft"}>
+          <p role="alert" className={"text-error"}>
             ⚠ {serverError}
           </p>
         ) : step === "names" ? (
-          <p className={ink ? "text-tint/80" : "text-ink-soft"}>
+          <p className={"text-muted"}>
             Almost there: tell us who is joining.
           </p>
         ) : (
-          <p className={ink ? "text-tint/80" : "text-ink-soft"}>
+          <p className={"text-muted"}>
             Join now and guarantee{" "}
             <a href="#waitlist" className="inline-block">
               <mark
                 className="cursor-pointer rounded-sm px-1 font-medium text-white transition-opacity duration-200 hover:opacity-85"
-                style={{ backgroundColor: "#6373FF" }}
+                style={{ backgroundColor: "var(--color-brand-strong)" }}
               >
                 Free access
               </mark>

@@ -20,8 +20,8 @@
     "brand": "../../brand/checkgrow"
   },
   "repository": {
-    "url": "https://github.com/checkgrowdev/checkgrow-website.git",
-    "sshUrl": "git@github.com:checkgrowdev/checkgrow-website.git",
+    "url": "https://github.com/Checkgrow-AI/checkgrow-website.git",
+    "sshUrl": "git@github.com:Checkgrow-AI/checkgrow-website.git",
     "remote": "origin",
     "defaultBranch": "main",
     "shipBranch": "main",

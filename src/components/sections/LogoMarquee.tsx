@@ -66,7 +66,7 @@ export function LogoMarquee() {
     <section className="py-14 md:py-16">
       <div className="wrap">
         <Reveal>
-          <p className="text-label text-center text-ink-soft">
+          <p className="text-label text-center text-muted">
             Companies growing their marketing with Checkgrow
           </p>
           <div
@@ -84,7 +84,7 @@ export function LogoMarquee() {
                       src={l.src}
                       alt={l.alt}
                       className={`mx-7 w-auto object-contain ${l.cls}`}
-                      style={{ filter: "brightness(0)", opacity: 0.65 }}
+                      style={{ filter: "brightness(0) invert(1)", opacity: 0.72 }}
                       loading="lazy"
                     />
                   ))}

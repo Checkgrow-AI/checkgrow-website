@@ -171,23 +171,23 @@ export function PlatformFilm() {
       ref={secRef}
       id="solution"
       className="relative overflow-hidden py-20 md:py-28"
-      style={{ backgroundColor: "#6373FF" }}
+      style={{ backgroundColor: "var(--color-canvas)" }}
     >
       {/* the big glow breathing behind the film */}
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-1/2 h-[85%] w-[88%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[130px]"
-        style={{ backgroundColor: "rgba(164, 146, 225, 0.65)" }}
+        style={{ backgroundColor: "rgba(99, 115, 255, 0.16)" }}
       />
       {/* the purple dissolves into the next section along a soft curve:
-          the cream rises highest at the centre and rolls off towards the
+          the black rises highest at the centre and rolls off towards the
           corners, so the ending reads circular rather than a hard band */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 h-64 md:h-96"
         style={{
           background:
-            "radial-gradient(140% 100% at 50% 100%, #F7F7F5 28%, rgba(247,247,245,0.7) 52%, rgba(247,247,245,0.25) 72%, rgba(247,247,245,0) 92%)",
+            "radial-gradient(140% 100% at 50% 100%, #000000 28%, rgba(0,0,0,0.7) 52%, rgba(0,0,0,0.25) 72%, rgba(0,0,0,0) 92%)",
         }}
       />
       <div className="wrap relative">
@@ -197,7 +197,7 @@ export function PlatformFilm() {
           style={{ opacity: 0 }}
         >
           {/* chapter tabs spanning the top edge of the film */}
-          <div className="flex w-full bg-white" role="tablist" aria-label="Film chapters">
+          <div className="flex w-full bg-raised" role="tablist" aria-label="Film chapters">
             {CHAPTERS.map((c, i) => (
               <button
                 key={c.label}
@@ -216,7 +216,7 @@ export function PlatformFilm() {
                   setChapter(i);
                 }}
                 className={`relative flex-1 whitespace-nowrap px-1 py-2.5 text-[11px] font-medium transition-colors duration-200 sm:py-3.5 sm:text-sm ${
-                  chapter === i ? "text-[#6373FF]" : "text-ink-soft hover:text-ink"
+                  chapter === i ? "text-accent" : "text-muted hover:text-foreground"
                 }`}
               >
                 {c.label}
@@ -253,7 +253,7 @@ export function PlatformFilm() {
                 vetoed.current = false;
                 setSound(true);
               }}
-              className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2.5 rounded-full bg-ink/85 px-5 py-2.5 text-sm font-medium text-cream backdrop-blur-sm transition-colors duration-200 hover:bg-ink"
+              className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2.5 rounded-full bg-canvas/85 px-5 py-2.5 text-sm font-medium text-foreground backdrop-blur-sm transition-colors duration-200 hover:bg-surface"
             >
               <span className="relative flex size-2" aria-hidden>
                 <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-75" />
@@ -274,7 +274,7 @@ export function PlatformFilm() {
               }
             }}
             aria-label="Restart the platform film"
-            className="absolute bottom-4 right-18 flex size-11 items-center justify-center rounded-full bg-ink/80 text-cream backdrop-blur-sm transition-colors duration-200 hover:bg-ink"
+            className="absolute bottom-4 right-18 flex size-11 items-center justify-center rounded-full bg-canvas/80 text-foreground backdrop-blur-sm transition-colors duration-200 hover:bg-surface"
           >
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden>
               <path
@@ -301,7 +301,7 @@ export function PlatformFilm() {
               setSound(!audible);
             }}
             aria-label={audible ? "Mute the platform film" : "Unmute the platform film"}
-            className="absolute bottom-4 right-4 flex size-11 items-center justify-center rounded-full bg-ink/80 text-cream backdrop-blur-sm transition-colors duration-200 hover:bg-ink"
+            className="absolute bottom-4 right-4 flex size-11 items-center justify-center rounded-full bg-canvas/80 text-foreground backdrop-blur-sm transition-colors duration-200 hover:bg-surface"
           >
             {audible ? (
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -332,7 +332,7 @@ export function PlatformFilm() {
         <div className="relative z-10 mt-9 flex justify-center">
           <a
             href="#waitlist"
-            className="inline-flex min-h-12 items-center rounded-full bg-white px-8 text-sm font-semibold text-ink transition-colors duration-200 hover:bg-tint"
+            className="inline-flex min-h-12 items-center rounded-full bg-foreground px-8 text-sm font-semibold text-canvas transition-colors duration-200 hover:bg-accent"
           >
             Join the waitlist
           </a>
