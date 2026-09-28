@@ -16,14 +16,43 @@ type Study = {
   person: string;
   role: string;
   company: string;
+  attribution?: string;
   photo: string;
   focus?: string;
-  logo: string;
-  metrics: string[];
+  logo?: string;
+  metrics?: string[];
   quote: string;
 };
 
 const studies: Study[] = [
+  {
+    id: "salim-sayed",
+    person: "Salim Sayed",
+    role: "Marketing Director",
+    company: "Payroll",
+    photo: "/case-studies/salim-sayed.webp",
+    quote:
+      "It is a well-thought-out growth operating system that connects marketing and sales while giving leadership greater visibility.",
+  },
+  {
+    id: "sophia-ahrel",
+    person: "Sophia Ahrel",
+    role: "Founder",
+    company: "Ahrel&Co",
+    attribution: "Founder, Ahrel&Co · Mentor, Brighteye Ventures",
+    photo: "/case-studies/sophia-ahrel.webp",
+    quote:
+      "This is a full go-to-market tech stack in one place. It's super practical because you have context and everything in one platform.",
+  },
+  {
+    id: "amanda-bester",
+    person: "Amanda Bester",
+    role: "Founder",
+    company: "Pragmattica Consulting",
+    photo: "/case-studies/amanda-bester.webp",
+    quote:
+      "What makes CheckGrow so compelling is its ability to bring marketing strategy, campaign planning, execution and performance visibility into one connected platform",
+  },
   {
     id: "witrina",
     person: "Ivo Pavlović",
@@ -34,17 +63,6 @@ const studies: Study[] = [
     metrics: ["€100k+ Organic Revenue"],
     quote:
       "We didn't want to build just another webshop. We wanted a curated digital space people enjoy browsing. Checkgrow gave us the engine to create at scale without losing our brand.",
-  },
-  {
-    id: "qubinets",
-    person: "Amir B.",
-    role: "Founder",
-    company: "Qubinets",
-    photo: "/case-studies/amir-qubinets.avif",
-    logo: "/client-logos/qubinets.svg",
-    metrics: ["20k New Users"],
-    quote:
-      "Checkgrow scaled our SaaS faster than any marketing agency ever did. Once I saw the system working, I decided to invest in the company too. That says it all.",
   },
   {
     id: "wespa",
@@ -183,7 +201,7 @@ function Slider() {
               >
                 <Image
                   src={s.photo}
-                  alt={`${s.person}, ${s.role} at ${s.company}`}
+                  alt={`${s.person}, ${s.attribution ?? `${s.role} at ${s.company}`}`}
                   fill
                   sizes="(max-width: 768px) 100vw, 400px"
                   className={`object-cover ${s.focus ?? "object-top"}`}
@@ -237,19 +255,21 @@ function Slider() {
                   <div>
                     <p className="font-semibold">{s.person}</p>
                     <p className="text-sm text-muted">
-                      {s.role} · {s.company}
+                      {s.attribution ?? `${s.role} · ${s.company}`}
                     </p>
                   </div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    {s.metrics.map((m) => (
-                      <span
-                        key={m}
-                        className="rounded-full bg-brand/10 px-3 py-1.5 text-xs font-semibold"
-                      >
-                        {m}
-                      </span>
-                    ))}
-                  </div>
+                  {s.metrics && s.metrics.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-2">
+                      {s.metrics.map((m) => (
+                        <span
+                          key={m}
+                          className="rounded-full bg-brand/10 px-3 py-1.5 text-xs font-semibold"
+                        >
+                          {m}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -267,7 +287,7 @@ function Slider() {
       </div>
 
       {/* avatar rail */}
-      <div className="mt-8 flex flex-wrap items-start justify-center gap-x-7 gap-y-5 sm:gap-x-10">
+      <div className="mt-8 flex flex-wrap items-start justify-center gap-x-5 gap-y-5 sm:gap-x-8">
         {studies.map((st, i) => {
           const active = i === index;
           return (
@@ -277,7 +297,7 @@ function Slider() {
               onClick={() => select(i)}
               aria-label={`Show ${st.person}'s story`}
               aria-current={active}
-              className="group flex w-20 flex-col items-center text-center"
+              className="group flex w-24 flex-col items-center text-center"
             >
               <span
                 className={`relative block size-14 overflow-hidden rounded-full ring-2 ring-offset-2 ring-offset-canvas transition-all duration-300 sm:size-16 ${
@@ -286,7 +306,7 @@ function Slider() {
               >
                 <Image
                   src={st.photo}
-                  alt={`${st.person}, ${st.role} at ${st.company}, a Checkgrow growth marketing customer`}
+                  alt={`${st.person}, ${st.attribution ?? `${st.role} at ${st.company}`}`}
                   fill
                   sizes="64px"
                   className={`object-cover ${st.focus ?? "object-top"}`}
