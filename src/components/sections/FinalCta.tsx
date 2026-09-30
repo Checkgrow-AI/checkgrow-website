@@ -2,7 +2,7 @@
 
 /* The closing waitlist section. Its content (logo, heading, sub, form)
    staggers in whenever the reader arrives: on first scroll into view and
-   again every time a "Join the waitlist" link brings them here, so the
+   again every time a "Get Free Early Access" link brings them here, so the
    anchor jump never feels like a hard cut. The form itself is never
    remounted, so anything typed survives a replay. */
 
@@ -75,7 +75,7 @@ export function FinalCta() {
             sell.
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted">
-            Join the waitlist and be first in when new workspaces open, with
+            Get free early access and be first in when new workspaces open, with
             an onboarding session to set up your knowledge base.
           </p>
           <div className="mt-10 flex w-full justify-center">

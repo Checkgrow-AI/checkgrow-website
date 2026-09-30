@@ -368,7 +368,7 @@ function DemoCard() {
               href="#waitlist"
               className="inline-flex min-h-12 items-center rounded-full border border-accent/50 bg-transparent px-7 text-sm font-semibold text-accent transition-colors duration-200 hover:bg-brand-strong hover:text-white"
             >
-              Join the waitlist
+              Get Free Early Access
             </a>
           </div>
         </div>

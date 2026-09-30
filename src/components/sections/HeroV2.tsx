@@ -9,9 +9,9 @@
                "Start onboarding your brand." + the typed website sit in
                the middle, then give way to an organic cluster of
                mixed-size knowledge bullets that follow the cursor
-     Scene 3 · the circle expands into a heartbeat cloud; channel icons
-               breathe close to the centre while the four verticals
-               typewrite past, satellites appearing at their own moments
+     Scene 3 · the circle expands into a heartbeat cloud; each vertical
+               holds centrally while supporting labels scroll and the
+               channel icons drift organically around the copy
      Scene 4 · the particles settle into a ring around the team:
                "One learning brain, one team, compounding growth."
    Everything scroll-linked is scrubbed in the engine's own rAF (motion
@@ -21,7 +21,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
-import { pinProgress } from "@/lib/scrollProgress";
+import { HERO_SCROLL_SCREENS, VERTICAL_START, VERTICAL_END, heroStoryProgress, satelliteFrame, verticalFrame } from "@/lib/heroTimeline";
 import { useStableVh } from "@/lib/useStableVh";
 import { createTeamOrbit, teamOrbitPoint } from "@/lib/teamOrbit";
 import { WaitlistForm } from "@/components/WaitlistForm";
@@ -140,31 +140,29 @@ const VERTICALS: Array<{ big: string; small: string[] }> = [
   { big: "Research\n& Report", small: ["Insights", "Competitors", "Market Trends", "KPIs", "Conversion Events"] },
 ];
 
-/* satellite word offsets around each big word (percent of the word box;
-   vertical offsets scale up on phones via --satk so the cloud spreads) */
+/* Two readable rows above/below the fixed title, never through it. */
 const SAT_POS: Array<CSSProperties> = [
-  { left: "-14%", top: "calc(-52% * var(--satk))" },
-  { right: "-16%", top: "calc(-28% * var(--satk))" },
-  { left: "-8%", bottom: "calc(-44% * var(--satk))" },
-  { right: "-4%", bottom: "calc(-58% * var(--satk))" },
-  { left: "34%", top: "calc(-78% * var(--satk))" },
-  { left: "28%", bottom: "calc(-88% * var(--satk))" },
-  { right: "-22%", top: "calc(16% * var(--satk))" },
+  { left: "22%", top: "calc(-1 * var(--sat-near))" },
+  { left: "76%", top: "calc(-1 * var(--sat-near))" },
+  { left: "22%", bottom: "calc(-1 * var(--sat-near))" },
+  { left: "76%", bottom: "calc(-1 * var(--sat-near))" },
+  { left: "50%", top: "calc(-1 * var(--sat-far))" },
+  { left: "50%", bottom: "calc(-1 * var(--sat-far))" },
 ];
 
-/* channel icons hugging the centre on a loose ellipse (viewport %) */
-const CHANNELS: Array<{ src: string; alt: string; x: number; y: number }> = [
-  { src: "/brand-icons/google-ads.svg", alt: "Google Ads", x: 30, y: 27 },
-  { src: "/brand-icons/google-analytics.svg", alt: "Google Analytics", x: 42, y: 20 },
-  { src: "/brand-icons/openai.svg", alt: "ChatGPT", x: 56, y: 18 },
-  { src: "/brand-icons/meta-ads.svg", alt: "Meta", x: 69, y: 25 },
-  { src: "/brand-icons/instagram.svg", alt: "Instagram", x: 78, y: 40 },
-  { src: "/brand-icons/gemini.svg", alt: "Gemini", x: 80, y: 60 },
-  { src: "/brand-icons/reddit.svg", alt: "Reddit", x: 70, y: 76 },
-  { src: "/brand-icons/x.svg", alt: "X", x: 56, y: 83 },
-  { src: "/brand-icons/linkedin.svg", alt: "LinkedIn", x: 41, y: 82 },
-  { src: "/brand-icons/claude.svg", alt: "Claude", x: 28, y: 72 },
-  { src: "/brand-icons/tiktok.svg", alt: "TikTok", x: 21, y: 50 },
+/* Channel marks float on a loose, breathing oval around the copy. */
+const CHANNELS: Array<{ src: string; alt: string }> = [
+  { src: "/brand-icons/google-ads.svg", alt: "Google Ads" },
+  { src: "/brand-icons/google-analytics.svg", alt: "Google Analytics" },
+  { src: "/brand-icons/openai.svg", alt: "ChatGPT" },
+  { src: "/brand-icons/meta-ads.svg", alt: "Meta" },
+  { src: "/brand-icons/instagram.svg", alt: "Instagram" },
+  { src: "/brand-icons/gemini.svg", alt: "Gemini" },
+  { src: "/brand-icons/reddit.svg", alt: "Reddit" },
+  { src: "/brand-icons/x.svg", alt: "X" },
+  { src: "/brand-icons/linkedin.svg", alt: "LinkedIn" },
+  { src: "/brand-icons/claude.svg", alt: "Claude" },
+  { src: "/brand-icons/tiktok.svg", alt: "TikTok" },
 ];
 
 const TEAM: Array<{ img: string; alt: string }> = [
@@ -426,6 +424,9 @@ function TipContent({ index }: { index: number }) {
 
 export function HeroV2() {
   const wrapRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const introCopyRef = useRef<HTMLDivElement>(null);
+  const teamCopyRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const typedRef = useRef<HTMLSpanElement>(null);
   const labelRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -433,7 +434,6 @@ export function HeroV2() {
   const teamRefs = useRef<(HTMLDivElement | null)[]>([]);
   const iconRefs = useRef<(HTMLDivElement | null)[]>([]);
   const wordRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const bigRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const satRefs = useRef<(HTMLSpanElement | null)[][]>(VERTICALS.map(() => []));
   const l1Ref = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
@@ -445,8 +445,10 @@ export function HeroV2() {
   const tipState = useRef({ i: -1 });
   const pointerType = useRef("mouse");
   const [reduced, setReduced] = useState(false);
+  const [compactFallback, setCompactFallback] = useState(false);
   const [tipIndex, setTipIndex] = useState(-1);
   const { vh: stableVh, vhRef: stableVhRef } = useStableVh();
+  const staticHero = reduced || compactFallback;
 
   const setTip = (i: number) => {
     tipState.current.i = i;
@@ -473,9 +475,6 @@ export function HeroV2() {
 
     let isMobile = window.innerWidth < 1024;
     let isNarrow = window.innerWidth < 375;
-    let ringK = isMobile ? 1.45 : 1;
-    /* extra vertical stretch so the phone ring clears the heading + CTA */
-    let ringKy = isMobile ? (isNarrow ? 1.8 : 1.4) : 1;
     const particles = buildParticles(isMobile ? 480 : 1000);
     /* ambient dust spread over the whole viewport, alive in every scene;
        a share of it fully formed at full contrast */
@@ -502,46 +501,52 @@ export function HeroV2() {
       spd: 0.5 + Math.random() * 0.8,
     }));
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    let w = 0, h = 0, S = 0;
+    let w = 0, h = 0, S = 0, headerClearance = 88;
     let cxA = 0, cyA = 0, cxB = 0, cyB = 0;
     let teamOrbit: ReturnType<typeof createTeamOrbit> | null = null;
     const currentTeam = () => teamRefs.current.filter((el): el is HTMLDivElement => el !== null && el.isConnected);
     const updateTeamOrbit = () => {
       const team = currentTeam();
+      const copy = teamCopyRef.current;
+      const stage = stageRef.current?.getBoundingClientRect();
+      const heading = copy?.querySelector("h2");
+      const range = document.createRange();
+      if (heading) range.selectNodeContents(heading);
+      const rects = heading ? Array.from(range.getClientRects()) : [];
+      const button = copy?.querySelector("a");
+      if (button) rects.push(button.getBoundingClientRect());
       teamOrbit = createTeamOrbit({
         viewportWidth: w,
         contentWidth: wrap.clientWidth,
         height: h,
         count: team.length,
         portraitSize: team[0]?.offsetWidth ?? 48,
+        protectedWidth: teamCopyRef.current?.offsetWidth ?? 0,
+        protectedHeight: teamCopyRef.current?.offsetHeight ?? 0,
+        protectedRegions: stage ? rects.map(rect => ({
+          left: rect.left - stage.left - w / 2, right: rect.right - stage.left - w / 2,
+          top: rect.top - stage.top - h / 2, bottom: rect.bottom - stage.top - h / 2,
+        })) : undefined,
       });
     };
     const labelPos = NODES.map(() => ({ x: 0, y: 0 }));
     const labelO = NODES.map(() => 0);
-    /* on the phone, mid-height icons step aside so the verticals stay legible */
-    const channelPosition = (c: (typeof CHANNELS)[number]) => {
-      if (!isMobile) return { x: c.x, y: c.y };
-      let x = 50 + (c.x - 50) * 1.5;
-      let y = c.y;
-      if (y > 35 && y < 65) y = y < 50 ? y - 18 : y + 18;
-      x = Math.min(86, Math.max(14, x));
-      return { x, y };
-    };
-    const iconPos = CHANNELS.map(channelPosition);
 
     const resize = () => {
-      const nw = window.innerWidth;
+      const nw = wrap.clientWidth;
+      headerClearance = parseFloat(getComputedStyle(wrap).getPropertyValue("--header-clearance")) || 88;
       /* stable height: browser-chrome show/hide must not re-anchor the scene */
-      const nh = stableVhRef.current || window.innerHeight;
-      if (nw === w && nh === h) return;
+      const availableHeight = Math.max(1, (stableVhRef.current || window.innerHeight) - headerClearance);
+      const copyHeight = introCopyRef.current?.offsetHeight ?? 0;
+      // At extreme zoom/landscape sizes, use natural document flow rather
+      // than clipping a form or shrinking readable copy into a pinned box.
+      setCompactFallback(copyHeight + 48 > availableHeight);
+      const nh = staticHero ? Math.max(availableHeight, copyHeight + 48) : availableHeight;
       w = nw;
       h = nh;
       // Keep the particle ring and its portraits in the same responsive mode.
       isMobile = w < 1024;
       isNarrow = w < 375;
-      ringK = isMobile ? 1.45 : 1;
-      ringKy = isMobile ? (isNarrow ? 1.8 : 1.4) : 1;
-      CHANNELS.forEach((channel, i) => { iconPos[i] = channelPosition(channel); });
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       canvas.style.width = `${w}px`;
@@ -556,6 +561,9 @@ export function HeroV2() {
     };
     resize();
     window.addEventListener("resize", resize);
+    const layoutObserver = new ResizeObserver(resize);
+    if (introCopyRef.current) layoutObserver.observe(introCopyRef.current);
+    if (teamCopyRef.current) layoutObserver.observe(teamCopyRef.current);
 
     const mouse = { x: -9999, y: -9999 };
     /* smoothed cursor for the bullet parallax */
@@ -564,7 +572,7 @@ export function HeroV2() {
     const tipPos = { x: 0, y: 0, on: false };
     const onMove = (e: PointerEvent) => {
       mouse.x = e.clientX;
-      mouse.y = e.clientY;
+      mouse.y = e.clientY - (stageRef.current?.getBoundingClientRect().top ?? headerClearance);
     };
     const onLeave = () => {
       mouse.x = -9999;
@@ -586,7 +594,9 @@ export function HeroV2() {
       raf = requestAnimationFrame(frame);
       if (!running) return;
       const t = performance.now() / 1000;
-      const p = pinProgress(wrap, h);
+      const bounds = wrap.getBoundingClientRect();
+      const rawProgress = clamp01((headerClearance - bounds.top) / Math.max(1, bounds.height - h));
+      const p = staticHero ? 0 : heroStoryProgress(rawProgress);
 
       /* ease the cursor towards its smoothed position */
       const hasPtr = mouse.x > -999;
@@ -600,11 +610,10 @@ export function HeroV2() {
       /* phase blends */
       const m1 = ramp(p, 0.12, 0.26);  // brain -> circle
       const m2 = ramp(p, 0.5, 0.58);   // circle -> heartbeat cloud
-      const m3 = ramp(p, 0.88, 0.95);  // cloud -> team ring
+      const m3 = ramp(p, 0.915, 0.96); // cloud -> team ring
       const labelsA = ramp(p, 0.3, 0.36) * (1 - ramp(p, 0.47, 0.53));
       const rot = prefersReduced ? 0 : t * 0.22;
       const pulse = prefersReduced ? 1 : 1 + 0.035 * Math.sin(t * 1.5);
-      const ringSpin = prefersReduced ? 0 : t * 0.09;
       /* a soft double-thump heartbeat for the expanded cloud */
       const hb = prefersReduced
         ? 1
@@ -708,10 +717,11 @@ export function HeroV2() {
         const exs = cxB + pt.ex * S * hb + Math.sin(t * 0.5 + pt.phase) * 5;
         const eys = cyB + pt.ey * S * hb + Math.cos(t * 0.44 + pt.phase * 1.2) * 4;
 
-        const ca = Math.atan2(pt.cy, pt.cx) + ringSpin;
         const cr = Math.hypot(pt.cx, pt.cy);
-        const cxs = cxB + Math.cos(ca) * cr * S * ringK;
-        const cys = cyB + Math.sin(ca) * cr * S * 0.86 * ringK * ringKy;
+        const orbit = teamOrbit!;
+        const ringPoint = teamOrbitPoint(orbit, pt.phase / (Math.PI * 2) * orbit.count, t, prefersReduced);
+        const cxs = orbit.centerX + (ringPoint.x - orbit.centerX) * cr / 0.8;
+        const cys = orbit.centerY + (ringPoint.y - orbit.centerY) * cr / 0.8;
 
         /* staggered morphs with a plasmatic swirl on the way */
         const e1 = smooth(clamp01((m1 - pt.delay * 0.25) / 0.75));
@@ -786,7 +796,6 @@ export function HeroV2() {
       if (l1Ref.current) {
         const o = 1 - ramp(p, 0.08, 0.15);
         l1Ref.current.style.opacity = String(o);
-        l1Ref.current.style.transform = `translateY(${-48 * ramp(p, 0, 0.15)}px)`;
         l1Ref.current.style.pointerEvents = o > 0.05 ? "auto" : "none";
       }
       if (l2Ref.current) {
@@ -794,7 +803,7 @@ export function HeroV2() {
         l2Ref.current.style.opacity = String(ramp(p, 0.15, 0.21) * (1 - ramp(p, 0.28, 0.33)));
       }
       if (l3Ref.current) {
-        l3Ref.current.style.opacity = String(ramp(p, 0.53, 0.58) * (1 - ramp(p, 0.87, 0.91)));
+        l3Ref.current.style.opacity = String(ramp(p, 0.525, 0.54) * (1 - ramp(p, 0.91, 0.925)));
       }
       if (l4Ref.current) {
         const o = ramp(p, 0.93, 0.975);
@@ -856,53 +865,70 @@ export function HeroV2() {
         }
       }
 
-      /* channel icons breathe in a slow loop close to the centre */
+      /* Icons appear after each title, and leave before it. */
+      const chapter = Math.min(VERTICALS.length - 1, Math.max(0, Math.floor((p - VERTICAL_START) / ((VERTICAL_END - VERTICAL_START) / VERTICALS.length))));
+      const { local } = verticalFrame(p, chapter, VERTICALS.length);
+      const stageTop = stageRef.current?.getBoundingClientRect().top ?? headerClearance;
+      const obstacles = satRefs.current[chapter].filter(Boolean).map(el => el!.getBoundingClientRect());
+      const heading = wordRefs.current[chapter]?.querySelector("h3");
+      if (heading) {
+        const range = document.createRange();
+        range.selectNodeContents(heading);
+        obstacles.push(...Array.from(range.getClientRects()));
+      }
       iconRefs.current.forEach((el, i) => {
         if (!el) return;
         const ph = i * 2.4;
-        const di = rand01((i + 1) * 45.3);
-        const o = ramp(p, 0.54 + di * 0.05, 0.6 + di * 0.05) * (1 - ramp(p, 0.85, 0.89));
-        const x = (iconPos[i].x / 100) * w + Math.sin(t * 0.34 + ph) * 24 + Math.sin(t * 0.13 + ph * 2.1) * 10;
-        const y = (iconPos[i].y / 100) * h + Math.cos(t * 0.29 + ph * 1.3) * 18 + Math.cos(t * 0.11 + ph) * 8;
+        const o = satelliteFrame(local, i, CHANNELS.length).opacity;
+        const radius = el.offsetWidth * 1.07 / 2;
+        const drift = prefersReduced ? 0 : Math.sin(t * 0.22 + ph) * 0.055;
+        const angle = -2.45 + i / CHANNELS.length * Math.PI * 2 + drift;
+        const breath = prefersReduced ? 1 : 1 + 0.035 * Math.sin(t * 0.31 + ph);
+        const radiusX = Math.min(w * 0.36, 390, w / 2 - radius - 16);
+        const radiusY = Math.min(h * 0.37, 270, Math.max(180, w * 0.27), h / 2 - radius - 16);
+        let x = w / 2 + Math.cos(angle) * radiusX * breath;
+        let y = h / 2 + Math.sin(angle) * radiusY * breath;
+        // Keep the original floating composition. Only nudge a mark
+        // outwards when it approaches actual text, never arrange rows.
+        for (let step = 0; step < 20; step++) {
+          const collides = obstacles.some(rect => {
+            const dx = Math.max(rect.left - x, 0, x - rect.right);
+            const dy = Math.max(rect.top - stageTop - y, 0, y - (rect.bottom - stageTop));
+            return Math.hypot(dx, dy) < radius + 12;
+          });
+          if (!collides) break;
+          x = Math.max(radius + 12, Math.min(w - radius - 12, x + Math.cos(angle) * 5));
+          y = Math.max(radius + 12, Math.min(h - radius - 12, y + Math.sin(angle) * 5));
+        }
+        // At a phone edge there may be no more horizontal room. Slide
+        // around the nearby label rather than pinning an icon against it.
+        const clear = (point: { x: number; y: number }) => obstacles.every(rect =>
+          Math.hypot(Math.max(rect.left - point.x, 0, point.x - rect.right),
+            Math.max(rect.top - stageTop - point.y, 0, point.y - (rect.bottom - stageTop))) >= radius + 12);
+        if (!clear({ x, y })) {
+          const gap = radius + 13;
+          const candidates = obstacles.flatMap(rect => [
+            { x, y: rect.top - stageTop - gap }, { x, y: rect.bottom - stageTop + gap },
+            { x: rect.left - gap, y }, { x: rect.right + gap, y },
+          ]).filter(point => point.x >= gap && point.x <= w - gap && point.y >= gap && point.y <= h - gap && clear(point));
+          candidates.sort((a, b) => Math.hypot(a.x - x, a.y - y) - Math.hypot(b.x - x, b.y - y));
+          if (candidates[0]) ({ x, y } = candidates[0]);
+        }
         el.style.opacity = String(o);
         el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${(0.7 + 0.3 * smooth(o)) * (1 + 0.07 * Math.sin(t * 0.9 + ph))})`;
       });
 
-      /* the verticals sweep bottom -> top; the big word typewrites in,
-         satellites surface at their own random moments */
+      /* The title is a stable reading anchor; only its details scroll. */
       wordRefs.current.forEach((el, i) => {
         if (!el) return;
-        const w0 = 0.555 + i * 0.075;
-        const wp = clamp01((p - w0) / 0.095);
-        const bell = Math.sin(Math.PI * wp);
-        el.style.opacity = String(bell);
-        /* eased lift so the word breathes upward instead of tracking scroll linearly */
-        el.style.transform = `translateY(-50%) translateY(${(1 - smooth(wp) * 2) * h * 0.4}px) scale(${0.96 + 0.06 * bell})`;
-        const big = bigRefs.current[i];
-        if (big) {
-          const full = VERTICALS[i].big;
-          /* types in on arrival, types backwards while it leaves to the top */
-          const typeIn = clamp01(wp * 2.6);
-          const typeOut = 1 - clamp01((wp - 0.68) / 0.24);
-          const chars = Math.round(Math.min(typeIn, typeOut) * full.length);
-          const txt = full.slice(0, chars);
-          if (big.textContent !== txt) big.textContent = txt;
-        }
+        const frame = verticalFrame(p, i, VERTICALS.length);
+        el.style.opacity = String(frame.opacity);
+        el.style.transform = `translateY(-50%) translateY(${frame.y}px)`;
         satRefs.current[i].forEach((sat, j) => {
           if (!sat) return;
-          /* each satellite gets its own scrubbed moment: they trickle in
-             while the keyword types (all present once it's complete) and
-             trickle out again in a different random order */
-          const sIn = 0.05 + rand01(i * 17.3 + j * 7.7 + 3) * 0.26;
-          const sOut = 0.58 + rand01(i * 31.7 + j * 13.1 + 9) * 0.24;
-          const so = ramp(wp, sIn, sIn + 0.1) * (1 - ramp(wp, sOut, sOut + 0.12));
-          sat.style.opacity = String(so * 0.9);
-          /* every satellite rides its own rail: a different scroll speed
-             and a slight sideways drift, so the cloud shears apart
-             instead of travelling as one block */
-          const spd = (rand01(i * 53.7 + j * 19.3 + 5) - 0.5) * 30;
-          const sx = (rand01(i * 71.3 + j * 23.9 + 7) - 0.5) * 70;
-          sat.style.transform = `translateY(${((1 - wp * 2) * spd * h) / 100}px) translate(${(wp - 0.5) * sx}px, ${Math.sin(t * 1.1 + j * 2.1 + i) * 4}px)`;
+          const detail = satelliteFrame(frame.local, j, VERTICALS[i].small.length);
+          sat.style.opacity = String(detail.opacity);
+          sat.style.transform = `translateX(-50%) translateY(${detail.y}px)`;
         });
       });
 
@@ -915,7 +941,7 @@ export function HeroV2() {
         /* Keep the full group visible before the scene finishes, even
            when more portraits are added to the ring. */
         const revealDelay = (i / Math.max(team.length - 1, 1)) * 0.03;
-        const o = ramp(p, 0.9 + revealDelay, 0.945 + revealDelay);
+        const o = ramp(p, 0.925 + revealDelay, 0.955 + revealDelay);
         const { x, y } = teamOrbitPoint(orbit, i, t, prefersReduced);
         el.style.opacity = String(o);
         el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${(0.6 + 0.4 * smooth(o)) * orbit.portraitScale})`;
@@ -926,32 +952,26 @@ export function HeroV2() {
     return () => {
       cancelAnimationFrame(raf);
       io.disconnect();
+      layoutObserver.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerleave", onLeave);
     };
-  }, [stableVhRef]);
+  }, [stableVhRef, staticHero]);
 
   return (
     <section
       ref={wrapRef}
       id="platform"
-      className="relative"
+      className={`hero-story relative ${staticHero ? "hero-static" : ""}`}
       style={{
-        /* pixel-pinned: vh units re-evaluate when mobile browser chrome
-           collapses, resizing the whole 620vh story mid-scroll and jolting
-           everything below it */
-        height: reduced
-          ? "100vh"
-          : stableVh
-            ? `${Math.round(stableVh * 6.2)}px`
-            : "620vh",
-        minHeight: reduced ? 640 : undefined,
-      }}
+        "--hero-viewport": stableVh ? `${stableVh}px` : "100svh",
+        height: staticHero ? "auto" : `calc(var(--hero-viewport) * ${HERO_SCROLL_SCREENS + 1} - var(--header-clearance))`,
+      } as CSSProperties}
     >
       <div
-        className="sticky top-0 h-screen overflow-hidden"
-        style={stableVh ? { height: `${stableVh}px` } : undefined}
+        ref={stageRef}
+        className="hero-stage overflow-hidden"
         onClick={() => {
           if (pointerType.current !== "mouse" && tipState.current.i >= 0) setTip(-1);
         }}
@@ -960,8 +980,8 @@ export function HeroV2() {
 
         {/* Scene 1 · the brain and the USP */}
         <div ref={l1Ref} className="hero-intro absolute inset-0 flex items-center">
-          <div className="hero-intro-wrap wrap w-full pt-16">
-            <div className="hero-intro-copy max-w-xl lg:max-w-2xl">
+          <div className="hero-intro-wrap wrap w-full">
+            <div ref={introCopyRef} className="hero-intro-copy max-w-xl lg:max-w-2xl">
               <p className="hero-intro-label text-label flex items-center gap-2.5 text-muted">
                 <span className="dot-marker" aria-hidden />
                 AI Native Growth Marketing
@@ -1000,7 +1020,7 @@ export function HeroV2() {
           </div>
         </div>
 
-        {!reduced && (
+        {!staticHero && (
           <>
             {/* Scene 2a · onboarding prompt in the centre of the circle */}
             <div ref={l2Ref} className="pointer-events-none absolute inset-0" style={{ opacity: 0 }}>
@@ -1074,8 +1094,8 @@ export function HeroV2() {
                   className="absolute left-0 top-0"
                   style={{ opacity: 0 }}
                 >
-                  <span className="flex size-14 items-center justify-center rounded-full bg-raised shadow-soft ring-1 ring-line sm:size-17">
-                    <Image src={c.src} alt={c.alt} width={36} height={36} className="size-7 sm:size-9" />
+                  <span className="hero-channel flex size-11 items-center justify-center rounded-full bg-raised shadow-soft ring-1 ring-line max-[374px]:size-8 sm:size-14">
+                    <Image src={c.src} alt={c.alt} width={36} height={36} className="size-[55%]" />
                   </span>
                 </div>
               ))}
@@ -1088,23 +1108,16 @@ export function HeroV2() {
                   className="absolute inset-x-0 top-1/2 flex justify-center"
                   style={{ opacity: 0 }}
                 >
-                  <div className="relative px-6 text-center">
+                  <div className="hero-vertical relative px-6 text-center">
                     <h3
                       className="relative whitespace-pre-line"
                       style={{
-                        fontSize: "clamp(2.4rem, 7vw, 5.5rem)",
                         lineHeight: 1.02,
                         fontWeight: 600,
                         letterSpacing: "-0.05em",
                       }}
                     >
-                      <span className="invisible">{v.big}</span>
-                      <span
-                        ref={(el) => {
-                          bigRefs.current[i] = el;
-                        }}
-                        className="absolute inset-0 whitespace-pre-line text-left"
-                      />
+                      {v.big}
                     </h3>
                     {v.small.map((s, j) => (
                       <span
@@ -1112,12 +1125,10 @@ export function HeroV2() {
                         ref={(el) => {
                           satRefs.current[i][j] = el;
                         }}
-                        className="pointer-events-auto absolute whitespace-nowrap text-sm font-bold text-muted sm:text-base"
+                        className="hero-satellite absolute whitespace-nowrap text-sm font-bold text-muted sm:text-base"
                         style={{ ...SAT_POS[j % SAT_POS.length], opacity: 0 }}
                       >
-                        <span className="inline-block cursor-default transition-transform duration-300 ease-out hover:scale-125">
-                          {s}
-                        </span>
+                        {s}
                       </span>
                     ))}
                   </div>
@@ -1128,9 +1139,9 @@ export function HeroV2() {
             {/* Scene 4 · one learning brain, one team */}
             <div ref={l4Ref} className="absolute inset-0" style={{ opacity: 0, pointerEvents: "none" }}>
               <div className="absolute inset-0 flex items-center justify-center px-6">
-                <div className="max-w-[160px] text-center min-[375px]:max-w-[230px] sm:max-w-md" style={{ transform: "translateY(2vh)" }}>
+                <div ref={teamCopyRef} className="hero-team-copy relative z-10 text-center">
                   <h2
-                    className="text-balance text-[clamp(1.6rem,4.8vw,3.5rem)] max-[374px]:text-[1.375rem]"
+                    className="hero-team-title text-balance text-[clamp(1.6rem,4.8vw,3.5rem)] max-[374px]:text-[1.375rem]"
                     style={{
                       lineHeight: 1.05,
                       fontWeight: 600,
@@ -1141,9 +1152,9 @@ export function HeroV2() {
                   </h2>
                   <a
                     href="#waitlist"
-                    className="mt-7 inline-flex min-h-12 items-center rounded-full bg-foreground px-7 text-sm font-medium text-canvas transition-colors duration-200 hover:bg-accent max-[374px]:mt-6 max-[374px]:px-5"
+                    className="mt-5 inline-flex min-h-12 max-w-full items-center justify-center rounded-full bg-foreground px-5 text-sm font-medium text-canvas transition-colors duration-200 hover:bg-accent max-[374px]:px-3 max-[374px]:text-xs"
                   >
-                    Join the waitlist
+                    Get Free Early Access
                   </a>
                 </div>
               </div>
@@ -1170,7 +1181,7 @@ export function HeroV2() {
             {/* scroll hint */}
             <div
               ref={hintRef}
-              className="hero-scroll-hint pointer-events-none absolute inset-x-0 bottom-6 flex flex-col items-center gap-1.5 text-muted"
+              className="hero-scroll-hint pointer-events-none absolute inset-x-0 bottom-6 hidden flex-col items-center gap-1.5 text-muted lg:flex"
             >
               <span className="text-label">Scroll</span>
               <svg width="12" height="8" viewBox="0 0 12 8" aria-hidden className="animate-bounce">

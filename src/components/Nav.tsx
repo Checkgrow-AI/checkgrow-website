@@ -67,11 +67,11 @@ export function Nav() {
   const pill = scrolled && !open;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
+    <header className="fixed inset-x-0 top-0 z-50 bg-canvas">
       <div
         className={`mx-auto transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] ${
           pill
-            ? "mt-3 w-[calc(100%-24px)] max-w-4xl rounded-full bg-surface/90 shadow-soft ring-1 ring-line backdrop-blur-xl"
+            ? "mt-3 w-[calc(100%-24px)] max-w-5xl rounded-full bg-surface/90 shadow-soft ring-1 ring-line backdrop-blur-xl"
             : "mt-0 w-full max-w-full rounded-none bg-transparent ring-0" +
               (open ? " bg-canvas" : "")
         }`}
@@ -128,11 +128,11 @@ export function Nav() {
         <div className="flex items-center gap-3">
           <a
             href="#waitlist"
-            className={`hidden items-center rounded-full border border-[#6373FF] bg-transparent text-sm font-medium text-accent transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] hover:bg-brand-strong hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6373FF] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas sm:inline-flex ${
-              pill ? "min-h-9 px-5" : "min-h-11 px-6"
+            className={`hidden shrink-0 items-center whitespace-nowrap rounded-full border border-[#6373FF] bg-transparent text-sm font-medium text-accent transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] hover:bg-brand-strong hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6373FF] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas sm:inline-flex ${
+              pill ? "min-h-11 px-5" : "min-h-11 px-6"
             }`}
           >
-            Join the waitlist
+            Get Free Early Access
           </a>
           <button
             type="button"
@@ -160,7 +160,7 @@ export function Nav() {
             onClick={() => setOpen(false)}
             className="mb-4 flex min-h-12 items-center justify-center rounded-full border border-[#6373FF] bg-transparent text-sm font-medium text-accent transition-colors duration-200 hover:bg-brand-strong hover:text-white active:bg-brand-strong active:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6373FF] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
           >
-            Join the waitlist
+            Get Free Early Access
           </a>
           <div className="flex flex-col">
             {links.map((l) => (

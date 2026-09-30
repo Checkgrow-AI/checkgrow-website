@@ -334,7 +334,7 @@ export function PlatformFilm() {
             href="#waitlist"
             className="inline-flex min-h-12 items-center rounded-full bg-foreground px-8 text-sm font-semibold text-canvas transition-colors duration-200 hover:bg-accent"
           >
-            Join the waitlist
+            Get Free Early Access
           </a>
         </div>
       </div>

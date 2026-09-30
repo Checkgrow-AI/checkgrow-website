@@ -1,49 +1,91 @@
 const BREATH = 0.012;
 const PORTRAIT_BORDER = 2;
 export const TEAM_PORTRAIT_GAP = 18;
+export const TEAM_CONTENT_GAP = 16;
+export const TEAM_EDGE_GAP = 12;
+
+/** Bounds relative to the composition centre, one per text line/CTA. */
+export type OrbitRegion = { left: number; right: number; top: number; bottom: number };
 
 export function createTeamOrbit({
-  viewportWidth,
-  contentWidth,
-  height,
-  count,
-  portraitSize,
+  contentWidth, height, count, portraitSize, protectedWidth = 0,
+  protectedHeight = 0, protectedRegions,
 }: {
   viewportWidth: number;
   contentWidth: number;
   height: number;
   count: number;
   portraitSize: number;
+  protectedWidth?: number;
+  protectedHeight?: number;
+  protectedRegions?: OrbitRegion[];
 }) {
-  const mobile = viewportWidth < 1024;
-  const narrow = viewportWidth < 375;
-  const radius = Math.min(viewportWidth, height)
-    * (mobile ? 0.34 : 0.4) * 0.8 * (mobile ? 1.45 : 1) * 1.12;
   const diameter = portraitSize + PORTRAIT_BORDER * 2;
-  // Reserve room for the whole portrait, its ring and the shared breath.
-  const radiusX = Math.min(radius, Math.max(1, (contentWidth / 2 - diameter / 2 - 12) / (1 + BREATH)));
-  const radiusY = Math.min(
-    radius * 0.86 * (mobile ? (narrow ? 1.8 : 1.4) : 1),
-    Math.max(1, (height / 2 - diameter / 2 - 72) / (1 + BREATH)),
-  );
-  // Uniform angles on an ellipse have this conservative separation bound.
-  // Fit portraits to short viewports without ever consuming their clear gap.
-  const separation = 2 * Math.min(radiusX, radiusY) * (1 - BREATH)
-    * Math.sin(Math.PI / Math.max(2, count));
-  const portraitScale = count <= 1 ? 1
-    : Math.min(1, Math.max(0, (separation - TEAM_PORTRAIT_GAP) / diameter));
+  const width = protectedWidth || Math.min(contentWidth * 0.34, 320);
+  const copyHeight = protectedHeight || Math.min(height * 0.3, 220);
+  const regions = protectedRegions?.length ? protectedRegions : [{
+    left: -width / 2, right: width / 2, top: -copyHeight / 2, bottom: copyHeight / 2,
+  }];
 
-  return { count, radiusX, radiusY, centerX: contentWidth / 2, centerY: height / 2, portraitScale };
+  const fit = (scale: number) => {
+    const radius = diameter * scale / 2;
+    const maxX = (contentWidth / 2 - radius - TEAM_EDGE_GAP) / (1 + BREATH);
+    const maxY = (height / 2 - radius - TEAM_EDGE_GAP) / (1 + BREATH);
+    // Rounded expansion protects actual ink, including inward breath.
+    // The extra pixel covers the small arcs between boundary samples.
+    const padding = radius + TEAM_CONTENT_GAP + 1;
+    const boundary = regions.flatMap(region => {
+      const corners = [
+        [region.right, region.bottom, 0], [region.left, region.bottom, Math.PI / 2],
+        [region.left, region.top, Math.PI], [region.right, region.top, Math.PI * 1.5],
+      ];
+      return corners.flatMap(([x, y, start]) => Array.from({ length: 17 }, (_, i) => {
+        const angle = start + i / 16 * Math.PI / 2;
+        return { x: (x + Math.cos(angle) * padding) / (1 - BREATH), y: (y + Math.sin(angle) * padding) / (1 - BREATH) };
+      }));
+    });
+    // Uniform angular spacing keeps every pair apart, even at ellipse tips.
+    const separationRadius = count > 1
+      ? (diameter * scale + TEAM_PORTRAIT_GAP) / (2 * Math.sin(Math.PI / count) * (1 - BREATH))
+      : 0;
+    const minX = Math.max(separationRadius, ...boundary.map(point => Math.abs(point.x) + 0.1));
+    if (minX > maxX || separationRadius > maxY) return null;
+    let best: { radiusX: number; radiusY: number; area: number } | null = null;
+    for (let step = 0; step <= 80; step++) {
+      const radiusX = minX + (maxX - minX) * step / 80;
+      let radiusY = separationRadius;
+      for (const point of boundary) {
+        radiusY = Math.max(radiusY, Math.abs(point.y) / Math.sqrt(1 - (point.x / radiusX) ** 2));
+      }
+      const area = radiusX * radiusY;
+      if (radiusY <= maxY && (!best || area < best.area)) best = { radiusX, radiusY, area };
+    }
+    return best;
+  };
+
+  // Prefer original portrait size. Scale only when a safe ellipse cannot
+  // fit. The ellipse hugs the measured copy, not the screen edges.
+  let portraitScale = 1;
+  let shape = fit(1);
+  if (!shape) {
+    let lower = 0, upper = 1;
+    for (let step = 0; step < 18; step++) {
+      const middle = (lower + upper) / 2;
+      if (fit(middle)) lower = middle; else upper = middle;
+    }
+    portraitScale = lower;
+    shape = fit(lower);
+  }
+  return {
+    count, radiusX: shape?.radiusX ?? 1, radiusY: shape?.radiusY ?? 1,
+    centerX: contentWidth / 2, centerY: height / 2, portraitScale,
+  };
 }
 
 export function teamOrbitPoint(
-  orbit: ReturnType<typeof createTeamOrbit>,
-  index: number,
-  time: number,
-  reducedMotion = false,
+  orbit: ReturnType<typeof createTeamOrbit>, index: number, time: number, reducedMotion = false,
 ) {
-  // One phase and one breath for the entire group: no overtaking or bunching.
-  const angle = -Math.PI / 2 + index * Math.PI * 2 / Math.max(1, orbit.count)
+  const angle = index / Math.max(1, orbit.count) * Math.PI * 2 - Math.PI / 2
     + (reducedMotion ? 0 : time * 0.07);
   const breath = reducedMotion ? 1 : 1 + BREATH * Math.sin(time * 0.6);
   return {

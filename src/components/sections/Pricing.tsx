@@ -356,7 +356,7 @@ function ComparisonModal({ open, onClose }: { open: boolean; onClose: () => void
                 onClick={onClose}
                 className="mt-5 inline-flex min-h-11 items-center rounded-full bg-foreground px-6 text-sm font-semibold text-canvas transition-colors duration-200 hover:bg-accent"
               >
-                Join the waitlist
+                Get Free Early Access
               </a>
             </div>
           </div>
@@ -479,7 +479,7 @@ export function Pricing() {
                           : "border border-brand text-accent hover:bg-brand-strong hover:text-white"
                       }`}
                     >
-                      Join the waitlist
+                      Get Free Early Access
                     </a>
                     <div className="mt-2 text-center text-xs leading-relaxed">
                       <p className="font-medium text-foreground">3 months free, guaranteed</p>

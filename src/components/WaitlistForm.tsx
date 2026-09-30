@@ -2,7 +2,7 @@
 
 /* The waitlist form as a three-step story, shared by the hero and final
    CTA. Both use the dark palette; the closing form has an accent border:
-     1 · work email + "Join the waitlist"
+     1 · work email + "Get Free Early Access"
      2 · the pill morphs into a First name / Last name double field
      3 · a personalised success card: tokens reserved, confirm the opt-in
          email at launch to validate them
@@ -225,7 +225,7 @@ export function WaitlistForm({
                 />
               </div>
               <button type="submit" className={buttonCls}>
-                Join the waitlist
+                Get Free Early Access
               </button>
             </motion.div>
           ) : (
@@ -272,7 +272,7 @@ export function WaitlistForm({
         </AnimatePresence>
       </div>
 
-      <div className="mt-3 flex items-center gap-2 text-sm">
+      <div className="waitlist-feedback mt-3 flex items-center gap-2 text-sm">
         {step === "email" &&
         errors.email &&
         errors.email.message !== COMPANY_EMAIL_MESSAGE ? (
@@ -292,7 +292,7 @@ export function WaitlistForm({
             Almost there: tell us who is joining.
           </p>
         ) : (
-          <p className={"text-muted"}>
+          <p className="waitlist-reassurance text-muted">
             Join now and guarantee{" "}
             <a href="#waitlist" className="inline-block">
               <mark

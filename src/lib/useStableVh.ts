@@ -6,8 +6,8 @@ import { useEffect, useRef, useState } from "react";
    in-app browsers (Instagram, Safari with its toolbar) fire resize events
    with small height deltas while the user scrolls; anything sized or
    scrubbed off the live innerHeight then shifts mid-scroll and the page
-   visibly jumps. This value updates only on real changes: a width change
-   (rotation, desktop resize) or a height move larger than 150px. */
+   visibly jumps. Only touch devices ignore small height changes; desktop
+   window resizing must always update the available content area. */
 export function useStableVh() {
   const [vh, setVh] = useState(0);
   const vhRef = useRef(0);
@@ -22,7 +22,8 @@ export function useStableVh() {
     const onResize = () => {
       const nw = window.innerWidth;
       const nh = window.innerHeight;
-      if (nw !== w || Math.abs(nh - vhRef.current) > 150) {
+      const mobileChrome = window.matchMedia("(pointer: coarse)").matches;
+      if (!mobileChrome || nw !== w || Math.abs(nh - vhRef.current) > 150) {
         w = nw;
         apply();
       }

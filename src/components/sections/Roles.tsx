@@ -87,7 +87,7 @@ export function Roles() {
                   href="#waitlist"
                   className="mt-8 inline-flex min-h-12 items-center rounded-full bg-foreground px-7 text-sm font-medium text-canvas transition-colors duration-200 hover:bg-accent"
                 >
-                  Join the waitlist
+                  Get Free Early Access
                 </a>
               </div>
             </div>
