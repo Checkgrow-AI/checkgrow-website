@@ -40,11 +40,26 @@ The loop: Your business -> Create -> Reach -> Measure -> Improve. What works get
 
 ## Use cases in practice
 
-1. Explain the business once. Never again. Add your website and the engine builds a knowledge graph: Brand, ICP, Use Cases, Products, Competitors, Social Media, Tracking, Campaigns.
-2. A funnel strategy in an afternoon, not a quarter. Generate Meta and Google campaign strategies and link them with your paid channels.
-3. AI output becomes shipped work, not a dead doc. Agents produce the work; tasks get owned, approved and shipped.
-4. Numbers that explain themselves. GA4, Meta and Google Ads unified into plain-language findings, with the biggest drop-off flagged.
-5. A consultant-grade conversion audit, on demand. Scored website audits with a ranked fix per finding.
+1. Knowledge Centre: Explain the business once. Never again. Google Drive, Notion, Slack and your website become structured marketing knowledge (ICPs, buyer personas, products, brand voice, SEO keywords) that every feature reads; update it by chatting and approve the AI's drafts.
+2. Insights: Ask a question. Get the report. GA4, Google Ads, Meta and LinkedIn Ads connected through integrations and MCP; smart reports with AI takeaways and events mapped to TOFU, MOFU and BOFU, with no dashboards to build.
+3. Campaigns: From strategy to KPIs, in one record. Budget split and KPI targets set from the strategy, every channel's live results in one table, and creators, fees and UTM links managed inside the campaign.
+4. Creative Studio: Creatives that already know your brand. Generate ad variations from campaign optimisations, competitor ads, your library and market trends with the AI model you prefer, then optimise underperforming ads from live data.
+5. Competitors: Every competitor move, as it happens. Active LinkedIn and Meta ads, website, pricing, launch and hiring changes tracked automatically, with competitor ads usable as creative references.
+6. AI Assistant: One chat for everything Checkgrow knows. Multi-model chat (Claude, GPT, Gemini, Perplexity) grounded in your knowledge, campaigns and data, with actions across features straight from the answer.
+
+## All features
+
+Every feature is shown in three steps at https://checkgrow.com/features
+
+- Knowledge Centre: Explain the business once. Never again. Google Drive, Notion, Slack and your website become structured marketing knowledge (ICPs, buyer personas, products, brand voice, SEO keywords) that every feature reads; update it by chatting and approve the AI's drafts.
+- Insights: Ask a question. Get the report. GA4, Google Ads, Meta and LinkedIn Ads connected through integrations and MCP; smart reports with AI takeaways and events mapped to TOFU, MOFU and BOFU, with no dashboards to build.
+- Campaigns: From strategy to KPIs, in one record. Budget split and KPI targets set from the strategy, every channel's live results in one table, and creators, fees and UTM links managed inside the campaign.
+- Creative Studio: Creatives that already know your brand. Generate ad variations from campaign optimisations, competitor ads, your library and market trends with the AI model you prefer, then optimise underperforming ads from live data.
+- Content: Know what to publish next. Daily industry, competitor and user-research picks with Perplexity and Gemini recommendations, turned into drafts in your brand voice in a couple of clicks.
+- Social Media: See where you stand, then act on it. Rankings against competitors, influencers scored against your ICP, and comment replies drafted by AI and approved by you.
+- Competitors: Every competitor move, as it happens. Active LinkedIn and Meta ads, website, pricing, launch and hiring changes tracked automatically, with competitor ads usable as creative references.
+- Sales: Outreach that knows what's going on. Account briefs with ICP fit and the best next move, personalised messages grounded in real signals, and human approval before anything is sent.
+- AI Assistant: One chat for everything Checkgrow knows. Multi-model chat (Claude, GPT, Gemini, Perplexity) grounded in your knowledge, campaigns and data, with actions across features straight from the answer.
 
 ## Real customer results
 

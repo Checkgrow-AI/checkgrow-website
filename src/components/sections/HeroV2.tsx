@@ -340,7 +340,7 @@ function HeroChat() {
   }, []);
 
   return (
-    <div className="rounded-2xl bg-raised/95 p-4 shadow-raised ring-1 ring-line backdrop-blur-sm">
+    <div className="rounded-card bg-raised/95 p-4 shadow-raised ring-1 ring-line backdrop-blur-sm">
       <div className="flex items-start gap-3">
         <CheckLoader dotColor="var(--color-foreground)" className="mt-0.5 shrink-0" />
         <div className="min-w-0 flex-1">
@@ -394,7 +394,7 @@ function TipContent({ index }: { index: number }) {
   }, [text]);
 
   return (
-    <div className="rounded-2xl bg-raised/95 p-3.5 shadow-raised ring-1 ring-line backdrop-blur-sm">
+    <div className="rounded-card bg-raised/95 p-3.5 shadow-raised ring-1 ring-line backdrop-blur-sm">
       <div className="flex items-start gap-2.5">
         <span className="block shrink-0" style={{ width: 28, height: 28 }} aria-hidden>
           <CheckLoader dotColor="var(--color-foreground)" className="origin-top-left scale-[0.7]" />
@@ -983,7 +983,6 @@ export function HeroV2() {
           <div className="hero-intro-wrap wrap w-full">
             <div ref={introCopyRef} className="hero-intro-copy max-w-xl lg:max-w-2xl">
               <p className="hero-intro-label text-label flex items-center gap-2.5 text-muted">
-                <span className="dot-marker" aria-hidden />
                 AI Native Growth Marketing
               </p>
               <h1 className="hero-intro-title text-display mt-6 text-balance" style={{ fontWeight: 400 }}>

@@ -5,9 +5,6 @@ import { MotionProvider } from "@/components/MotionProvider";
 import {
   organizationJsonLd,
   websiteJsonLd,
-  softwareJsonLd,
-  faqJsonLd,
-  videosJsonLd,
   SITE_URL,
 } from "@/lib/seo";
 
@@ -127,18 +124,6 @@ gtag('config', 'G-GB1T5THY0V');`,
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(videosJsonLd) }}
         />
       </body>
     </html>

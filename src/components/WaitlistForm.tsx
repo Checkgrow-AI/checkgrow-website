@@ -120,7 +120,7 @@ export function WaitlistForm({
         initial={{ opacity: 0, y: 14, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.4, ease: [0.2, 0, 0, 1] }}
-        className={`w-full max-w-md rounded-2xl p-6 ${
+        className={`w-full max-w-md rounded-card p-6 ${
           ink
             ? "bg-raised text-foreground ring-1 ring-lavender/25"
             : "bg-raised text-foreground shadow-soft ring-1 ring-line"

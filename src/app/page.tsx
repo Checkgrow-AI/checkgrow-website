@@ -14,13 +14,14 @@ import { Integrations } from "@/components/sections/Integrations";
 import { Faq } from "@/components/sections/Faq";
 import { FinalCta } from "@/components/sections/FinalCta";
 import { Footer } from "@/components/sections/Footer";
+import { softwareJsonLd, faqJsonLd, videosJsonLd } from "@/lib/seo";
 
 export default function Home() {
   return (
     <>
       <Nav />
       <MobileScrollRail />
-      <main>
+      <main id="top">
         <HeroV2 />
         <LogoMarquee />
         <Credibility />
@@ -36,6 +37,9 @@ export default function Home() {
         <FinalCta />
       </main>
       <Footer />
+      {[softwareJsonLd, faqJsonLd, videosJsonLd].map((data, index) => (
+        <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
+      ))}
     </>
   );
 }

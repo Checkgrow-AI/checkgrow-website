@@ -1,0 +1,169 @@
+/* Feature stories: a 4:3 framed stage that plays three 1200×900 UI screens
+   over the feature's background, plus step tabs. Screen markup comes from
+   src/lib/featureScreens.ts; elements with data-layer animate in, staggered
+   by the --i index FeatureStage assigns. */
+
+.story { display: grid; align-items: center; gap: 2.5rem; }
+.media { min-width: 0; }
+.copy { min-width: 0; }
+
+.frame {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  isolation: isolate;
+}
+.background { object-fit: cover; z-index: -1; }
+
+.artboard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1200px;
+  height: 900px;
+  transform-origin: 0 0;
+  opacity: 0;
+  transition: opacity 240ms var(--ease-enter);
+}
+.artboard[data-ready="true"] { opacity: 1; }
+
+.screen {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 420ms var(--ease-standard), visibility 0s linear 420ms;
+}
+.screen[data-active="true"] {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 420ms var(--ease-enter), visibility 0s;
+}
+
+/* Layer choreography for the active screen */
+.artboard[data-started="true"] .screen[data-active="true"] [data-layer] {
+  animation: layer-in 620ms var(--ease-enter) both;
+  animation-delay: calc(120ms + var(--i, 0) * 75ms);
+}
+.artboard[data-started="true"] .screen[data-active="true"] [data-layer="progress"] {
+  transform-origin: left center;
+  animation-name: layer-grow;
+  animation-duration: 900ms;
+}
+.artboard[data-started="true"] .screen[data-active="true"] [data-layer="line"] {
+  stroke-dasharray: 1000;
+  animation-name: layer-draw;
+  animation-duration: 1400ms;
+}
+@keyframes layer-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes layer-grow {
+  from { transform: scaleX(0); }
+  to { transform: none; }
+}
+@keyframes layer-draw {
+  from { stroke-dashoffset: 1000; }
+  to { stroke-dashoffset: 0; }
+}
+
+.pause {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 48%);
+  color: #fff;
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 180ms, background 180ms;
+}
+.frame:hover .pause, .pause:focus-visible, .pause[aria-pressed="true"] { opacity: 1; }
+.pause:hover { background: rgb(0 0 0 / 68%); }
+@media (hover: none) { .pause { opacity: 0.85; } }
+
+.tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1.25rem; }
+.tab {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  min-height: 44px;
+  padding-bottom: 0.25rem;
+  text-align: left;
+  color: var(--color-muted);
+  transition: color 180ms;
+}
+.tab:hover, .tab[aria-selected="true"] { color: var(--color-foreground); }
+.tab:focus-visible { outline-offset: 4px; border-radius: 2px; }
+.track { position: relative; display: block; height: 2px; overflow: hidden; border-radius: 2px; background: var(--color-line); }
+.fill { position: absolute; inset: 0; background: var(--color-brand); transform: scaleX(0); transform-origin: left center; }
+.tab[aria-selected="true"] .fill { transform: none; }
+.tab[aria-selected="true"] .fill[data-playing="true"] { animation: step-progress var(--step-ms) linear both; }
+@keyframes step-progress { from { transform: scaleX(0); } to { transform: none; } }
+.tabLabel { display: flex; align-items: baseline; gap: 0.5rem; font-size: 0.875rem; line-height: 1.4; font-weight: 500; }
+.tabIndex { font-size: 0.75rem; font-variant-numeric: tabular-nums; color: var(--color-accent); }
+.caption { margin-top: 0.75rem; min-height: 3em; font-size: 0.875rem; line-height: 1.5; color: var(--color-muted); }
+
+.eyebrow { color: var(--color-muted); }
+.title { margin-top: 1rem; text-wrap: balance; }
+.scenario { margin-top: 1rem; font-weight: 500; line-height: 1.6; }
+.body { margin-top: 0.75rem; line-height: 1.6; color: var(--color-muted); }
+.points { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+.points li { display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.875rem; line-height: 1.6; }
+.dot { margin-top: 0.55rem; width: 6px; height: 6px; flex-shrink: 0; border-radius: 999px; background: var(--color-accent); }
+.more { margin-top: 1.75rem; display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; font-size: 0.875rem; font-weight: 500; color: var(--color-accent); }
+.more:hover { color: var(--color-foreground); }
+
+@media (min-width: 768px) {
+  .story { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 4rem; }
+  /* Mirror the columns too, so every stage keeps the same (wide) size. */
+  .story[data-reverse="true"] { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); }
+  .story[data-reverse="true"] .media { order: 2; }
+  .story[data-reverse="true"] .copy { order: 1; }
+}
+@media (max-width: 479px) {
+  .tabs { gap: 0.625rem; }
+  .tabLabel { flex-direction: column; gap: 0.125rem; font-size: 0.8125rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen, .screen[data-active="true"], .artboard { transition: none; }
+  .artboard[data-started="true"] .screen[data-active="true"] [data-layer] { animation: none; }
+  .tab[aria-selected="true"] .fill[data-playing="true"] { animation: none; }
+}
+
+/* /features page, following the Tutorials index layout */
+.page { padding-top: calc(var(--header-clearance) + 4rem); padding-bottom: 7rem; }
+.pageHeader { max-width: 44rem; margin-bottom: 3rem; }
+.pageHeader h1 { font-size: clamp(2.75rem, 5.2vw, 4.5rem); line-height: 1.05; letter-spacing: -0.05em; font-weight: 500; }
+.pageHeader p { margin-top: 1.5rem; font-size: 1.125rem; line-height: 1.6; color: var(--color-muted); text-wrap: pretty; }
+.jump { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; padding-bottom: 1.5rem; margin-bottom: 4rem; border-bottom: 1px solid var(--color-line); }
+.jump h2 { margin-right: 0.75rem; font-size: 1rem; font-weight: 500; }
+.jump ul { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.jump a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 1rem; border: 1px solid var(--color-line); border-radius: 999px; font-size: 0.875rem; color: var(--color-muted); transition: color 150ms, border-color 150ms, background 150ms; }
+.jump a:hover { color: var(--color-foreground); border-color: var(--color-control-line); background: var(--color-raised); }
+.list { display: flex; flex-direction: column; gap: 6rem; }
+.list > article { scroll-margin-top: calc(var(--header-clearance) + 2rem); }
+.pageCta { margin-top: 7rem; padding-top: 3rem; border-top: 1px solid var(--color-line); display: grid; gap: 1.5rem; }
+.pageCta h2 { font-size: clamp(1.75rem, 3.4vw, 2.5rem); line-height: 1.1; letter-spacing: -0.035em; font-weight: 600; text-wrap: balance; }
+.pageCta p { max-width: 36rem; line-height: 1.6; color: var(--color-muted); }
+.ctaActions { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
+.primary { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0.75rem 1.75rem; border-radius: 999px; background: var(--color-brand-strong); color: #fff; font-size: 0.875rem; font-weight: 600; transition: background 180ms; }
+.primary:hover { background: var(--color-brand-hover); }
+.secondary { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; font-size: 0.875rem; color: var(--color-muted); }
+.secondary:hover { color: var(--color-foreground); }
+@media (min-width: 768px) { .list { gap: 8rem; } }
+@media (max-width: 767px) {
+  .page { padding-top: calc(var(--header-clearance) + 2rem); padding-bottom: 4rem; }
+  .jump { margin-bottom: 3rem; }
+  .jump h2 { width: 100%; margin-bottom: 0.25rem; }
+  .pageCta { margin-top: 5rem; }
+}

@@ -49,7 +49,7 @@ const studies: Study[] = [
     person: "Amanda Bester",
     role: "Founder",
     company: "Pragmattica Consulting",
-    photo: "/case-studies/amanda-bester.webp",
+    photo: "/case-studies/amanda-bester-retouched.webp",
     quote:
       "What makes CheckGrow so compelling is its ability to bring marketing strategy, campaign planning, execution and performance visibility into one connected platform",
   },
@@ -58,7 +58,7 @@ const studies: Study[] = [
     person: "Ivo Pavlović",
     role: "Founder & CEO",
     company: "Witrina",
-    photo: "/case-studies/ivo-witrina.avif",
+    photo: "/case-studies/ivo-witrina-retouched.webp",
     logo: "/client-logos/witrina.svg",
     metrics: ["€100k+ Organic Revenue"],
     quote:
@@ -80,7 +80,7 @@ const studies: Study[] = [
     person: "Vikram R.",
     role: "CPO",
     company: "Minka",
-    photo: "/case-studies/vikram-minka.avif",
+    photo: "/case-studies/vikram-minka-enhanced.webp",
     logo: "/client-logos/minka.svg",
     metrics: ["30+ Enterprise SQLs"],
     quote:
@@ -186,7 +186,7 @@ function Slider() {
         pausedRef.current = false;
       }}
     >
-      <div className="relative overflow-hidden rounded-xl bg-raised shadow-soft ring-1 ring-line">
+      <div className="relative overflow-hidden rounded-card bg-raised shadow-soft ring-1 ring-line">
         <div className="grid md:grid-cols-[minmax(0,340px)_1fr] lg:grid-cols-[minmax(0,400px)_1fr]">
           {/* portrait */}
           <div className="relative aspect-[4/3] md:aspect-auto md:min-h-95">
@@ -333,7 +333,7 @@ function DemoCard() {
 
   return (
     <div
-      className="relative mt-20 overflow-hidden rounded-xl p-8 text-white md:p-12"
+      className="relative mt-20 overflow-hidden rounded-card p-8 text-white md:p-12"
       style={{ backgroundColor: "var(--color-raised)" }}
     >
       <div
@@ -384,7 +384,7 @@ function DemoCard() {
               transition={{ duration: 0.45, ease: [0.2, 0, 0, 1] }}
               className="overflow-hidden"
             >
-              <div className="relative mx-auto mt-9 max-w-3xl overflow-hidden rounded-xl bg-canvas shadow-[0_30px_60px_-15px_rgba(24,24,24,0.5)]">
+              <div className="relative mx-auto mt-9 max-w-3xl overflow-hidden rounded-card bg-canvas shadow-[0_30px_60px_-15px_rgba(24,24,24,0.5)]">
                 <video
                   src="/videos/checkgrow-demo-review.mp4"
                   autoPlay
@@ -417,7 +417,6 @@ export function CaseStudies() {
       <div className="wrap">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="text-label flex items-center justify-center gap-2.5 text-muted">
-            <span className="dot-marker" aria-hidden />
             Real stories
           </p>
           <h2 className="text-h1 mt-6 text-balance">

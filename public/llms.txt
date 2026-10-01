@@ -12,16 +12,21 @@ Key facts:
 
 ## Pages
 
+- [Features](https://checkgrow.com/features): every platform feature shown in three steps: Knowledge Centre, Insights, Campaigns, Creative Studio, Content, Social Media, Competitors, Sales and the AI Assistant.
+- [Tutorials](https://checkgrow.com/tutorials): Practical video guides for using Checkgrow.
+- [Sales outreach tutorial](https://checkgrow.com/tutorials/sales-outreach): A short and full walkthrough of ICPs, company tracking, representative setup and LinkedIn outreach, with a six-stage written guide.
+
 - [Home](https://checkgrow.com/): value proposition, the platform film, the problem it solves, how the system works (Knowledge Centre + four verticals), real customer stories with metrics, use cases in practice, integrations, who it's for, the 11-tool cost comparison, FAQ, and the waitlist signup.
 - [Full content for LLMs](https://checkgrow.com/llms-full.txt): the complete site content in plain markdown.
 
 ## Use cases
 
-- Explain the business once, never again: onboard from your website into a living knowledge graph (Brand, ICP, Use Cases, Products, Competitors, Social Media, Tracking, Campaigns).
-- A funnel strategy in an afternoon, not a quarter: campaign strategies for Meta and Google linked to paid channels.
-- AI output becomes shipped work, not a dead doc: agents produce work, tasks get owned, approved and shipped.
-- Numbers that explain themselves: GA4, Meta and Google Ads unified into plain-language insights.
-- A consultant-grade conversion audit, on demand: scored website audits with a ranked fix per finding.
+- Knowledge Centre: Explain the business once. Never again. Google Drive, Notion, Slack and your website become structured marketing knowledge (ICPs, buyer personas, products, brand voice, SEO keywords) that every feature reads; update it by chatting and approve the AI's drafts.
+- Insights: Ask a question. Get the report. GA4, Google Ads, Meta and LinkedIn Ads connected through integrations and MCP; smart reports with AI takeaways and events mapped to TOFU, MOFU and BOFU, with no dashboards to build.
+- Campaigns: From strategy to KPIs, in one record. Budget split and KPI targets set from the strategy, every channel's live results in one table, and creators, fees and UTM links managed inside the campaign.
+- Creative Studio: Creatives that already know your brand. Generate ad variations from campaign optimisations, competitor ads, your library and market trends with the AI model you prefer, then optimise underperforming ads from live data.
+- Competitors: Every competitor move, as it happens. Active LinkedIn and Meta ads, website, pricing, launch and hiring changes tracked automatically, with competitor ads usable as creative references.
+- AI Assistant: One chat for everything Checkgrow knows. Multi-model chat (Claude, GPT, Gemini, Perplexity) grounded in your knowledge, campaigns and data, with actions across features straight from the answer.
 
 ## Problems Checkgrow answers
 

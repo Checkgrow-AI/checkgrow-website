@@ -1,7 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 import { PrivacySettingsLink } from "@/components/PrivacySettingsLink";
 
-export function Footer() {
+export function Footer({ homePage = true }: { homePage?: boolean }) {
+  const homeAnchor = (id: string) => `${homePage ? "" : "/"}#${id}`;
   return (
     <footer className="-mt-px bg-surface pb-10 pt-4 text-foreground">
       <div className="wrap">
@@ -19,24 +21,27 @@ export function Footer() {
             </p>
           </div>
           <nav className="flex flex-wrap gap-x-8 gap-y-3 text-sm text-muted">
-            <a href="#platform" className="transition-colors duration-200 hover:text-foreground">
+            <a href={homeAnchor("platform")} className="transition-colors duration-200 hover:text-foreground">
               Platform
             </a>
-            <a href="#solution" className="transition-colors duration-200 hover:text-foreground">
+            <a href={homeAnchor("solution")} className="transition-colors duration-200 hover:text-foreground">
               Solution
             </a>
-            <a href="#stories" className="transition-colors duration-200 hover:text-foreground">
+            <a href={homeAnchor("stories")} className="transition-colors duration-200 hover:text-foreground">
               Real stories
             </a>
-            <a href="#use-cases" className="transition-colors duration-200 hover:text-foreground">
+            <Link href="/features" className="transition-colors duration-200 hover:text-foreground">
               Features
-            </a>
-            <a href="#pricing" className="transition-colors duration-200 hover:text-foreground">
+            </Link>
+            <a href={homeAnchor("pricing")} className="transition-colors duration-200 hover:text-foreground">
               Pricing
             </a>
-            <a href="#faq" className="transition-colors duration-200 hover:text-foreground">
+            <a href={homeAnchor("faq")} className="transition-colors duration-200 hover:text-foreground">
               FAQ
             </a>
+            <Link href="/tutorials" className="transition-colors duration-200 hover:text-foreground">
+              Tutorials
+            </Link>
             <a
               href="mailto:bruno@checkgrow.com"
               className="transition-colors duration-200 hover:text-foreground"

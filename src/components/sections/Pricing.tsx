@@ -261,13 +261,12 @@ function ComparisonModal({ open, onClose }: { open: boolean; onClose: () => void
       onClick={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
-      className="m-auto max-h-[calc(100dvh-32px)] w-[calc(100%-32px)] max-w-6xl overflow-hidden rounded-xl bg-surface p-0 text-foreground ring-1 ring-line shadow-raised backdrop:bg-black/80 backdrop:backdrop-blur-sm"
+      className="m-auto max-h-[calc(100dvh-32px)] w-[calc(100%-32px)] max-w-6xl overflow-hidden rounded-card bg-surface p-0 text-foreground ring-1 ring-line shadow-raised backdrop:bg-black/80 backdrop:backdrop-blur-sm"
     >
       <div className="flex max-h-[calc(100dvh-32px)] flex-col">
         <header className="flex shrink-0 items-start justify-between gap-6 border-b border-line bg-surface px-5 py-5 sm:px-8 sm:py-6">
           <div>
             <p className="text-label flex items-center gap-2.5 text-muted">
-              <span className="dot-marker" aria-hidden />
               Full comparison
             </p>
             <h2 id="pricing-comparison-title" className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
@@ -296,7 +295,7 @@ function ComparisonModal({ open, onClose }: { open: boolean; onClose: () => void
           <p className="mb-3 text-xs text-muted md:hidden">
             Swipe horizontally to compare every column.
           </p>
-          <div className="overflow-x-auto rounded-xl bg-raised ring-1 ring-line">
+          <div className="overflow-x-auto rounded-card bg-raised ring-1 ring-line">
             <table className="w-full min-w-[820px] border-collapse text-left">
               <thead>
                 <tr className="border-b border-line">
@@ -336,7 +335,7 @@ function ComparisonModal({ open, onClose }: { open: boolean; onClose: () => void
           </div>
 
           <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <div className="rounded-xl bg-raised p-6 ring-1 ring-line">
+            <div className="rounded-card bg-raised p-6 ring-1 ring-line">
               <p className="text-label text-muted">Typical full stack</p>
               <p className="mt-2 text-3xl font-semibold tracking-tight text-muted line-through decoration-muted/85 decoration-[4px]">
                 €1,199/mo
@@ -345,7 +344,7 @@ function ComparisonModal({ open, onClose }: { open: boolean; onClose: () => void
                 Before seats, overages and the time spent stitching every tool together.
               </p>
             </div>
-            <div className="rounded-xl bg-brand-strong p-6 text-white shadow-raised">
+            <div className="rounded-card bg-brand-strong p-6 text-white shadow-raised">
               <p className="text-label text-white">Checkgrow</p>
               <p className="mt-2 text-3xl font-semibold tracking-tight">From €79/mo</p>
               <p className="mt-2 text-sm leading-relaxed text-white">
@@ -380,7 +379,6 @@ export function Pricing() {
         <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_auto]">
           <Reveal className="max-w-2xl">
             <p className="text-label flex items-center gap-2.5 text-muted">
-              <span className="dot-marker" aria-hidden />
               Pricing
             </p>
             <h2 className="text-h1 mt-6 text-balance">Choose the capacity your growth team needs.</h2>
@@ -438,7 +436,7 @@ export function Pricing() {
               <Reveal key={plan.name} className="h-full">
                 <article
                   aria-labelledby={`plan-${plan.name.toLowerCase()}`}
-                  className={`relative flex h-full flex-col overflow-hidden rounded-xl ${
+                  className={`relative flex h-full flex-col overflow-hidden rounded-card ${
                     featured
                       ? "bg-raised bg-linear-to-br from-brand/10 via-transparent to-brand/5 text-foreground shadow-[0_0_64px_-24px_var(--color-brand)] ring-1 ring-accent/60"
                       : "bg-surface text-foreground shadow-soft ring-1 ring-line"
@@ -545,7 +543,7 @@ export function Pricing() {
         </div>
 
         <Reveal delay={0.08}>
-          <div className="mt-5 overflow-hidden rounded-xl bg-raised p-6 text-foreground ring-1 ring-line shadow-soft sm:p-8">
+          <div className="mt-5 overflow-hidden rounded-card bg-raised p-6 text-foreground ring-1 ring-line shadow-soft sm:p-8">
             <div className="grid gap-4 border-b border-white/10 pb-6 md:grid-cols-[1fr_1.2fr] md:items-end">
               <h3 className="text-2xl font-semibold tracking-tight sm:text-3xl">
                 Included on every plan. No credits needed.
@@ -576,7 +574,7 @@ export function Pricing() {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <article aria-labelledby="enterprise-pricing-title" className="mt-5 flex flex-col gap-8 rounded-xl bg-canvas p-6 shadow-raised ring-1 ring-line sm:p-8 lg:flex-row lg:items-center lg:justify-between">
+          <article aria-labelledby="enterprise-pricing-title" className="mt-5 flex flex-col gap-8 rounded-card bg-canvas p-6 shadow-raised ring-1 ring-line sm:p-8 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-2xl">
               <p className="text-label text-accent">Enterprise</p>
               <h3 id="enterprise-pricing-title" className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">

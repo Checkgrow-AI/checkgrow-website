@@ -12,7 +12,6 @@ export function Faq() {
       <div className="wrap grid gap-12 md:grid-cols-[1fr_1.4fr]">
         <Reveal>
           <p className="text-label flex items-center gap-2.5 text-muted">
-            <span className="dot-marker" aria-hidden />
             Questions
           </p>
           <h2 className="text-h2 mt-6">Before you join</h2>

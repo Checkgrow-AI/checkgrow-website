@@ -35,7 +35,6 @@ export function HeroV1() {
               {...enter(0)}
               className="text-label flex items-center gap-2.5 text-muted"
             >
-              <span className="dot-marker" aria-hidden />
               AI Native Growth Marketing
             </motion.p>
 

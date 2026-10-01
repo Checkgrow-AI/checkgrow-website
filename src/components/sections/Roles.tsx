@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { Reveal, RevealStagger, RevealItem } from "@/components/Reveal";
+import { AiGlyph } from "@/components/AiGlyph";
+import type { AiKind } from "@/lib/ai-glyph/glyphs";
 
 const roles = [
   {
@@ -7,24 +9,24 @@ const roles = [
     title: "Set direction once",
     body: "Define the brand, the offer and the target buyer a single time. Everything produced downstream stays on message, without you in the loop.",
     win: "No more re-briefing",
-    icon: "/brand/icons/operations-framework.svg",
-    iconAlt: "Operational framework icon",
+    // The logo itself; its dots orbit like a thinking sphere.
+    glyph: "ask" as AiKind,
   },
   {
     who: "Marketing & sales ops",
     title: "Execute at real speed",
     body: "Specialist agents produce content, ads, outreach and creative that already know your product, audience and tone.",
     win: "Weeks to minutes",
-    icon: "/brand/icons/delivery-machine.svg",
-    iconAlt: "Connected delivery system icon",
+    // A picture frame; rows shuffle like work being produced.
+    glyph: "images" as AiKind,
   },
   {
     who: "Growth & analytics",
     title: "Close the loop",
     body: "See what converted and why, with fixes ranked and routed straight into the next campaign as tracked work.",
     win: "Compounding, not resetting",
-    icon: "/brand/icons/data-analytics-kpis.svg",
-    iconAlt: "Analytics and KPIs icon",
+    // Rising bars; dots connect like a loop being closed.
+    glyph: "analysis" as AiKind,
   },
 ];
 
@@ -34,7 +36,6 @@ export function Roles() {
       <div className="wrap">
         <Reveal className="max-w-2xl">
           <p className="text-label flex items-center gap-2.5 text-muted">
-            <span className="dot-marker" aria-hidden />
             Who it&apos;s for
           </p>
           <h2 className="text-h1 mt-6 text-balance">
@@ -42,10 +43,11 @@ export function Roles() {
           </h2>
         </Reveal>
         <RevealStagger className="mt-14 grid gap-x-8 gap-y-12 md:grid-cols-3" gap={0.1}>
-          {roles.map((r) => (
+          {roles.map((r, i) => (
             <RevealItem key={r.who}>
               <article>
-                <Image src={r.icon} alt={r.iconAlt} width={50} height={50} />
+                {/* Decorative: the role label and heading carry the meaning. */}
+                <AiGlyph kind={r.glyph} size={48} delay={i * 0.9} />
                 <p className="text-label mt-6 text-muted">{r.who}</p>
                 <h3 className="mt-3 text-xl font-semibold">{r.title}</h3>
                 <p className="mt-3 leading-relaxed text-muted">{r.body}</p>
@@ -57,7 +59,7 @@ export function Roles() {
 
         {/* Enterprise: the tier above the three roles */}
         <Reveal delay={0.08}>
-          <div className="mt-16 overflow-hidden rounded-xl bg-surface ring-1 ring-line md:mt-20">
+          <div className="mt-16 overflow-hidden rounded-card bg-surface ring-1 ring-line md:mt-20">
             <div className="grid md:grid-cols-[minmax(0,340px)_1fr] lg:grid-cols-[minmax(0,420px)_1fr]">
               <div className="relative min-h-64 md:min-h-full">
                 <Image
@@ -70,7 +72,6 @@ export function Roles() {
               </div>
               <div className="p-8 md:p-12 lg:p-14">
                 <p className="text-label flex items-center gap-2.5 text-muted">
-                  <span className="dot-marker" aria-hidden />
                   For enterprises
                 </p>
                 <h3 className="text-h2 mt-6 text-balance">

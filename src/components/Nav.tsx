@@ -14,7 +14,7 @@ const links = [
   { href: "#faq", label: "FAQ" },
 ];
 
-export function Nav() {
+export function Nav({ homePage = true }: { homePage?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const progressRefs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -40,6 +40,7 @@ export function Nav() {
      scrolls through its section (a link's range runs to the next link's
      section, so the page always maps onto exactly one filling line) */
   useEffect(() => {
+    if (!homePage) return;
     const ids = links.map((l) => l.href.slice(1)).concat("waitlist");
     let raf = 0;
     const frame = () => {
@@ -59,7 +60,7 @@ export function Nav() {
     };
     raf = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(raf);
-  }, [stableVhRef]);
+  }, [homePage, stableVhRef]);
 
   /* scrolled: the bar compresses into a floating glassy pill; back at the
      top it relaxes into the plain full-width header. The mobile dropdown
@@ -82,10 +83,11 @@ export function Nav() {
           }`}
         >
         <Link
-          href="/"
+          href={homePage ? "/" : "/#top"}
           aria-label="Checkgrow home"
           className="shrink-0"
           onClick={(e) => {
+            if (!homePage) return;
             e.preventDefault();
             setOpen(false);
             window.scrollTo({ top: 0, behavior: "smooth" });
@@ -110,7 +112,7 @@ export function Nav() {
           {links.map((l, i) => (
             <a
               key={l.href}
-              href={l.href}
+              href={homePage ? l.href : `/${l.href}`}
               className="relative text-sm text-muted transition-colors duration-200 hover:text-foreground"
             >
               {l.label}
@@ -127,7 +129,7 @@ export function Nav() {
         </div>
         <div className="flex items-center gap-3">
           <a
-            href="#waitlist"
+            href={homePage ? "#waitlist" : "/#waitlist"}
             className={`hidden shrink-0 items-center whitespace-nowrap rounded-full border border-[#6373FF] bg-transparent text-sm font-medium text-accent transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] hover:bg-brand-strong hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6373FF] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas sm:inline-flex ${
               pill ? "min-h-11 px-5" : "min-h-11 px-6"
             }`}
@@ -156,7 +158,7 @@ export function Nav() {
       {open && (
         <div className="border-t border-line bg-canvas px-6 pb-6 pt-4 lg:hidden">
           <a
-            href="#waitlist"
+            href={homePage ? "#waitlist" : "/#waitlist"}
             onClick={() => setOpen(false)}
             className="mb-4 flex min-h-12 items-center justify-center rounded-full border border-[#6373FF] bg-transparent text-sm font-medium text-accent transition-colors duration-200 hover:bg-brand-strong hover:text-white active:bg-brand-strong active:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6373FF] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
           >
@@ -166,7 +168,7 @@ export function Nav() {
             {links.map((l) => (
               <a
                 key={l.href}
-                href={l.href}
+                href={homePage ? l.href : `/${l.href}`}
                 onClick={() => setOpen(false)}
                 className="flex min-h-12 items-center border-b border-line text-base text-foreground"
               >

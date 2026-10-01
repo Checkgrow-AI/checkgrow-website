@@ -1,0 +1,243 @@
+.section {
+  --shift-stage: calc(100svh - var(--header-clearance));
+  --shift-gap: clamp(3rem, 7vw, 6rem);
+  /* Scroll distance that advances one chapter while the stage is pinned. */
+  --shift-step: 55svh;
+}
+
+.intro {
+  max-width: 44rem;
+  margin-bottom: 3rem;
+}
+
+.story {
+  display: grid;
+  gap: 1rem;
+}
+
+.visual,
+.stage,
+.chapters {
+  min-width: 0;
+}
+
+.artwork {
+  position: relative;
+  display: grid;
+  align-items: end;
+  width: 100%;
+  max-width: 32rem;
+  min-height: 20rem;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  isolation: isolate;
+}
+
+.image {
+  object-fit: cover;
+  object-position: 20% center;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 20%, rgb(0 0 0 / 10%) 40%, rgb(0 0 0 / 66%) 100%);
+}
+
+.caption {
+  z-index: 1;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  color: var(--color-foreground);
+}
+
+.symbol {
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.captionStack {
+  display: grid;
+}
+
+.captionPanel {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity 240ms var(--ease-standard);
+}
+
+.captionPanel[data-state="active"] {
+  opacity: 1;
+}
+
+.captionTitle {
+  max-width: 18ch;
+  font-size: clamp(1.375rem, 2.2vw, 1.875rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.captionBody {
+  max-width: 30ch;
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.chapter {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding-block: 3rem;
+}
+
+.chapter + .chapter {
+  border-top: 1px solid var(--color-line);
+}
+
+.benefit {
+  width: 100%;
+  max-width: 27rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metric {
+  margin-top: 2rem;
+  font-size: clamp(3rem, 5.3vw, 4.5rem);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 1.05;
+}
+
+.body {
+  margin-top: 1.25rem;
+  color: var(--color-muted);
+  font-size: clamp(1.125rem, 1.8vw, 1.5rem);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.topic {
+  margin-top: 2rem;
+}
+
+.topic h3 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.topic p {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+
+@media (min-width: 768px) {
+  .story {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: var(--shift-gap);
+    align-items: start;
+  }
+}
+
+/* Pinned story: the image and one chapter at a time stay inside the stage.
+   The track supplies the scroll distance; chapters swap in place, rising
+   out upwards when scrolling down and returning from above when scrolling
+   back. Phones, short windows and reduced motion keep natural flow. */
+@media (min-width: 768px) and (min-height: 600px) and (prefers-reduced-motion: no-preference) {
+  .intro {
+    margin-bottom: 1rem;
+  }
+
+  .track[data-enhanced="true"] {
+    height: calc(var(--shift-stage) + (var(--shift-count) - 1) * var(--shift-step));
+  }
+
+  .track[data-enhanced="true"] .story {
+    position: sticky;
+    top: var(--header-clearance);
+    height: var(--shift-stage);
+    align-items: center;
+  }
+
+  .track[data-enhanced="true"] .visual {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  .track[data-enhanced="true"] .artwork {
+    max-height: calc(var(--shift-stage) - 4rem);
+  }
+
+  .track[data-enhanced="true"] .stage {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  .track[data-enhanced="true"] .chapters {
+    display: grid;
+    flex: 1;
+  }
+
+  .track[data-enhanced="true"] .chapter {
+    grid-area: 1 / 1;
+    padding-block: 0;
+    border-top: 0;
+  }
+
+  /* Opacity only, no movement: the outgoing chapter fades out first, then
+     the incoming lines fade in on a short stagger. */
+  .track[data-enhanced="true"] .chapter :is(.label, .metric, .body) {
+    opacity: 0;
+    transition: opacity 220ms var(--ease-exit);
+  }
+
+  .track[data-enhanced="true"] .chapter[data-state="active"] :is(.label, .metric, .body) {
+    opacity: 1;
+    transition: opacity 420ms var(--ease-enter);
+  }
+
+  .track[data-enhanced="true"] .chapter[data-state="active"] .label { transition-delay: 200ms; }
+  .track[data-enhanced="true"] .chapter[data-state="active"] .metric { transition-delay: 260ms; }
+  .track[data-enhanced="true"] .chapter[data-state="active"] .body { transition-delay: 320ms; }
+  .track[data-enhanced="true"] .chapter:not([data-state="active"]) { pointer-events: none; }
+
+  .track[data-enhanced="true"] .captionPanel {
+    transition: opacity 220ms var(--ease-exit);
+  }
+
+  .track[data-enhanced="true"] .captionPanel[data-state="active"] {
+    transition: opacity 420ms var(--ease-enter) 200ms;
+  }
+
+  .track[data-enhanced="true"] .topic {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .captionPanel {
+    transition: none;
+  }
+}

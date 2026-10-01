@@ -64,7 +64,6 @@ export function Integrations() {
       <div className="wrap">
         <Reveal className="max-w-2xl">
           <p className="text-label flex items-center gap-2.5 text-muted">
-            <span className="dot-marker" aria-hidden />
             Integrations
           </p>
           <h2 className="text-h1 mt-6 text-balance">
@@ -79,7 +78,7 @@ export function Integrations() {
         <RevealStagger className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-3" gap={0.06}>
           {integrations.map((t) => (
             <RevealItem key={t.name}>
-              <article className="flex h-full flex-col items-start gap-3 rounded-lg bg-raised p-4 ring-1 ring-line sm:flex-row sm:gap-4 sm:p-5">
+              <article className="flex h-full flex-col items-start gap-3 rounded-card bg-raised p-4 ring-1 ring-line sm:flex-row sm:gap-4 sm:p-5">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={t.icon}

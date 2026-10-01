@@ -1,0 +1,94 @@
+.layout {
+  display: grid;
+  align-items: center;
+  gap: 3rem;
+}
+
+.board {
+  --tile-row-height: 8rem;
+  min-width: 0;
+}
+
+.column { min-width: 0; }
+
+.card {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-raised);
+  border-radius: 0;
+  box-shadow: inset 0 0 0 1px var(--color-line);
+}
+
+/* The phone accordion is one continuous surface, not five rounded boxes. */
+.column:first-child .card:first-child {
+  border-top-left-radius: var(--radius-card);
+  border-top-right-radius: var(--radius-card);
+}
+.column:last-child .card:last-child {
+  border-bottom-left-radius: var(--radius-card);
+  border-bottom-right-radius: var(--radius-card);
+}
+
+.card[data-open="true"] {
+  z-index: 2;
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+}
+
+.trigger {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  width: 100%;
+  min-height: 7rem;
+  padding: 2.5rem 1.5rem 1.5rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -4px;
+}
+
+.card[data-open="true"] .trigger { padding-top: 1.5rem; }
+.title { font-size: 1.125rem; font-weight: 400; line-height: 1.35; }
+.context { margin-top: 0.25rem; font-size: 0.875rem; font-weight: 400; line-height: 1.5; color: var(--color-muted); }
+.toggleIcon { position: absolute; top: 0.75rem; right: 0.75rem; transition: transform 180ms var(--ease-standard); }
+.card[data-open="true"] .toggleIcon { transform: rotate(45deg); }
+.details { overflow: hidden; }
+.points { display: flex; flex-direction: column; gap: 0.875rem; padding: 0.75rem 1.5rem 2rem; }
+.points li { display: flex; align-items: flex-start; gap: 0.625rem; font-size: 0.875rem; line-height: 1.6; }
+.points svg { flex: 0 0 auto; margin-top: 0.25rem; color: var(--color-accent); }
+
+@media (min-width: 640px) {
+  .board { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .column { position: relative; height: calc(var(--tile-row-height) * 3); }
+  .card { position: absolute; inset-inline: 0; top: var(--tile-top); height: var(--tile-height); }
+  /* Keep the central seam and every internal row junction completely flat. */
+  .column:first-child .card:first-child { border-top-right-radius: 0; }
+  .column:first-child .card:last-child { border-bottom-left-radius: var(--radius-card); }
+  .column:last-child .card:first-child { border-top-right-radius: var(--radius-card); }
+  .column:last-child .card:last-child { border-bottom-left-radius: 0; }
+  .column:first-child .card[data-open="true"] {
+    border-top-left-radius: var(--radius-card);
+    border-bottom-left-radius: var(--radius-card);
+  }
+  .column:last-child .card[data-open="true"] {
+    border-top-right-radius: var(--radius-card);
+    border-bottom-right-radius: var(--radius-card);
+  }
+  .card[data-covered="true"] { pointer-events: none; }
+  .heading, .trigger { height: 100%; }
+  .card[data-open="true"] .heading, .card[data-open="true"] .trigger { height: auto; }
+  .trigger { min-height: 0; }
+}
+
+@media (min-width: 1024px) {
+  .layout { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 4rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggleIcon { transition: none; }
+}
