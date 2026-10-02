@@ -93,7 +93,7 @@ export default function FeaturesPage() {
         </p>
         <div className={styles.ctaActions}>
           <Link href="/#waitlist" className={styles.primary}>Get Free Early Access</Link>
-          <Link href="/tutorials" className={styles.secondary}>Watch the tutorials <span aria-hidden>↗</span></Link>
+          <Link href="/news" className={styles.secondary}>Explore News and tutorials <span aria-hidden>↗</span></Link>
         </div>
       </section>
 

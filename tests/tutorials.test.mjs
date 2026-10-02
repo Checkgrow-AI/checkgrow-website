@@ -11,7 +11,7 @@ test('tutorial routes are unique, URL-safe and resolve only known records', () =
   for (const tutorial of tutorials) {
     assert.match(tutorial.slug, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
     assert.equal(getTutorial(tutorial.slug), tutorial);
-    assert.equal(tutorialPath(tutorial.slug), `/tutorials/${tutorial.slug}`);
+    assert.equal(tutorialPath(tutorial.slug), `/news/${tutorial.slug}`);
   }
   assert.equal(getTutorial('missing-tutorial'), undefined);
   assert.equal(getTutorial('../sales-outreach'), undefined);

@@ -98,7 +98,7 @@ export const tutorials: Tutorial[] = [
 ];
 
 export const getTutorial = (slug: string) => tutorials.find(tutorial => tutorial.slug === slug);
-export const tutorialPath = (slug: string) => `/tutorials/${slug}`;
+export const tutorialPath = (slug: string) => `/news/${slug}`;
 export function videoDuration(seconds: number) {
   return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 }

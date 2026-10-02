@@ -13,8 +13,9 @@ Key facts:
 ## Pages
 
 - [Features](https://checkgrow.com/features): every platform feature shown in three steps: Knowledge Centre, Insights, Campaigns, Creative Studio, Content, Social Media, Competitors, Sales and the AI Assistant.
-- [Tutorials](https://checkgrow.com/tutorials): Practical video guides for using Checkgrow.
-- [Sales outreach tutorial](https://checkgrow.com/tutorials/sales-outreach): A short and full walkthrough of ICPs, company tracking, representative setup and LinkedIn outreach, with a six-stage written guide.
+- [News](https://checkgrow.com/news): Practical tutorials and security releases from Checkgrow, filterable by category.
+- [Sales outreach tutorial](https://checkgrow.com/news/sales-outreach): A short and full walkthrough of ICPs, company tracking, representative setup and LinkedIn outreach, with a six-stage written guide.
+- [October 2026 security update](https://checkgrow.com/news/security-update-october-2026): Checkgrow's public summary of account, company-data, integration and retention improvements. Based on internal review and release evidence; not an independent penetration-test attestation or compliance certification.
 
 - [Home](https://checkgrow.com/): value proposition, the platform film, the problem it solves, how the system works (Knowledge Centre + four verticals), real customer stories with metrics, use cases in practice, integrations, who it's for, the 11-tool cost comparison, FAQ, and the waitlist signup.
 - [Full content for LLMs](https://checkgrow.com/llms-full.txt): the complete site content in plain markdown.

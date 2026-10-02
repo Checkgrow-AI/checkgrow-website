@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo";
-import { tutorials, tutorialPath } from "@/lib/tutorials";
+import { newsPosts, newsPath } from "@/lib/news";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
@@ -11,10 +11,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     { url: `${SITE_URL}/features`, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${SITE_URL}/tutorials`, changeFrequency: "weekly", priority: 0.7 },
-    ...tutorials.map(tutorial => ({
-      url: `${SITE_URL}${tutorialPath(tutorial.slug)}`,
-      lastModified: new Date(`${tutorial.publishedAt}T12:00:00Z`),
+    { url: `${SITE_URL}/news`, changeFrequency: "weekly", priority: 0.7 },
+    ...newsPosts.map(post => ({
+      url: `${SITE_URL}${newsPath(post.slug)}`,
+      lastModified: new Date(`${post.publishedAt}T12:00:00Z`),
       changeFrequency: "monthly" as const,
       priority: 0.6,
     })),

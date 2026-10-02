@@ -1,5 +1,7 @@
 # Tutorials
 
+> Updated 2 October 2026: Tutorials is now a category of the News hub. The canonical listing is `/news` and the Sales guide is `/news/sales-outreach`. Old page URLs permanently redirect; media stays under `/tutorials/`. See `docs/news.md` for the current publishing and verification notes. The original delivery record below is retained as history.
+
 ## Approved direction
 
 Extend the approved dark homepage with a reusable Tutorials listing and article template. Follow the supplied OpenAI editorial references through generous whitespace, unboxed article cards, clear metadata and a narrow reading column, expressed in Checkgrow's existing Geist, black/charcoal and purple tokens. Use the current 8px media radius, restrained hover/focus states and supplied abstract imagery. No new sign-up or payment flow.
@@ -54,5 +56,5 @@ The listing and social images use supplied `checkgrow-bg-05-cobalt-sky` artwork.
 
 1. Add a typed record to `src/lib/tutorials.ts`, with a unique slug, publication date, original copy, steps and two video records (short, then full).
 2. Place the cover, `social.webp` (1200×630), posters, captions and compressed recordings in `public/tutorials/<slug>/`. Set exact paths and rounded duration seconds in the record. Keep each recording below 15 MB.
-3. The listing, static article route, canonical, structured data and sitemap derive from that record automatically. Add a descriptive article link to `public/llms.txt`.
+3. The News listing, static article route at `/news/<slug>`, canonical, structured data and sitemap derive from that record automatically. Add a descriptive article link to `public/llms.txt`.
 4. Run typecheck, lint, all tests and the production build. Preview the new article on desktop and phone, play both videos, check captions, anchors and the existing early-access link. Publishing remains a separate approved action.

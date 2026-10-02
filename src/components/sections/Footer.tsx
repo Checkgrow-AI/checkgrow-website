@@ -39,8 +39,8 @@ export function Footer({ homePage = true }: { homePage?: boolean }) {
             <a href={homeAnchor("faq")} className="transition-colors duration-200 hover:text-foreground">
               FAQ
             </a>
-            <Link href="/tutorials" className="transition-colors duration-200 hover:text-foreground">
-              Tutorials
+            <Link href="/news" className="transition-colors duration-200 hover:text-foreground">
+              News
             </Link>
             <a
               href="mailto:bruno@checkgrow.com"

@@ -1,85 +1,95 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { tutorials, getTutorial, tutorialPath, tutorialDate } from "@/lib/tutorials";
+import { getTutorial, tutorialDate } from "@/lib/tutorials";
+import { newsPosts, getNewsPost, newsPath, categoryLabel, securitySections } from "@/lib/news";
 import { SITE_URL } from "@/lib/seo";
 import { TutorialVideo } from "@/components/tutorials/TutorialVideo";
+import { SecurityArticle } from "@/components/news/SecurityArticle";
 import styles from "@/components/tutorials/Tutorials.module.css";
 
 export const dynamicParams = false;
-export function generateStaticParams() { return tutorials.map(({ slug }) => ({ slug })); }
+export function generateStaticParams() { return newsPosts.map(({ slug }) => ({ slug })); }
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const tutorial = getTutorial((await params).slug);
-  if (!tutorial) return {};
-  const title = `${tutorial.title} | Checkgrow Tutorials`;
-  const image = `/tutorials/${tutorial.slug}/social.webp`;
+  const post = getNewsPost((await params).slug);
+  if (!post) return {};
+  const title = `${post.title} | Checkgrow News`;
+  const image = post.social;
   return {
-    title, description: tutorial.description,
-    alternates: { canonical: tutorialPath(tutorial.slug) },
+    title, description: post.description,
+    alternates: { canonical: newsPath(post.slug) },
     openGraph: {
-      type: "article", title, description: tutorial.description, url: tutorialPath(tutorial.slug), siteName: "Checkgrow",
-      publishedTime: tutorial.publishedAt, authors: ["Checkgrow"], section: tutorial.category,
-      images: [{ url: image, width: 1200, height: 630, alt: tutorial.title }],
+      type: "article", title, description: post.description, url: newsPath(post.slug), siteName: "Checkgrow",
+      publishedTime: post.publishedAt, authors: ["Checkgrow"], section: categoryLabel(post.category),
+      images: [{ url: image, alt: post.title }],
     },
-    twitter: { card: "summary_large_image", title, description: tutorial.description, images: [image] },
+    twitter: { card: "summary_large_image", title, description: post.description, images: [image] },
   };
 }
 
-export default async function TutorialPage({ params }: Props) {
-  const tutorial = getTutorial((await params).slug);
-  if (!tutorial) notFound();
-  const url = `${SITE_URL}${tutorialPath(tutorial.slug)}`;
-  const videos = tutorial.videos.map(video => ({
+export default async function NewsArticlePage({ params }: Props) {
+  const post = getNewsPost((await params).slug);
+  if (!post) notFound();
+  const tutorial = post.category === "tutorials" ? getTutorial(post.slug) : undefined;
+  const url = `${SITE_URL}${newsPath(post.slug)}`;
+  const videos = (tutorial?.videos ?? []).map(video => ({
     "@type": "VideoObject", "@id": `${url}#${video.id}`,
     name: video.title, description: video.description, contentUrl: `${SITE_URL}${video.src}`,
     thumbnailUrl: `${SITE_URL}${video.poster}`, duration: `PT${video.durationSeconds}S`,
-    uploadDate: `${tutorial.publishedAt}T12:00:00Z`, inLanguage: "en",
+    uploadDate: `${post.publishedAt}T12:00:00Z`, inLanguage: "en",
   }));
   const schema = {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "BlogPosting", headline: tutorial.title, description: tutorial.description,
-        mainEntityOfPage: url, url, datePublished: tutorial.publishedAt,
+        "@type": "BlogPosting", headline: post.title, description: post.description,
+        mainEntityOfPage: url, url, datePublished: post.publishedAt,
         author: { "@type": "Organization", name: "Checkgrow", url: SITE_URL },
         publisher: { "@id": `${SITE_URL}/#organization` },
-        image: `${SITE_URL}/tutorials/${tutorial.slug}/social.webp`,
-        articleSection: tutorial.category, inLanguage: "en-GB",
-        video: videos.map(video => ({ "@id": video["@id"] })),
+        image: `${SITE_URL}${post.social}`,
+        articleSection: categoryLabel(post.category), inLanguage: "en-GB",
+        ...(videos.length ? { video: videos.map(video => ({ "@id": video["@id"] })) } : {}),
       },
       ...videos,
       { "@type": "BreadcrumbList", itemListElement: [
         { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: "Tutorials", item: `${SITE_URL}/tutorials` },
-        { "@type": "ListItem", position: 3, name: tutorial.title, item: url },
+        { "@type": "ListItem", position: 2, name: "News", item: `${SITE_URL}/news` },
+        { "@type": "ListItem", position: 3, name: post.title, item: url },
       ] },
     ],
   };
   return (
     <article className={`wrap ${styles.article}`}>
       <nav aria-label="Breadcrumb">
-        <Link href="/tutorials" className={styles.back}><span aria-hidden>←</span> All tutorials</Link>
+        <Link href="/news" className={styles.back}><span aria-hidden>←</span> All news</Link>
       </nav>
       <header className={styles.articleHeader}>
-        <div className={styles.meta}><strong>{tutorial.category}</strong><time dateTime={tutorial.publishedAt}>{tutorialDate(tutorial.publishedAt)}</time></div>
-        <h1>{tutorial.title}</h1>
-        <p className={styles.subtitle}>{tutorial.description}</p>
-        <p className={styles.author}>By Checkgrow · 2 guided videos</p>
+        <div className={styles.meta}><strong>{categoryLabel(post.category)}</strong><time dateTime={post.publishedAt}>{tutorialDate(post.publishedAt)}</time></div>
+        <h1>{post.title}</h1>
+        <p className={styles.subtitle}>{post.description}</p>
+        <p className={styles.author}>By Checkgrow · {tutorial ? "2 guided videos" : "Security update"}</p>
       </header>
       <div className={styles.articleLayout}>
         <aside className={styles.contents}>
           <nav aria-label="On this page">
             <p>On this page</p>
             <ul>
+              {tutorial ? <>
               <li><a href={`#${tutorial.videos[0].id}`}>Short walkthrough</a></li>
               <li><a href="#step-by-step">Step by step</a></li>
               <li><a href={`#${tutorial.videos[1].id}`}>Full walkthrough</a></li>
+              </> : <>
+                {securitySections.map(section => <li key={section.id}><a href={`#${section.id}`}>{section.shortTitle}</a></li>)}
+                <li><a href="#assessment-scope">Assessment scope</a></li>
+                <li><a href="#security-review">Your security review</a></li>
+              </>}
             </ul>
           </nav>
         </aside>
         <div className={styles.reading}>
+          {tutorial ? <>
           <p className={styles.intro}>{tutorial.introduction}</p>
           <p className={styles.prerequisites}><strong>Before you begin. </strong>{tutorial.prerequisites}</p>
           <TutorialVideo video={tutorial.videos[0]} />
@@ -95,9 +105,10 @@ export default async function TutorialPage({ params }: Props) {
             <h2>Build on what you learn</h2>
             <p>{tutorial.takeaway}</p>
           </section>
+          </> : <SecurityArticle />}
           <div className={styles.cta}>
             <Link href="/#waitlist">Get Free Early Access</Link>
-            <Link href="/tutorials">All tutorials <span aria-hidden>→</span></Link>
+            <Link href="/news">All news <span aria-hidden>→</span></Link>
           </div>
         </div>
       </div>

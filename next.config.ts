@@ -50,6 +50,9 @@ const nextConfig: NextConfig = {
         destination: "https://checkgrow.com/:path*",
         permanent: true,
       },
+      { source: "/tutorials", destination: "/news", permanent: true },
+      // Only article routes redirect; /tutorials/<slug>/<asset> media URLs stay intact.
+      { source: "/tutorials/:slug", destination: "/news/:slug", permanent: true },
     ];
   },
 };
