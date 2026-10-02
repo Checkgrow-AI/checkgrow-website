@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { createTeamOrbit, teamOrbitPoint, TEAM_PORTRAIT_GAP, TEAM_CONTENT_GAP, TEAM_EDGE_GAP } from '../src/lib/teamOrbit.ts';
+import { createTeamOrbit, teamOrbitPoint, teamPortraitScale, TEAM_PORTRAIT_GAP, TEAM_CONTENT_GAP, TEAM_EDGE_GAP } from '../src/lib/teamOrbit.ts';
 
 const viewports = [
   [320, 568], [320, 740], [375, 812], [390, 844], [400, 480],
@@ -75,7 +75,30 @@ test('reduced-motion positions are stationary', () => {
   const orbit = createTeamOrbit({ viewportWidth: 390, contentWidth: 375, height: 844, count: 10, portraitSize: 44 });
   for (let i = 0; i < orbit.count; i++) {
     assert.deepEqual(teamOrbitPoint(orbit, i, 0, true), teamOrbitPoint(orbit, i, 200, true));
+    assert.equal(teamPortraitScale(orbit, i, 0, true), teamPortraitScale(orbit, i, 200, true));
   }
+});
+
+test('portrait depth varies smoothly with movement, inside the protected maximum size', () => {
+  for (const [width, height] of viewports) {
+    const orbit = createTeamOrbit({ viewportWidth: width, contentWidth: width - 15, height, count: 10, portraitSize: 48 });
+    for (let time = 0; time < 200; time += 0.2) {
+      const scales = Array.from({ length: orbit.count }, (_, i) => teamPortraitScale(orbit, i, time));
+      assert.ok(Math.max(...scales) - Math.min(...scales) > orbit.portraitScale * 0.25, 'portraits must not all be the same size');
+      scales.forEach((scale, i) => {
+        assert.ok(scale >= orbit.portraitScale * 0.72 - 1e-10);
+        assert.ok(scale <= orbit.portraitScale, 'must stay inside the existing collision envelope');
+        assert.ok(Math.abs(scale - teamPortraitScale(orbit, i, time + 1 / 60)) < 0.0002, 'no per-frame size jumps');
+      });
+    }
+  }
+});
+
+test('a portrait recedes at the back and returns to original size at the front', () => {
+  const orbit = createTeamOrbit({ viewportWidth: 1440, contentWidth: 1425, height: 812, count: 10, portraitSize: 48 });
+  assert.equal(teamPortraitScale(orbit, 0, 0), 0.72 * orbit.portraitScale);
+  assert.equal(teamPortraitScale(orbit, 0, Math.PI / 0.07), orbit.portraitScale);
+  assert.ok(Math.abs(teamPortraitScale(orbit, 0, Math.PI * 2 / 0.07) - 0.72 * orbit.portraitScale) < 1e-10);
 });
 
 test('desktop portraits form a compact ellipse, not a screen-sized perimeter', () => {

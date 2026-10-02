@@ -9,9 +9,9 @@
                "Start onboarding your brand." + the typed website sit in
                the middle, then give way to an organic cluster of
                mixed-size knowledge bullets that follow the cursor
-     Scene 3 · the circle expands into a heartbeat cloud; each vertical
-               holds centrally while supporting labels scroll and the
-               channel icons drift organically around the copy
+     Scene 3 · one heartbeat cloud connects five platform capabilities,
+               centred on Marketing; details fade around the shared
+               reading beat, with channel icons on an organic oval
      Scene 4 · the particles settle into a ring around the team:
                "One learning brain, one team, compounding growth."
    Everything scroll-linked is scrubbed in the engine's own rAF (motion
@@ -21,9 +21,10 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
-import { HERO_SCROLL_SCREENS, VERTICAL_START, VERTICAL_END, heroStoryProgress, satelliteFrame, verticalFrame } from "@/lib/heroTimeline";
+import { HERO_SCROLL_SCREENS, heroStoryProgress, platformLocalProgress, platformWordFrame, platformDetailFrame, platformIconOpacity } from "@/lib/heroTimeline";
+import { PLATFORM_WORDS, PLATFORM_DETAILS, createPlatformConstellation } from "@/lib/platformConstellation";
 import { useStableVh } from "@/lib/useStableVh";
-import { createTeamOrbit, teamOrbitPoint } from "@/lib/teamOrbit";
+import { createTeamOrbit, teamOrbitPoint, teamPortraitScale } from "@/lib/teamOrbit";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { Trustpilot } from "@/components/Trustpilot";
 import { RotatingWord } from "@/components/RotatingWord";
@@ -132,23 +133,6 @@ function tipSegments(tip: { text: string; marks: string[] }) {
     segs.push({ text: tip.text.slice(pos), marked: false, offset: pos });
   return segs;
 }
-
-const VERTICALS: Array<{ big: string; small: string[] }> = [
-  { big: "Operations", small: ["AI Assistant", "AI Agents", "AI Tasks", "Dashboard", "Integrations", "Token Management"] },
-  { big: "Marketing", small: ["Campaigns", "Social Media", "Content", "Website", "Tracking"] },
-  { big: "Sales", small: ["Companies", "Targets", "Leads", "Sales Brain"] },
-  { big: "Research\n& Report", small: ["Insights", "Competitors", "Market Trends", "KPIs", "Conversion Events"] },
-];
-
-/* Two readable rows above/below the fixed title, never through it. */
-const SAT_POS: Array<CSSProperties> = [
-  { left: "22%", top: "calc(-1 * var(--sat-near))" },
-  { left: "76%", top: "calc(-1 * var(--sat-near))" },
-  { left: "22%", bottom: "calc(-1 * var(--sat-near))" },
-  { left: "76%", bottom: "calc(-1 * var(--sat-near))" },
-  { left: "50%", top: "calc(-1 * var(--sat-far))" },
-  { left: "50%", bottom: "calc(-1 * var(--sat-far))" },
-];
 
 /* Channel marks float on a loose, breathing oval around the copy. */
 const CHANNELS: Array<{ src: string; alt: string }> = [
@@ -433,8 +417,8 @@ export function HeroV2() {
   const ctxPhraseRef = useRef<HTMLDivElement>(null);
   const teamRefs = useRef<(HTMLDivElement | null)[]>([]);
   const iconRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const wordRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const satRefs = useRef<(HTMLSpanElement | null)[][]>(VERTICALS.map(() => []));
+  const wordRefs = useRef<(HTMLHeadingElement | null)[]>([]);
+  const detailRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const l1Ref = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
   const l2Ref = useRef<HTMLDivElement>(null);
@@ -504,6 +488,12 @@ export function HeroV2() {
     let w = 0, h = 0, S = 0, headerClearance = 88;
     let cxA = 0, cyA = 0, cxB = 0, cyB = 0;
     let teamOrbit: ReturnType<typeof createTeamOrbit> | null = null;
+    let platformLayout: ReturnType<typeof createPlatformConstellation> | null = null;
+    const updatePlatformLayout = () => {
+      const sizes = (elements: (HTMLElement | null)[]) => elements.map(el => ({ width: el?.offsetWidth ?? 0, height: el?.offsetHeight ?? 0 }));
+      platformLayout = createPlatformConstellation({ width: w, height: h,
+        words: sizes(wordRefs.current), details: sizes(detailRefs.current), icons: sizes(iconRefs.current) });
+    };
     const currentTeam = () => teamRefs.current.filter((el): el is HTMLDivElement => el !== null && el.isConnected);
     const updateTeamOrbit = () => {
       const team = currentTeam();
@@ -558,12 +548,17 @@ export function HeroV2() {
       cxB = isNarrow ? wrap.clientWidth * 0.5 : w * 0.5;
       cyB = h * 0.5;
       updateTeamOrbit();
+      updatePlatformLayout();
     };
     resize();
     window.addEventListener("resize", resize);
     const layoutObserver = new ResizeObserver(resize);
     if (introCopyRef.current) layoutObserver.observe(introCopyRef.current);
     if (teamCopyRef.current) layoutObserver.observe(teamCopyRef.current);
+    // Re-measure after font swaps, without forcing layout in the frame loop.
+    for (const el of [...wordRefs.current, ...detailRefs.current, ...iconRefs.current]) {
+      if (el) layoutObserver.observe(el);
+    }
 
     const mouse = { x: -9999, y: -9999 };
     /* smoothed cursor for the bullet parallax */
@@ -865,71 +860,34 @@ export function HeroV2() {
         }
       }
 
-      /* Icons appear after each title, and leave before it. */
-      const chapter = Math.min(VERTICALS.length - 1, Math.max(0, Math.floor((p - VERTICAL_START) / ((VERTICAL_END - VERTICAL_START) / VERTICALS.length))));
-      const { local } = verticalFrame(p, chapter, VERTICALS.length);
-      const stageTop = stageRef.current?.getBoundingClientRect().top ?? headerClearance;
-      const obstacles = satRefs.current[chapter].filter(Boolean).map(el => el!.getBoundingClientRect());
-      const heading = wordRefs.current[chapter]?.querySelector("h3");
-      if (heading) {
-        const range = document.createRange();
-        range.selectNodeContents(heading);
-        obstacles.push(...Array.from(range.getClientRects()));
-      }
-      iconRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const ph = i * 2.4;
-        const o = satelliteFrame(local, i, CHANNELS.length).opacity;
-        const radius = el.offsetWidth * 1.07 / 2;
-        const drift = prefersReduced ? 0 : Math.sin(t * 0.22 + ph) * 0.055;
-        const angle = -2.45 + i / CHANNELS.length * Math.PI * 2 + drift;
-        const breath = prefersReduced ? 1 : 1 + 0.035 * Math.sin(t * 0.31 + ph);
-        const radiusX = Math.min(w * 0.36, 390, w / 2 - radius - 16);
-        const radiusY = Math.min(h * 0.37, 270, Math.max(180, w * 0.27), h / 2 - radius - 16);
-        let x = w / 2 + Math.cos(angle) * radiusX * breath;
-        let y = h / 2 + Math.sin(angle) * radiusY * breath;
-        // Keep the original floating composition. Only nudge a mark
-        // outwards when it approaches actual text, never arrange rows.
-        for (let step = 0; step < 20; step++) {
-          const collides = obstacles.some(rect => {
-            const dx = Math.max(rect.left - x, 0, x - rect.right);
-            const dy = Math.max(rect.top - stageTop - y, 0, y - (rect.bottom - stageTop));
-            return Math.hypot(dx, dy) < radius + 12;
-          });
-          if (!collides) break;
-          x = Math.max(radius + 12, Math.min(w - radius - 12, x + Math.cos(angle) * 5));
-          y = Math.max(radius + 12, Math.min(h - radius - 12, y + Math.sin(angle) * 5));
-        }
-        // At a phone edge there may be no more horizontal room. Slide
-        // around the nearby label rather than pinning an icon against it.
-        const clear = (point: { x: number; y: number }) => obstacles.every(rect =>
-          Math.hypot(Math.max(rect.left - point.x, 0, point.x - rect.right),
-            Math.max(rect.top - stageTop - point.y, 0, point.y - (rect.bottom - stageTop))) >= radius + 12);
-        if (!clear({ x, y })) {
-          const gap = radius + 13;
-          const candidates = obstacles.flatMap(rect => [
-            { x, y: rect.top - stageTop - gap }, { x, y: rect.bottom - stageTop + gap },
-            { x: rect.left - gap, y }, { x: rect.right + gap, y },
-          ]).filter(point => point.x >= gap && point.x <= w - gap && point.y >= gap && point.y <= h - gap && clear(point));
-          candidates.sort((a, b) => Math.hypot(a.x - x, a.y - y) - Math.hypot(b.x - x, b.y - y));
-          if (candidates[0]) ({ x, y } = candidates[0]);
-        }
-        el.style.opacity = String(o);
-        el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${(0.7 + 0.3 * smooth(o)) * (1 + 0.07 * Math.sin(t * 0.9 + ph))})`;
-      });
-
-      /* The title is a stable reading anchor; only its details scroll. */
+      /* One shared platform scene, with stable main words and quieter
+         independently phased details. All positions are measured on resize. */
+      const local = platformLocalProgress(p);
+      const layout = platformLayout!;
       wordRefs.current.forEach((el, i) => {
         if (!el) return;
-        const frame = verticalFrame(p, i, VERTICALS.length);
+        const { x, y } = layout.words[i];
+        const frame = platformWordFrame(local, i);
         el.style.opacity = String(frame.opacity);
-        el.style.transform = `translateY(-50%) translateY(${frame.y}px)`;
-        satRefs.current[i].forEach((sat, j) => {
-          if (!sat) return;
-          const detail = satelliteFrame(frame.local, j, VERTICALS[i].small.length);
-          sat.style.opacity = String(detail.opacity);
-          sat.style.transform = `translateX(-50%) translateY(${detail.y}px)`;
-        });
+        el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${frame.scale})`;
+      });
+      detailRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const { x, y, visible } = layout.details[i];
+        const frame = platformDetailFrame(local, i);
+        const drift = prefersReduced ? 0 : Math.sin(t * 0.4 + i * 1.7) * 2;
+        el.style.opacity = String(visible ? frame.opacity : 0);
+        el.style.transform = `translate(-50%, -50%) translate(${x + drift}px, ${y + frame.y}px)`;
+      });
+      iconRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const { x, y, visible } = layout.icons[i];
+        const ph = i * 2.4;
+        const opacity = visible ? platformIconOpacity(local) : 0;
+        const dx = prefersReduced ? 0 : Math.sin(t * 0.32 + ph) * 4;
+        const dy = prefersReduced ? 0 : Math.cos(t * 0.28 + ph) * 4;
+        el.style.opacity = String(opacity * 0.8);
+        el.style.transform = `translate(-50%, -50%) translate(${x + dx}px, ${y + dy}px) scale(${0.88 + 0.12 * opacity})`;
       });
 
       /* Read the mounted portraits, not a captured TEAM length: local
@@ -943,8 +901,9 @@ export function HeroV2() {
         const revealDelay = (i / Math.max(team.length - 1, 1)) * 0.03;
         const o = ramp(p, 0.925 + revealDelay, 0.955 + revealDelay);
         const { x, y } = teamOrbitPoint(orbit, i, t, prefersReduced);
+        const scale = teamPortraitScale(orbit, i, t, prefersReduced);
         el.style.opacity = String(o);
-        el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${(0.6 + 0.4 * smooth(o)) * orbit.portraitScale})`;
+        el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${(0.6 + 0.4 * smooth(o)) * scale})`;
       });
     };
     raf = requestAnimationFrame(frame);
@@ -1082,8 +1041,8 @@ export function HeroV2() {
               </div>
             </div>
 
-            {/* Scene 3 · every channel, every vertical */}
-            <div ref={l3Ref} className="pointer-events-none absolute inset-0" style={{ opacity: 0 }}>
+            {/* Scene 3 · every capability, together */}
+            <div ref={l3Ref} className="hero-platform pointer-events-none absolute inset-0" style={{ opacity: 0 }}>
               {CHANNELS.map((c, i) => (
                 <div
                   key={c.alt}
@@ -1093,45 +1052,30 @@ export function HeroV2() {
                   className="absolute left-0 top-0"
                   style={{ opacity: 0 }}
                 >
-                  <span className="hero-channel flex size-11 items-center justify-center rounded-full bg-raised shadow-soft ring-1 ring-line max-[374px]:size-8 sm:size-14">
+                  <span className="hero-channel flex size-8 items-center justify-center rounded-full bg-raised shadow-soft ring-1 ring-line sm:size-12">
                     <Image src={c.src} alt={c.alt} width={36} height={36} className="size-[55%]" />
                   </span>
                 </div>
               ))}
-              {VERTICALS.map((v, i) => (
-                <div
-                  key={v.big}
-                  ref={(el) => {
-                    wordRefs.current[i] = el;
-                  }}
-                  className="absolute inset-x-0 top-1/2 flex justify-center"
+              {PLATFORM_WORDS.map((word, i) => (
+                <h3
+                  key={word}
+                  ref={(el) => { wordRefs.current[i] = el; }}
+                  className={`hero-platform-word ${i === 0 ? "hero-platform-centre" : ""}`}
                   style={{ opacity: 0 }}
                 >
-                  <div className="hero-vertical relative px-6 text-center">
-                    <h3
-                      className="relative whitespace-pre-line"
-                      style={{
-                        lineHeight: 1.02,
-                        fontWeight: 600,
-                        letterSpacing: "-0.05em",
-                      }}
-                    >
-                      {v.big}
-                    </h3>
-                    {v.small.map((s, j) => (
-                      <span
-                        key={s}
-                        ref={(el) => {
-                          satRefs.current[i][j] = el;
-                        }}
-                        className="hero-satellite absolute whitespace-nowrap text-sm font-bold text-muted sm:text-base"
-                        style={{ ...SAT_POS[j % SAT_POS.length], opacity: 0 }}
-                      >
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                  {word}
+                </h3>
+              ))}
+              {PLATFORM_DETAILS.map((detail, i) => (
+                <span
+                  key={detail}
+                  ref={(el) => { detailRefs.current[i] = el; }}
+                  className="hero-platform-detail"
+                  style={{ opacity: 0 }}
+                >
+                  {detail}
+                </span>
               ))}
             </div>
 

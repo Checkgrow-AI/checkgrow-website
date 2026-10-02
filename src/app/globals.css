@@ -158,14 +158,36 @@ body {
   width: min(60vw, 28rem);
 }
 
-.hero-vertical {
-  width: min(88vw, 42rem);
-  --sat-near: clamp(32px, calc((var(--hero-viewport) - var(--header-clearance)) * 0.07), 72px);
-  --sat-far: calc(var(--sat-near) + 36px);
+.hero-platform-word,
+.hero-platform-detail {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: max-content;
+  white-space: nowrap;
+  text-shadow: 0 2px 14px var(--color-canvas), 0 0 28px var(--color-canvas);
 }
 
-.hero-vertical h3 {
-  font-size: clamp(2.4rem, 7vw, 5.5rem);
+.hero-platform-word {
+  z-index: 2;
+  font-size: clamp(1.65rem, 4.1vw, 3.5rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+}
+
+.hero-platform-centre {
+  font-size: clamp(2.8rem, 7.2vw, 6.25rem);
+  font-weight: 600;
+  letter-spacing: -0.055em;
+}
+
+.hero-platform-detail {
+  z-index: 1;
+  color: var(--color-muted);
+  font-size: clamp(0.8125rem, 1.3vw, 1rem);
+  font-weight: 500;
+  line-height: 1.4;
 }
 
 @media (max-height: 540px) {
@@ -173,17 +195,12 @@ body {
     font-size: clamp(1.375rem, 3.6vw, 2.5rem);
   }
 
-  .hero-vertical {
-    --sat-near: 24px;
-    --sat-far: 50px;
+  .hero-platform-word {
+    font-size: clamp(1.65rem, 3.3vw, 2.5rem);
   }
 
-  .hero-vertical h3 {
-    font-size: clamp(2rem, 5vw, 3rem);
-  }
-
-  .hero-satellite {
-    font-size: 0.75rem;
+  .hero-platform-centre {
+    font-size: clamp(2.8rem, 6vw, 4rem);
   }
 
   .hero-channel {

@@ -82,11 +82,24 @@ export function createTeamOrbit({
   };
 }
 
+function teamOrbitAngle(count: number, index: number, time: number, reducedMotion: boolean) {
+  return index / Math.max(1, count) * Math.PI * 2 - Math.PI / 2
+    + (reducedMotion ? 0 : time * 0.07);
+}
+
+/** Depth follows the orbit: gently recede at the back and return to the
+ * original size at the front. Never exceed the collision-tested size. */
+export function teamPortraitScale(
+  orbit: ReturnType<typeof createTeamOrbit>, index: number, time: number, reducedMotion = false,
+) {
+  const depth = (Math.sin(teamOrbitAngle(orbit.count, index, time, reducedMotion)) + 1) / 2;
+  return orbit.portraitScale * (0.72 + depth * 0.28);
+}
+
 export function teamOrbitPoint(
   orbit: ReturnType<typeof createTeamOrbit>, index: number, time: number, reducedMotion = false,
 ) {
-  const angle = index / Math.max(1, orbit.count) * Math.PI * 2 - Math.PI / 2
-    + (reducedMotion ? 0 : time * 0.07);
+  const angle = teamOrbitAngle(orbit.count, index, time, reducedMotion);
   const breath = reducedMotion ? 1 : 1 + BREATH * Math.sin(time * 0.6);
   return {
     x: orbit.centerX + Math.cos(angle) * orbit.radiusX * breath,
