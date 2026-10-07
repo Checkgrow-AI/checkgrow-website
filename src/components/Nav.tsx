@@ -129,12 +129,12 @@ export function Nav({ homePage = true }: { homePage?: boolean }) {
         </div>
         <div className="flex items-center gap-3">
           <a
-            href={homePage ? "#waitlist" : "/#waitlist"}
+            href="/book-a-demo"
             className={`hidden shrink-0 items-center whitespace-nowrap rounded-full border border-[#6373FF] bg-transparent text-sm font-medium text-accent transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] hover:bg-brand-strong hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6373FF] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas sm:inline-flex ${
               pill ? "min-h-11 px-5" : "min-h-11 px-6"
             }`}
           >
-            Get Free Early Access
+            Book a demo
           </a>
           <button
             type="button"
@@ -158,11 +158,11 @@ export function Nav({ homePage = true }: { homePage?: boolean }) {
       {open && (
         <div className="border-t border-line bg-canvas px-6 pb-6 pt-4 lg:hidden">
           <a
-            href={homePage ? "#waitlist" : "/#waitlist"}
+            href="/book-a-demo"
             onClick={() => setOpen(false)}
             className="mb-4 flex min-h-12 items-center justify-center rounded-full border border-[#6373FF] bg-transparent text-sm font-medium text-accent transition-colors duration-200 hover:bg-brand-strong hover:text-white active:bg-brand-strong active:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6373FF] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
           >
-            Get Free Early Access
+            Book a demo
           </a>
           <div className="flex flex-col">
             {links.map((l) => (

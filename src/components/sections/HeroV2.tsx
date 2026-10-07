@@ -25,7 +25,6 @@ import { HERO_SCROLL_SCREENS, heroStoryProgress, platformLocalProgress, platform
 import { PLATFORM_WORDS, PLATFORM_DETAILS, createPlatformConstellation } from "@/lib/platformConstellation";
 import { useStableVh } from "@/lib/useStableVh";
 import { createTeamOrbit, teamOrbitPoint, teamPortraitScale } from "@/lib/teamOrbit";
-import { WaitlistForm } from "@/components/WaitlistForm";
 import { Trustpilot } from "@/components/Trustpilot";
 import { RotatingWord } from "@/components/RotatingWord";
 import { CheckLoader } from "@/components/CheckLoader";
@@ -960,8 +959,13 @@ export function HeroV2() {
               <div className="hero-intro-trust mt-8">
                 <Trustpilot />
               </div>
-              <div className="hero-intro-form mt-4">
-                <WaitlistForm id="hero" />
+              <div className="hero-intro-form mt-6">
+                <a
+                  href="/book-a-demo"
+                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-foreground px-7 text-base font-medium text-canvas transition-colors duration-200 hover:bg-accent max-sm:w-full"
+                >
+                  Book a demo
+                </a>
               </div>
             </div>
           </div>
@@ -1094,10 +1098,10 @@ export function HeroV2() {
                     One learning brain, one team, compounding growth.
                   </h2>
                   <a
-                    href="#waitlist"
+                    href="/book-a-demo"
                     className="mt-5 inline-flex min-h-12 max-w-full items-center justify-center rounded-full bg-foreground px-5 text-sm font-medium text-canvas transition-colors duration-200 hover:bg-accent max-[374px]:px-3 max-[374px]:text-xs"
                   >
-                    Get Free Early Access
+                    Book a demo
                   </a>
                 </div>
               </div>

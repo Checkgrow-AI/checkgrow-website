@@ -328,7 +328,7 @@ function Slider() {
   );
 }
 
-function DemoCard() {
+function DemoCard({ showBookCta = true }: { showBookCta?: boolean }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -364,12 +364,14 @@ function DemoCard() {
               </svg>
               {open ? "Hide the demo" : "Watch our demo review"}
             </button>
+            {showBookCta && (
             <a
-              href="#waitlist"
+              href="/book-a-demo"
               className="inline-flex min-h-12 items-center rounded-full border border-accent/50 bg-transparent px-7 text-sm font-semibold text-accent transition-colors duration-200 hover:bg-brand-strong hover:text-white"
             >
-              Get Free Early Access
+              Book a demo
             </a>
+            )}
           </div>
         </div>
 
@@ -403,17 +405,21 @@ function DemoCard() {
           )}
         </AnimatePresence>
 
-        <p className="relative mt-7 text-center text-sm text-white/80">
-          Struggling with your marketing and still questioning?
-        </p>
+        {showBookCta && (
+          <p className="relative mt-7 text-center text-sm text-white/80">
+            Struggling with your marketing and still questioning?
+          </p>
+        )}
       </div>
     </div>
   );
 }
 
-export function CaseStudies() {
+/* `afterBooking`: the demo confirmation page mirrors this section without
+   its top rule and without the "Book a demo" button (already booked). */
+export function CaseStudies({ afterBooking = false }: { afterBooking?: boolean }) {
   return (
-    <section className="border-t border-line py-24 md:py-32" id="stories">
+    <section className={`${afterBooking ? "" : "border-t border-line "}py-24 md:py-32`} id="stories">
       <div className="wrap">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="text-label flex items-center justify-center gap-2.5 text-muted">
@@ -432,7 +438,7 @@ export function CaseStudies() {
           <div className="mt-14">
             <Slider />
           </div>
-          <DemoCard />
+          <DemoCard showBookCta={!afterBooking} />
         </Reveal>
       </div>
     </section>

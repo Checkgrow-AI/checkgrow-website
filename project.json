@@ -4,10 +4,13 @@
   "name": "Checkgrow Website",
   "phase": "production",
   "version": "0.1.0",
-  "description": "The public Checkgrow marketing and waitlist website served at checkgrow.com.",
+  "description": "The public Checkgrow marketing website served at checkgrow.com; primary conversion is Book a demo.",
   "stack": {
     "frontend": ["Next.js 16 App Router", "React 19", "TypeScript", "Tailwind CSS v4", "motion"],
-    "backend": ["Next.js route handler for waitlist intake", "external Checkgrow waitlist webhook"],
+    "backend": [
+      "Next.js route handlers for demo availability/booking (Google Calendar API) and the hidden waitlist intake",
+      "external Checkgrow webhooks"
+    ],
     "ai": [],
     "packageManager": "pnpm",
     "deployTarget": "Easy Panel Docker service for checkgrow.com"
@@ -43,6 +46,7 @@
   },
   "cascades": [
     "A push to main triggers the Easy Panel production deployment for checkgrow.com.",
+    "Book a demo requires GOOGLE_CALENDAR_CLIENT_ID, GOOGLE_CALENDAR_CLIENT_SECRET and GOOGLE_CALENDAR_REFRESH_TOKEN in production; without them the booking calendar is unavailable (503), never faked.",
     "Changes to the waitlist route must preserve explicit webhook failure handling and require WAITLIST_WEBHOOK_URL in production.",
     "Brand identity changes remain bound to the Checkgrow Brand Pack and the site Decisions Log."
   ],

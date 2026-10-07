@@ -7,7 +7,7 @@ export function Footer({ homePage = true }: { homePage?: boolean }) {
   return (
     <footer className="-mt-px bg-surface pb-10 pt-4 text-foreground">
       <div className="wrap">
-        <div className="flex flex-col justify-between gap-8 border-t border-line pt-10 md:flex-row md:items-center">
+        <div className="flex flex-col justify-between gap-8 pt-10 md:flex-row md:items-center">
           <div>
             <Image
               src="/brand/logos/wordmark-light.svg"
@@ -42,12 +42,9 @@ export function Footer({ homePage = true }: { homePage?: boolean }) {
             <Link href="/news" className="transition-colors duration-200 hover:text-foreground">
               News
             </Link>
-            <a
-              href="mailto:bruno@checkgrow.com"
-              className="transition-colors duration-200 hover:text-foreground"
-            >
-              Contact
-            </a>
+            <Link href="/book-a-demo" className="transition-colors duration-200 hover:text-foreground">
+              Book a demo
+            </Link>
             <a
               href="https://doc.checkgrow.com/"
               target="_blank"

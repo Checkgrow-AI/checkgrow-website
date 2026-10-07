@@ -85,10 +85,10 @@ export function Roles() {
                   your security requirements and your scale.
                 </p>
                 <a
-                  href="#waitlist"
+                  href="/book-a-demo"
                   className="mt-8 inline-flex min-h-12 items-center rounded-full bg-foreground px-7 text-sm font-medium text-canvas transition-colors duration-200 hover:bg-accent"
                 >
-                  Get Free Early Access
+                  Book a demo
                 </a>
               </div>
             </div>

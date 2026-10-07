@@ -107,7 +107,7 @@ export default async function NewsArticlePage({ params }: Props) {
           </section>
           </> : <SecurityArticle />}
           <div className={styles.cta}>
-            <Link href="/#waitlist">Get Free Early Access</Link>
+            <Link href="/book-a-demo">Book a demo</Link>
             <Link href="/news">All news <span aria-hidden>→</span></Link>
           </div>
         </div>

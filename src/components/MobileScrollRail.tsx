@@ -17,7 +17,7 @@ const SECTIONS: Array<{ id: string; label: string }> = [
   { id: "use-cases", label: "Features" },
   { id: "pricing", label: "Pricing" },
   { id: "faq", label: "FAQ" },
-  { id: "waitlist", label: "Early Access" },
+  { id: "waitlist", label: "Book a demo" },
 ];
 
 export function MobileScrollRail() {

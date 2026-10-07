@@ -16,7 +16,8 @@ Every release remains approval-gated: show the complete working-tree manifest an
 | Ship and production branch | `main` |
 | Production | Easy Panel builds `Dockerfile` and proxies the standalone Next.js server on port 3000 |
 | Local development | `pnpm dev` at `http://localhost:8030` |
-| Required production variable | `WAITLIST_WEBHOOK_URL` |
+| Required production variables | `GOOGLE_CALENDAR_CLIENT_ID`, `GOOGLE_CALENDAR_CLIENT_SECRET`, `GOOGLE_CALENDAR_REFRESH_TOKEN` (Book a demo; see `docs/book-a-demo.md`) |
+| Optional production variables | `DEMO_REQUEST_WEBHOOK_URL` (lead copy to the CRM after each booking), `DEMO_CALENDAR_ID`; `WAITLIST_WEBHOOK_URL` (only while the hidden waitlist route is kept) |
 
 ## `>>ship` sequence
 
@@ -33,7 +34,9 @@ Every release remains approval-gated: show the complete working-tree manifest an
 ## Backend policy
 
 - This repository contains no Supabase project, migrations or edge functions.
-- `/api/waitlist` is a Next.js route deployed with the website. It forwards accepted leads to the existing Checkgrow webhook through `WAITLIST_WEBHOOK_URL`.
+- `/api/demo-slots` and `/api/demo-request` are Next.js routes deployed with the website. They read free/busy from and create events in bruno@checkgrow.com's Google Calendar through the Google Calendar API, using the three `GOOGLE_CALENDAR_*` variables. Without them, the booking page shows its "couldn't load the calendar" state and the API returns 503.
+- Never create a production test booking during a ship unless explicitly authorised; it creates a real calendar event and invite.
+- `/api/waitlist` is a Next.js route deployed with the website (the waitlist form is hidden since 2026-10-07). It forwards accepted leads to the existing Checkgrow webhook through `WAITLIST_WEBHOOK_URL`.
 - Never test production signup delivery during a ship unless creating a test lead is explicitly authorised.
 - A missing or failing webhook must remain a loud 5xx response. Never report a signup success after a failed delivery.
 

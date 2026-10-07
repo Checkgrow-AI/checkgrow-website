@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start -p 8030",
     "lint": "eslint",
-    "test:team-orbit": "node --test tests/teamOrbit.test.mjs"
+    "test:team-orbit": "node --test tests/teamOrbit.test.mjs",
+    "calendar:auth": "node --env-file=.env.local scripts/google-calendar-auth.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.5.7",

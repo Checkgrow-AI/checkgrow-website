@@ -1,14 +1,14 @@
 "use client";
 
-/* The closing waitlist section. Its content (logo, heading, sub, form)
-   staggers in whenever the reader arrives: on first scroll into view and
-   again every time a "Get Free Early Access" link brings them here, so the
-   anchor jump never feels like a hard cut. The form itself is never
-   remounted, so anything typed survives a replay. */
+/* The closing call to action: Book a demo. Its content (logo, heading,
+   sub, button) staggers in the first time the reader scrolls it into
+   view. The section keeps the id "waitlist" so the nav progress and the
+   mobile scroll rail still end here. The early-access form
+   (WaitlistForm) is hidden for now, not deleted. */
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { WaitlistForm } from "@/components/WaitlistForm";
+import Link from "next/link";
 
 export function FinalCta() {
   const boxRef = useRef<HTMLDivElement>(null);
@@ -16,51 +16,21 @@ export function FinalCta() {
   useEffect(() => {
     const el = boxRef.current;
     if (!el) return;
-
-    const play = () => {
-      el.classList.remove("cta-arrive");
-      void el.offsetWidth; // restart the keyframes
-      el.classList.add("cta-arrive");
-    };
-
-    /* first organic arrival by scroll */
     const io = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting) {
-          play();
+          el.classList.add("cta-arrive");
           io.disconnect();
         }
       },
       { threshold: 0.25 },
     );
     io.observe(el);
-
-    /* every waitlist CTA replays the entrance once the section is
-       actually on screen (the smooth scroll needs a moment) */
-    const onClick = (ev: MouseEvent) => {
-      const target = ev.target as HTMLElement | null;
-      if (!target?.closest?.('a[href="#waitlist"]')) return;
-      const t0 = performance.now();
-      const poll = () => {
-        const r = el.getBoundingClientRect();
-        if (r.top < window.innerHeight * 0.75 || performance.now() - t0 > 1600) {
-          play();
-        } else {
-          requestAnimationFrame(poll);
-        }
-      };
-      requestAnimationFrame(poll);
-    };
-    document.addEventListener("click", onClick);
-
-    return () => {
-      io.disconnect();
-      document.removeEventListener("click", onClick);
-    };
+    return () => io.disconnect();
   }, []);
 
   return (
-    <section className="border-t border-line bg-surface py-24 text-foreground md:py-32" id="waitlist">
+    <section className="bg-surface py-24 text-foreground md:py-32" id="waitlist">
       <div className="wrap">
         <div ref={boxRef} className="cta-box flex flex-col items-center text-center">
           <Image
@@ -75,11 +45,17 @@ export function FinalCta() {
             sell.
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted">
-            Get free early access and be first in when new workspaces open, with
-            an onboarding session to set up your knowledge base.
+            Book a 30-minute demo on your own company, competitors and
+            website. Leave with Checkgrow set up and a clear plan for what to
+            do next.
           </p>
           <div className="mt-10 flex w-full justify-center">
-            <WaitlistForm id="footer" tone="ink" />
+            <Link
+              href="/book-a-demo"
+              className="inline-flex min-h-12 items-center justify-center rounded-full bg-foreground px-8 text-base font-medium text-canvas transition-colors duration-200 hover:bg-accent max-sm:w-full"
+            >
+              Book a demo
+            </Link>
           </div>
         </div>
       </div>

@@ -88,11 +88,11 @@ export default function FeaturesPage() {
       <section className={styles.pageCta} aria-labelledby="features-cta-title">
         <h2 id="features-cta-title">One platform. Every feature connected.</h2>
         <p>
-          Get early access and put the whole system to work, with onboarding
-          from our team to set up your Knowledge Centre.
+          Book a demo and put the whole system to work, with onboarding from
+          our team to set up your Knowledge Centre.
         </p>
         <div className={styles.ctaActions}>
-          <Link href="/#waitlist" className={styles.primary}>Get Free Early Access</Link>
+          <Link href="/book-a-demo" className={styles.primary}>Book a demo</Link>
           <Link href="/news" className={styles.secondary}>Explore News and tutorials <span aria-hidden>↗</span></Link>
         </div>
       </section>
