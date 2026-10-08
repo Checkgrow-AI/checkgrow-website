@@ -9,12 +9,12 @@ export type ChallengeId =
   | "leads"
   | "conversion"
   | "cac"
-  | "meta"
-  | "google"
-  | "linkedin"
+  | "ads"
+  | "outreach"
+  | "creatives"
+  | "content"
+  | "geo"
   | "agents"
-  | "workflows"
-  | "team"
   | "compliance";
 
 export type ChallengeIcon =
@@ -22,11 +22,11 @@ export type ChallengeIcon =
   | "funnel"
   | "coins"
   | "meta"
-  | "search"
-  | "linkedin"
+  | "send"
+  | "image"
+  | "pen"
+  | "geo"
   | "spark"
-  | "flow"
-  | "team"
   | "shield";
 
 export const challengeGroups: {
@@ -39,21 +39,21 @@ export const challengeGroups: {
     tag: "Pipeline",
     items: [
       { id: "leads", label: "Get more leads", icon: "magnet" },
-      { id: "conversion", label: "Convert more website visits", icon: "funnel" },
+      { id: "conversion", label: "A website that converts", icon: "funnel" },
       { id: "cac", label: "Reduce my CAC", icon: "coins" },
-      { id: "meta", label: "Better Meta campaigns", icon: "meta" },
-      { id: "google", label: "Better Google campaigns", icon: "search" },
-      { id: "linkedin", label: "Better LinkedIn campaigns", icon: "linkedin" },
+      { id: "ads", label: "Better Google, Meta or LinkedIn campaigns", icon: "meta" },
+      { id: "outreach", label: "Improve my sales outreach", icon: "send" },
+      { id: "creatives", label: "More and better creatives", icon: "image" },
+      { id: "content", label: "Generate more content", icon: "pen" },
+      { id: "geo", label: "Improve my GEO or SEO ranking", icon: "geo" },
     ],
   },
   {
     label: "AI operations",
     tag: "Team",
     items: [
-      { id: "agents", label: "Agentic AI operations", icon: "spark" },
-      { id: "workflows", label: "Structured AI workflows", icon: "flow" },
-      { id: "team", label: "Manage AI across my team", icon: "team" },
-      { id: "compliance", label: "Fully compliant AI", icon: "shield" },
+      { id: "agents", label: "AI agentic force for my team", icon: "spark" },
+      { id: "compliance", label: "Better compliance with AI", icon: "shield" },
     ],
   },
 ];
@@ -98,12 +98,12 @@ const goalsByChallenge: Record<ChallengeId, string[]> = {
   leads: ["Double qualified leads", "Build a predictable pipeline"],
   conversion: ["Lift website conversion rate", "Fix drop-offs in the funnel"],
   cac: ["Cut CAC by 30%", "Scale ads profitably"],
-  meta: ["Profitable Meta campaigns", "Scale ads profitably"],
-  google: ["Win high-intent Google searches", "Scale ads profitably"],
-  linkedin: ["Reach decision-makers on LinkedIn", "Build a predictable pipeline"],
+  ads: ["Scale ads profitably", "Reach decision-makers on LinkedIn"],
+  outreach: ["Book more sales meetings", "Personalise outreach at scale"],
+  content: ["Publish content every week", "Grow organic reach"],
+  creatives: ["Ship fresh creatives every week", "Find winning ad creatives"],
+  geo: ["Get cited in AI answers", "Rank on page one of Google"],
   agents: ["Run marketing with AI agents", "Automate weekly reporting"],
-  workflows: ["Standardise AI workflows", "Automate weekly reporting"],
-  team: ["Roll AI out to the whole team", "Save hours every week"],
   compliance: ["AI governance and compliance", "Roll AI out to the whole team"],
 };
 

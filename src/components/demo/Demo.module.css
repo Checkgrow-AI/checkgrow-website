@@ -536,3 +536,8 @@
   line-height: 1.5;
   color: var(--color-muted);
 }
+
+/* an odd number of answer cards: the last one spans the row */
+.cardGrid > :last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}

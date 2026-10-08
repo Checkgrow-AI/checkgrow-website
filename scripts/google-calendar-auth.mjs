@@ -6,7 +6,8 @@
    http://127.0.0.1:53682 as an authorised redirect URI. Opens Google's consent page, receives the
    code on a loopback port, and writes GOOGLE_CALENDAR_REFRESH_TOKEN into
    .env.local. Sign in as the calendar owner (bruno@checkgrow.com).
-   Scopes: create events + read free/busy. Nothing else. */
+   Scopes: create events, read free/busy, send email (lead notifications
+   to sales). Nothing else; it cannot read the mailbox. */
 
 import http from "node:http";
 import { readFile, writeFile } from "node:fs/promises";
@@ -17,6 +18,7 @@ const CLIENT_SECRET = process.env.GOOGLE_CALENDAR_CLIENT_SECRET;
 const SCOPES = [
   "https://www.googleapis.com/auth/calendar.events",
   "https://www.googleapis.com/auth/calendar.freebusy",
+  "https://www.googleapis.com/auth/gmail.send",
 ];
 const ENV_FILE = ".env.local";
 const PORT = 53682;

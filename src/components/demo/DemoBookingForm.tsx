@@ -323,7 +323,7 @@ export function DemoBookingForm() {
                         </span>
                         {group.label}
                       </p>
-                      <div className="grid grid-cols-2 gap-2">
+                      <div className={`grid grid-cols-2 gap-2 ${styles.cardGrid}`}>
                         {group.items.map((item) => {
                           const on = challenges.includes(item.id);
                           return (

@@ -1,29 +1,36 @@
 /* Server only. Demo availability and booking through the Google Calendar
-   API, acting as the calendar owner with an OAuth refresh token
-   (one-time consent: `pnpm calendar:auth`, see docs/book-a-demo.md).
-   Credentials live ONLY in server environment variables:
-     GOOGLE_CALENDAR_CLIENT_ID, GOOGLE_CALENDAR_CLIENT_SECRET,
-     GOOGLE_CALENDAR_REFRESH_TOKEN, and optionally DEMO_CALENDAR_ID
-     (defaults to the owner's primary calendar).
+   API, as bruno@checkgrow.com (auth: ./google.ts).
 
-   Availability comes from Google's free/busy query, so a new event hides
-   its slots immediately (free, declined and cancelled events don't
-   count, as in Google's own scheduling). Rules: weekdays 09:00–18:00
-   Europe/Zagreb, 30-minute slots, 30 minutes clear before and after any
-   busy time, at least 4 hours' notice, 21 days ahead. Visitors receive
-   free start times only, never event details.
+   Bookings are created in the demo calendar (DEMO_CALENDAR_ID). A slot is
+   only offered when it is free in the demo calendar AND in every conflict
+   calendar (DEMO_CONFLICT_CALENDAR_IDS, comma-separated; Bruno's own
+   calendar by default), so a demo can never clash with his other
+   commitments. If any of these calendars cannot be read, no slots are
+   offered (503): availability is never guessed.
 
-   Booking re-checks the slot with Google and creates the event (Meet
-   link, invite emailed to the visitor) under a lock, so two visitors
-   can never take the same time. */
+   Free/busy decides what is busy: free, declined and cancelled events
+   don't count. Rules: weekdays 09:00–18:00 Europe/Zagreb, 30-minute
+   slots, 30 minutes clear before and after any busy time, at least 4
+   hours' notice, 21 days ahead. Visitors receive free start times only.
+
+   Booking re-checks the slot under a lock and creates the event (Meet
+   link, invite emailed to the visitor), so two visitors can never take
+   the same time. */
 
 import { randomUUID } from "crypto";
 import { DEMO_MINUTES, DEMO_TIME_ZONE } from "./demo";
+import { googleApi, GoogleUnavailableError } from "./google";
 
-const CLIENT_ID = process.env.GOOGLE_CALENDAR_CLIENT_ID;
-const CLIENT_SECRET = process.env.GOOGLE_CALENDAR_CLIENT_SECRET;
-const REFRESH_TOKEN = process.env.GOOGLE_CALENDAR_REFRESH_TOKEN;
-const CALENDAR_ID = process.env.DEMO_CALENDAR_ID || "primary";
+/* Calendar ids are not secret (the iCal "private" addresses are); env
+   overrides them per environment. */
+const BOOKING_CALENDAR_ID =
+  process.env.DEMO_CALENDAR_ID ||
+  "c_44b4834d5fc38d0202651861140e2f93bd7c045553c1d321e3d71d9a5bb8221d@group.calendar.google.com";
+const CONFLICT_CALENDAR_IDS = (process.env.DEMO_CONFLICT_CALENDAR_IDS ?? "bruno@checkgrow.com")
+  .split(",")
+  .map((id) => id.trim())
+  .filter(Boolean);
+const CHECKED_CALENDAR_IDS = [...new Set([BOOKING_CALENDAR_ID, ...CONFLICT_CALENDAR_IDS])];
 
 const CACHE_MS = 30_000;
 const DAY_START = 9;
@@ -36,7 +43,7 @@ const API = "https://www.googleapis.com/calendar/v3";
 
 type Interval = { start: number; end: number };
 
-export class CalendarUnavailableError extends Error {}
+export { GoogleUnavailableError as CalendarUnavailableError };
 export class SlotTakenError extends Error {}
 
 /* ---------- team-time helpers ---------- */
@@ -73,78 +80,28 @@ function teamDay(at: number) {
 
 /* ---------- Google Calendar API ---------- */
 
-let token: { value: string; expires: number } | null = null;
-
-async function accessToken() {
-  if (!CLIENT_ID || !CLIENT_SECRET || !REFRESH_TOKEN) {
-    throw new CalendarUnavailableError("Google Calendar credentials are not set");
-  }
-  if (token && token.expires - Date.now() > 60_000) return token.value;
-  const res = await fetch("https://oauth2.googleapis.com/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET,
-      refresh_token: REFRESH_TOKEN,
-      grant_type: "refresh_token",
-    }),
-    signal: AbortSignal.timeout(8_000),
-  });
-  if (!res.ok) {
-    throw new CalendarUnavailableError(`token refresh ${res.status}: ${(await res.text()).slice(0, 200)}`);
-  }
-  const data: { access_token: string; expires_in: number } = await res.json();
-  token = { value: data.access_token, expires: Date.now() + data.expires_in * 1000 };
-  return token.value;
-}
-
-async function gcal<T>(path: string, init: { method: string; body?: unknown }): Promise<T> {
-  for (let attempt = 0; attempt < 2; attempt++) {
-    let res: Response;
-    try {
-      res = await fetch(`${API}${path}`, {
-        method: init.method,
-        headers: {
-          Authorization: `Bearer ${await accessToken()}`,
-          "Content-Type": "application/json",
-        },
-        body: init.body === undefined ? undefined : JSON.stringify(init.body),
-        signal: AbortSignal.timeout(8_000),
-      });
-    } catch (e) {
-      if (e instanceof CalendarUnavailableError) throw e;
-      throw new CalendarUnavailableError(e instanceof Error ? e.message : "calendar unreachable");
-    }
-    if (res.status === 401 && attempt === 0) {
-      token = null; // revoked or expired early: refresh once
-      continue;
-    }
-    if (!res.ok) {
-      throw new CalendarUnavailableError(`calendar ${res.status}: ${(await res.text()).slice(0, 200)}`);
-    }
-    return res.json() as Promise<T>;
-  }
-  throw new CalendarUnavailableError("calendar auth failed");
-}
-
+/* Busy time across every checked calendar, merged. */
 async function busyBetween(from: number, to: number): Promise<Interval[]> {
-  const data = await gcal<{
+  const data = await googleApi<{
     calendars: Record<string, { busy?: { start: string; end: string }[]; errors?: { reason: string }[] }>;
-  }>("/freeBusy", {
+  }>(`${API}/freeBusy`, {
     method: "POST",
     body: {
       timeMin: new Date(from).toISOString(),
       timeMax: new Date(to).toISOString(),
       timeZone: DEMO_TIME_ZONE,
-      items: [{ id: CALENDAR_ID }],
+      items: CHECKED_CALENDAR_IDS.map((id) => ({ id })),
     },
   });
-  const cal = data.calendars[CALENDAR_ID] ?? Object.values(data.calendars)[0];
-  if (!cal || cal.errors?.length) {
-    throw new CalendarUnavailableError(`free/busy: ${cal?.errors?.map((e) => e.reason).join(", ") ?? "no calendar"}`);
+  const busy: Interval[] = [];
+  for (const id of CHECKED_CALENDAR_IDS) {
+    const cal = data.calendars[id];
+    if (!cal || cal.errors?.length) {
+      throw new GoogleUnavailableError(`free/busy ${id}: ${cal?.errors?.map((e) => e.reason).join(", ") ?? "missing"}`);
+    }
+    for (const b of cal.busy ?? []) busy.push({ start: Date.parse(b.start), end: Date.parse(b.end) });
   }
-  return (cal.busy ?? []).map((b) => ({ start: Date.parse(b.start), end: Date.parse(b.end) }));
+  return busy;
 }
 
 /* ---------- availability ---------- */
@@ -203,7 +160,7 @@ let lock: Promise<unknown> = Promise.resolve();
 /* Re-checks the slot with Google, then creates the event with a Meet
    link and emails the invite. Serialised so concurrent requests for one
    slot cannot both succeed. Throws SlotTakenError or
-   CalendarUnavailableError. */
+   GoogleUnavailableError. */
 export function bookDemo(booking: DemoBooking) {
   const run = lock.then(async () => {
     if (!(await availableSlots({ fresh: true })).includes(booking.slot)) {
@@ -212,8 +169,8 @@ export function bookDemo(booking: DemoBooking) {
     const start = new Date(booking.slot);
     const end = new Date(start.getTime() + SLOT_MS);
     const site = booking.website.replace(/^https?:\/\//, "").replace(/\/$/, "");
-    const event = await gcal<{ id: string; htmlLink: string; hangoutLink?: string }>(
-      `/calendars/${encodeURIComponent(CALENDAR_ID)}/events?sendUpdates=all&conferenceDataVersion=1`,
+    const event = await googleApi<{ id: string; htmlLink: string; hangoutLink?: string }>(
+      `${API}/calendars/${encodeURIComponent(BOOKING_CALENDAR_ID)}/events?sendUpdates=all&conferenceDataVersion=1`,
       {
         method: "POST",
         body: {

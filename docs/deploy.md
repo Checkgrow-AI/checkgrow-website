@@ -34,7 +34,7 @@ Every release remains approval-gated: show the complete working-tree manifest an
 ## Backend policy
 
 - This repository contains no Supabase project, migrations or edge functions.
-- `/api/demo-slots` and `/api/demo-request` are Next.js routes deployed with the website. They read free/busy from and create events in bruno@checkgrow.com's Google Calendar through the Google Calendar API, using the three `GOOGLE_CALENDAR_*` variables. Without them, the booking page shows its "couldn't load the calendar" state and the API returns 503.
+- `/api/demo-slots` and `/api/demo-request` are Next.js routes deployed with the website. They read free/busy across the demo calendar and bruno@checkgrow.com's calendar, create the booking in the demo calendar, and email every lead to sales@checkgrow.com via the Gmail API, all with the three `GOOGLE_CALENDAR_*` variables (scopes: calendar.events, calendar.freebusy, gmail.send). Without them, the booking page shows its "couldn't load the calendar" state and the API returns 503.
 - Never create a production test booking during a ship unless explicitly authorised; it creates a real calendar event and invite.
 - `/api/waitlist` is a Next.js route deployed with the website (the waitlist form is hidden since 2026-10-07). It forwards accepted leads to the existing Checkgrow webhook through `WAITLIST_WEBHOOK_URL`.
 - Never test production signup delivery during a ship unless creating a test lead is explicitly authorised.

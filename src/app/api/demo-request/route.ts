@@ -12,16 +12,21 @@ import {
   spendStops,
 } from "@/lib/demo";
 import { bookDemo, CalendarUnavailableError, SlotTakenError } from "@/lib/demoAvailability";
+import { sendLeadEmail, type LeadEmail } from "@/lib/leadEmail";
 
 /* Book a demo intake.
    1 · Validate every answer against the page's own option lists.
    2 · Book: re-check the slot with Google Calendar and create the event
        (Meet link, invite emailed to the visitor). The calendar event is
        the booking and carries every answer in its description.
-   3 · Forward the lead to DEMO_REQUEST_WEBHOOK_URL when it is set (CRM
-       record). The booking already exists by then, so a webhook failure
-       is logged (console + .data/demo-requests.jsonl) and does not fail
-       the visitor's booking. */
+   3 · Email every answer to sales (sales@checkgrow.com) via Gmail. Also
+       sent when the calendar is unavailable and nothing could be booked,
+       so the lead is never lost.
+   4 · Forward the lead to DEMO_REQUEST_WEBHOOK_URL when it is set (CRM
+       record).
+   The booking exists before 3 and 4, so their failures are logged
+   loudly (console + .data/demo-requests.jsonl) and do not fail the
+   visitor's booking; the calendar event still holds every answer. */
 
 const WEBHOOK_URL = process.env.DEMO_REQUEST_WEBHOOK_URL;
 
@@ -117,7 +122,31 @@ export async function POST(req: Request) {
     visitor_time_zone: visitorTimeZone,
   };
 
-  let event: { id: string; htmlLink: string };
+  const challengeNames = challenges.map(challengeLabel);
+  const spendText = noActiveAds ? "No active ads" : `${describeSpend(adSpend as number)} / month`;
+  const aiTeamText = aiTeamOptions.find((o) => o.id === aiTeam)?.label ?? aiTeam;
+  const emailLead = (extra: Pick<LeadEmail, "status" | "eventUrl" | "meetUrl" | "problem">) =>
+    sendLeadEmail({
+      ...extra,
+      firstName,
+      lastName,
+      email,
+      website,
+      challenges: challengeNames,
+      adSpend: spendText,
+      aiTeam: aiTeamText,
+      goals,
+      slot,
+      visitorTimeZone,
+    })
+      .then(() => ({ emailed: true as const }))
+      .catch((err: unknown) => {
+        const message = err instanceof Error ? err.message : "email failed";
+        console.error(`[demo-request] lead email to sales failed (${email}): ${message}`);
+        return { emailed: false as const, emailError: message };
+      });
+
+  let event: { id: string; htmlLink: string; hangoutLink?: string };
   try {
     event = await bookDemo({
       slot,
@@ -128,9 +157,9 @@ export async function POST(req: Request) {
       summaryLines: [
         `${firstName} ${lastName} · ${email}`,
         `Website: ${website}`,
-        `Wants to fix: ${challenges.map(challengeLabel).join(", ")}`,
-        `Monthly ad spend: ${noActiveAds ? "No active ads" : describeSpend(adSpend as number)}`,
-        `People using AI: ${aiTeamOptions.find((o) => o.id === aiTeam)?.label ?? aiTeam}`,
+        `Wants to fix: ${challengeNames.join(", ")}`,
+        `Monthly ad spend: ${spendText}`,
+        `People using AI: ${aiTeamText}`,
         `Goals: ${goals.length ? goals.join("; ") : "not given"}`,
         `Visitor time zone: ${visitorTimeZone || "unknown"}`,
       ],
@@ -141,11 +170,14 @@ export async function POST(req: Request) {
     }
     if (e instanceof CalendarUnavailableError) {
       console.error("[demo-request] calendar unavailable:", e.message);
-      await auditLog({ ...request, booked: false, bookingError: e.message, at: new Date().toISOString() });
+      const mail = await emailLead({ status: "not-booked", problem: `Calendar unavailable: ${e.message}` });
+      await auditLog({ ...request, booked: false, bookingError: e.message, ...mail, at: new Date().toISOString() });
       return NextResponse.json({ error: "Booking is temporarily unavailable" }, { status: 503 });
     }
     throw e;
   }
+
+  const mail = await emailLead({ status: "booked", eventUrl: event.htmlLink, meetUrl: event.hangoutLink });
 
   let delivered = false;
   let deliveryError = "";
@@ -171,6 +203,7 @@ export async function POST(req: Request) {
     ...request,
     booked: true,
     calendar_event_id: event.id,
+    ...mail,
     delivered,
     ...(deliveryError ? { deliveryError } : {}),
     at: new Date().toISOString(),
