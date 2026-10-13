@@ -128,6 +128,7 @@ V_CHAL = dlv("lead_challenges")
 V_SPEND = dlv("lead_ad_spend")
 V_TEAM = dlv("lead_ai_team")
 V_MKT = dlv("ucCategory.marketing")
+V_HIST = dlv("gtm.historyChangeSource")  # what the built-in "History Source" reads
 V_SRC = dlv("attribution_source")
 V_MED = dlv("attribution_medium")
 V_CMP = dlv("attribution_campaign")
@@ -182,7 +183,7 @@ T_STEP = trigger("CE - demo_form_step", "CUSTOM_EVENT", (), "demo_form_step")
 T_HISTORY_MKT = trigger(
     "History - page change · marketing granted",
     "HISTORY_CHANGE",
-    [cond("EQUALS", "{{History Source}}", "pushState"), MKT_ON],
+    [cond("EQUALS", V_HIST, "pushState"), MKT_ON],
 )
 T_CTA = trigger(
     "Click - Book a demo links",
@@ -335,12 +336,14 @@ li_conversion("LinkedIn - Conversion - Demo lead", V_LI_LEAD, [T_LEAD_MKT])
 li_conversion("LinkedIn - Conversion - Demo booked", V_LI_BOOKED, [T_BOOKED_MKT])
 
 # ---- built-in variables ---------------------------------------------------------
+# Only types GTM accepted in the previous export of this container; anything
+# else is read from the dataLayer with a DLV ("Built-in variable type is not
+# supported in the container" otherwise).
 BUILT_INS = [
     ("PAGE_URL", "Page URL"), ("PAGE_HOSTNAME", "Page Hostname"), ("PAGE_PATH", "Page Path"),
     ("REFERRER", "Referrer"), ("EVENT", "Event"), ("CLICK_ELEMENT", "Click Element"),
+    ("CLICK_CLASSES", "Click Classes"), ("CLICK_ID", "Click ID"), ("CLICK_TARGET", "Click Target"),
     ("CLICK_URL", "Click URL"), ("CLICK_TEXT", "Click Text"), ("CONTAINER_ID", "Container ID"),
-    ("CONTAINER_VERSION", "Container Version"), ("HISTORY_SOURCE", "History Source"),
-    ("NEW_HISTORY_URL", "New History URL"), ("OLD_HISTORY_URL", "Old History URL"),
 ]
 
 template = json.loads((HERE / "templates" / "facebook-pixel.json").read_text())

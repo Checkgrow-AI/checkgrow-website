@@ -16,9 +16,10 @@
    result in memory (window.__cgAttr), which survives the site's
    client-side navigation, so the demo form gets the campaign even before
    or without consent. Nothing is stored in the browser until
-   Usercentrics reports consent (consent_status) for the service
-   "Checkgrow Campaign Attribution", or for the Marketing category while
-   that service is not configured. Then both cookies are written (90 days,
+   Usercentrics reports an explicit consent (consent_status, type
+   EXPLICIT) for the service "Checkgrow Campaign Attribution", or for the
+   Marketing category while that service is not configured; an implicit
+   default never counts, whatever the CMP settings say. Then both cookies are written (90 days,
    .checkgrow.com, so ai.checkgrow.com can read them too); when consent is
    refused or withdrawn they are deleted. They carry no personal data.
 
@@ -92,7 +93,9 @@ var seen=0;
 function scan(){
  var dl=window.dataLayer||[];
  for(;seen<dl.length;seen++){var e=dl[seen];
-  if(e&&e.event==="consent_status"){var s=e[SVC];apply(typeof s==="boolean"?s:!!(e.ucCategory&&e.ucCategory.marketing))}}
+  if(e&&e.event==="consent_status"){var s=e[SVC],on=typeof s==="boolean"?s:!!(e.ucCategory&&e.ucCategory.marketing);
+   /* only a choice the visitor made counts; an implicit default never stores */
+   apply(on&&e.type==="EXPLICIT")}}
 }
 window.addEventListener("UC_CONSENT",function(){setTimeout(scan,0);setTimeout(scan,300)});
 var n=0,iv=setInterval(function(){scan();if(++n>40)clearInterval(iv)},250);
