@@ -4,8 +4,9 @@
    sender to that account). Reply-To is
    the visitor, so sales can answer straight from the inbox.
 
-   Sent for confirmed bookings, and also when the calendar was
-   unavailable and the visitor could not book, so no lead is ever lost. */
+   Sent for confirmed bookings, when the calendar was unavailable and the
+   visitor could not book, and when the leads webhook rejected a lead at
+   the contact step ("lead-only"), so no lead is ever lost. */
 
 import { DEMO_MINUTES, DEMO_TIME_ZONE } from "./demo";
 import { googleApi } from "./google";
@@ -13,20 +14,22 @@ import { googleApi } from "./google";
 const TO = process.env.DEMO_LEAD_EMAIL_TO || "sales@checkgrow.com";
 
 export type LeadEmail = {
-  status: "booked" | "not-booked";
+  status: "booked" | "not-booked" | "lead-only";
   firstName: string;
   lastName: string;
   email: string;
+  phone: string;
   website: string;
   challenges: string[];
   adSpend: string;
   aiTeam: string;
   goals: string[];
-  slot: string;
+  slot?: string;
   visitorTimeZone: string;
   eventUrl?: string;
   meetUrl?: string;
   problem?: string;
+  campaign?: string;
 };
 
 const esc = (v: string) =>
@@ -50,10 +53,10 @@ export async function sendLeadEmail(lead: LeadEmail) {
   const name = `${lead.firstName} ${lead.lastName}`.trim();
   const site = lead.website.replace(/^https?:\/\//, "").replace(/\/$/, "");
   const siteUrl = /^https?:\/\//.test(lead.website) ? lead.website : `https://${site}`;
-  const teamTime = `${when(lead.slot, DEMO_TIME_ZONE)} (Zagreb)`;
+  const teamTime = lead.slot ? `${when(lead.slot, DEMO_TIME_ZONE)} (Zagreb)` : "";
   let visitorTime = "";
   try {
-    if (lead.visitorTimeZone && lead.visitorTimeZone !== DEMO_TIME_ZONE) {
+    if (lead.slot && lead.visitorTimeZone && lead.visitorTimeZone !== DEMO_TIME_ZONE) {
       visitorTime = `${when(lead.slot, lead.visitorTimeZone)} (${lead.visitorTimeZone})`;
     }
   } catch {
@@ -61,34 +64,45 @@ export async function sendLeadEmail(lead: LeadEmail) {
   }
 
   const booked = lead.status === "booked";
+  const leadOnly = lead.status === "lead-only";
   const subject = booked
     ? `New demo booked: ${name} · ${site} · ${teamTime}`
-    : `ACTION NEEDED · demo not booked: ${name} · ${site}`;
+    : leadOnly
+      ? `New demo lead, not in the CRM yet: ${name} · ${site}`
+      : `ACTION NEEDED · demo not booked: ${name} · ${site}`;
 
-  const rows: [string, string][] = [
-    [booked ? "Demo" : "Requested time", `${teamTime}${visitorTime ? ` · visitor: ${visitorTime}` : ""} · ${DEMO_MINUTES} min`],
+  const rows: [string, string][] = [];
+  if (teamTime) {
+    rows.push([booked ? "Demo" : "Requested time", `${teamTime}${visitorTime ? ` · visitor: ${visitorTime}` : ""} · ${DEMO_MINUTES} min`]);
+  }
+  rows.push(
     ["Name", name],
     ["Work email", lead.email],
+    ["Phone", lead.phone],
     ["Website", site],
     ["Wants to fix", lead.challenges.join(", ")],
     ["Monthly ad spend", lead.adSpend],
     ["People using AI", lead.aiTeam],
     ["Goals", lead.goals.length ? lead.goals.join("; ") : "not given"],
     ["Visitor time zone", lead.visitorTimeZone || "unknown"],
-  ];
+  );
   if (lead.meetUrl) rows.push(["Google Meet", lead.meetUrl]);
   if (lead.eventUrl) rows.push(["Calendar event", lead.eventUrl]);
   if (lead.problem) rows.push(["Problem", lead.problem]);
+  if (lead.campaign) rows.push(["Campaign", lead.campaign]);
   rows.push(["Source", "checkgrow.com/book-a-demo"], ["Submitted", new Date().toISOString()]);
 
   const intro = booked
     ? `${name} booked a demo. The calendar invite and Meet link went to them automatically.`
-    : `${name} tried to book a demo, but the calendar could not be reached, so nothing was booked. Please contact them to schedule it.`;
+    : leadOnly
+      ? `${name} gave their contact details on the demo form, but the leads webhook did not accept the lead, so it is not in the CRM yet. They may still book a time; if not, follow up.`
+      : `${name} tried to book a demo, but the calendar could not be reached, so nothing was booked. Please contact them to schedule it.`;
 
   const text = [intro, "", ...rows.map(([k, v]) => `${k}: ${v}`), "", "Reply to this email to answer the lead directly."].join("\n");
 
   const link = (k: string, v: string) => {
     if (k === "Work email") return `<a href="mailto:${esc(v)}">${esc(v)}</a>`;
+    if (k === "Phone") return `<a href="tel:${esc(v.replace(/[^\d+]/g, ""))}">${esc(v)}</a>`;
     if (k === "Website") return `<a href="${esc(siteUrl)}">${esc(v)}</a>`;
     if (/^https:\/\//.test(v)) return `<a href="${esc(v)}">${esc(v)}</a>`;
     return esc(v);

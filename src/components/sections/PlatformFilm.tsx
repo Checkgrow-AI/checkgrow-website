@@ -10,6 +10,7 @@
    The speaker chip always shows the ACTUAL audio state and doubles as a
    manual override. */
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { passProgress } from "@/lib/scrollProgress";
@@ -325,12 +326,12 @@ export function PlatformFilm() {
             </div>
         </div>
         <div className="relative z-10 mt-9 flex justify-center">
-          <a
+          <Link
             href="/book-a-demo"
             className="inline-flex min-h-12 items-center rounded-full bg-foreground px-8 text-sm font-semibold text-canvas transition-colors duration-200 hover:bg-accent"
           >
             Book a demo
-          </a>
+          </Link>
         </div>
       </div>
     </section>

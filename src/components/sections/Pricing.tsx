@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Reveal } from "@/components/Reveal";
 
@@ -350,13 +351,13 @@ function ComparisonModal({ open, onClose }: { open: boolean; onClose: () => void
               <p className="mt-2 text-sm leading-relaxed text-white">
                 One operating system, one source of truth and one bill.
               </p>
-              <a
+              <Link
                 href="/book-a-demo"
                 onClick={onClose}
                 className="mt-5 inline-flex min-h-11 items-center rounded-full bg-foreground px-6 text-sm font-semibold text-canvas transition-colors duration-200 hover:bg-accent"
               >
                 Book a demo
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -469,7 +470,7 @@ export function Pricing() {
                       </p>
                     </div>
 
-                    <a
+                    <Link
                       href="/book-a-demo"
                       className={`mt-5 inline-flex min-h-12 items-center justify-center rounded-full px-7 text-sm font-semibold transition-colors duration-200 ${
                         featured
@@ -478,7 +479,7 @@ export function Pricing() {
                       }`}
                     >
                       Book a demo
-                    </a>
+                    </Link>
                     <div className="mt-2 text-center text-xs leading-relaxed">
                       <p className="font-medium text-foreground">3 months free, guaranteed</p>
                       <p className="mt-0.5 text-muted">No credit card required</p>

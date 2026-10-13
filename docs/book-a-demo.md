@@ -4,7 +4,12 @@
 
 - Page: `src/app/book-a-demo/`. Form: `src/components/demo/`. Options and goal suggestions: `src/lib/demo.ts`.
 - Google auth (one token for Calendar and Gmail): `src/lib/google.ts`. Availability and booking: `src/lib/demoAvailability.ts`. Lead email: `src/lib/leadEmail.ts` (all server only).
-- `GET /api/demo-slots` returns free slot start times only. `POST /api/demo-request` validates the answers, re-checks the slot with Google, creates the calendar event and forwards the lead.
+- `GET /api/demo-slots` returns free slot start times only.
+- `POST /api/demo-lead` runs on **Request demo** (contact step, before the calendar): validates every answer and sends the lead to the Checkgrow leads webhook (`DEMO_REQUEST_WEBHOOK_URL`, status `new`). If the webhook fails, the lead is emailed to sales ("not in the CRM yet") instead; the visitor goes on to the calendar either way.
+- `POST /api/demo-request` runs on **Confirm demo**: validates again, re-checks the slot with Google, creates the calendar event, emails sales and sends the lead to the webhook again with the booking in `notes` (the webhook updates the lead by email; `status` is not resent).
+- Shared validation, webhook mapping (`email, phone, first_name, last_name, website, notes, source, language, page_url, referrer, utm_*`) and audit log: `src/lib/demoLead.ts`. Campaign attribution comes from `src/lib/attribution.ts` as hidden fields: kept in memory before consent, in the `cg_attr_*` cookies only after consent.
+- The website field follows the work email's domain until the visitor edits it.
+- Tracking: dataLayer events only (`lead_submitted`, `demo_booked`, …); tags live in GTM. See `docs/gtm/README.md`.
 
 ## Scheduling rules
 

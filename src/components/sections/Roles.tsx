@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { Reveal, RevealStagger, RevealItem } from "@/components/Reveal";
 import { AiGlyph } from "@/components/AiGlyph";
@@ -84,12 +85,12 @@ export function Roles() {
                   self-hosted, custom-developed setups that fit your stack,
                   your security requirements and your scale.
                 </p>
-                <a
+                <Link
                   href="/book-a-demo"
                   className="mt-8 inline-flex min-h-12 items-center rounded-full bg-foreground px-7 text-sm font-medium text-canvas transition-colors duration-200 hover:bg-accent"
                 >
                   Book a demo
-                </a>
+                </Link>
               </div>
             </div>
           </div>

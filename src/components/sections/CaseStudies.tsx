@@ -6,6 +6,7 @@
    video behind a click-to-play purple card so no video bytes load until
    asked for. The client-logo marquee lives up top in LogoMarquee.tsx. */
 
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
@@ -365,12 +366,12 @@ function DemoCard({ showBookCta = true }: { showBookCta?: boolean }) {
               {open ? "Hide the demo" : "Watch our demo review"}
             </button>
             {showBookCta && (
-            <a
+            <Link
               href="/book-a-demo"
               className="inline-flex min-h-12 items-center rounded-full border border-accent/50 bg-transparent px-7 text-sm font-semibold text-accent transition-colors duration-200 hover:bg-brand-strong hover:text-white"
             >
               Book a demo
-            </a>
+            </Link>
             )}
           </div>
         </div>

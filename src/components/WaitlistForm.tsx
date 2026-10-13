@@ -15,12 +15,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "motion/react";
 import { isCompanyEmail, COMPANY_EMAIL_MESSAGE } from "@/lib/freeEmailDomains";
-
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-  }
-}
+import { track } from "@/lib/track";
 
 const schema = z.object({
   email: z
@@ -86,7 +81,7 @@ export function WaitlistForm({
         });
         if (res.ok) {
           setStep("done");
-          window.gtag?.("event", "generate_lead", { method: "waitlist" });
+          track("waitlist_submitted", { form_name: "waitlist" });
         } else setServerError("Something went wrong. Please try again.");
       } catch {
         setServerError("Something went wrong. Please try again.");

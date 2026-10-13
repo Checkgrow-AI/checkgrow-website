@@ -19,6 +19,7 @@
    pulsation/twinkle/breathing, and the cursor bends nearby particles.
    Reduced motion gets a single static scene. */
 
+import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import { HERO_SCROLL_SCREENS, heroStoryProgress, platformLocalProgress, platformWordFrame, platformDetailFrame, platformIconOpacity } from "@/lib/heroTimeline";
@@ -960,12 +961,12 @@ export function HeroV2() {
                 <Trustpilot />
               </div>
               <div className="hero-intro-form mt-6">
-                <a
+                <Link
                   href="/book-a-demo"
                   className="inline-flex min-h-12 items-center justify-center rounded-full bg-foreground px-7 text-base font-medium text-canvas transition-colors duration-200 hover:bg-accent max-sm:w-full"
                 >
                   Book a demo
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -1097,12 +1098,12 @@ export function HeroV2() {
                   >
                     One learning brain, one team, compounding growth.
                   </h2>
-                  <a
+                  <Link
                     href="/book-a-demo"
                     className="mt-5 inline-flex min-h-12 max-w-full items-center justify-center rounded-full bg-foreground px-5 text-sm font-medium text-canvas transition-colors duration-200 hover:bg-accent max-[374px]:px-3 max-[374px]:text-xs"
                   >
                     Book a demo
-                  </a>
+                  </Link>
                 </div>
               </div>
               {TEAM.map((m, i) => (

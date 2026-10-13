@@ -17,7 +17,7 @@ Every release remains approval-gated: show the complete working-tree manifest an
 | Production | Easy Panel builds `Dockerfile` and proxies the standalone Next.js server on port 3000 |
 | Local development | `pnpm dev` at `http://localhost:8030` |
 | Required production variables | `GOOGLE_CALENDAR_CLIENT_ID`, `GOOGLE_CALENDAR_CLIENT_SECRET`, `GOOGLE_CALENDAR_REFRESH_TOKEN` (Book a demo; see `docs/book-a-demo.md`) |
-| Optional production variables | `DEMO_REQUEST_WEBHOOK_URL` (lead copy to the CRM after each booking), `DEMO_CALENDAR_ID`; `WAITLIST_WEBHOOK_URL` (only while the hidden waitlist route is kept) |
+| Optional production variables | `DEMO_REQUEST_WEBHOOK_URL` (Checkgrow leads-webhook URL incl. its `whk_` token: the lead at the contact step, then again with the booking; see docs/book-a-demo.md), `DEMO_CALENDAR_ID`; `WAITLIST_WEBHOOK_URL` (only while the hidden waitlist route is kept) |
 
 ## `>>ship` sequence
 

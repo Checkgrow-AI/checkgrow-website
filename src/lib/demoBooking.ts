@@ -11,7 +11,9 @@ export type DemoBookingSummary = {
   website: string;
   slot: string;
   timeZone: string;
-  /* set once the generate_lead conversion has been sent, so a reload
+  /* shared with the demo_booked dataLayer event, for deduplication */
+  eventId?: string;
+  /* set once the demo_booked conversion has been sent, so a reload
      of the confirmation page never counts the booking twice */
   tracked?: boolean;
 };

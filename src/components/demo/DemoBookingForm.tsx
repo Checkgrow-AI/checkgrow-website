@@ -8,9 +8,13 @@
        own time zone, read live from the team calendar (/api/demo-slots).
    Every answer travels with the booking so the team arrives with the
    competitor scan, website review and AI strategy already prepared.
-   Requests post to /api/demo-request; a confirmed booking moves to
-   /demo-confirmation (its own page view, and the generate_lead
-   conversion fires there). */
+   Two conversions, each a dataLayer event for GTM (see lib/track.ts):
+     · "Request demo" on the contact step posts the lead to
+       /api/demo-lead (leads webhook) → lead_submitted
+     · "Confirm demo" posts to /api/demo-request (calendar booking,
+       webhook update) and moves to /demo-confirmation → demo_booked
+   Campaign attribution (lib/attribution.ts cookies) rides along in
+   hidden fields on the contact step. */
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -32,6 +36,9 @@ import {
 } from "@/lib/demo";
 import { DemoIcon } from "./DemoIcons";
 import { saveDemoBooking } from "@/lib/demoBooking";
+import { ATTRIBUTION_FIELDS, readAttribution, type Attribution } from "@/lib/attribution";
+import { newEventId, track, trackAfterConsent } from "@/lib/track";
+import { isPhone } from "@/lib/phone";
 import styles from "./Demo.module.css";
 
 const contactSchema = z.object({
@@ -40,6 +47,11 @@ const contactSchema = z.object({
     .trim()
     .email("Enter a valid work email")
     .refine(isCompanyEmail, COMPANY_EMAIL_MESSAGE),
+  phone: z
+    .string()
+    .trim()
+    .min(1, "Add your phone number")
+    .refine(isPhone, "Enter a valid phone number, e.g. +385 91 234 5678"),
   firstName: z.string().trim().min(1, "Add your first name").max(80),
   lastName: z.string().trim().min(1, "Add your last name").max(80),
   website: z
@@ -114,6 +126,22 @@ export function DemoBookingForm() {
   const [challengeHint, setChallengeHint] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const advanceTimer = useRef<number | null>(null);
+  /* the website the email last filled in: while the field still holds
+     it (or is empty), it follows the email; a manual edit stops that */
+  const [autoWebsite, setAutoWebsite] = useState("");
+  const startedRef = useRef(false);
+  const leadSent = useRef<string | null>(null);
+  const leadTracked = useRef(false);
+  const [attribution, setAttribution] = useState<Attribution>({ first: null, last: null });
+  const tz = useMemo(
+    () => Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
+    [],
+  );
+  const [slotsState, setSlotsState] = useState<SlotsState>({ status: "loading" });
+  const loadSlots = async () => {
+    setSlotsState((cur) => (cur.status === "ready" ? cur : { status: "loading" }));
+    setSlotsState(await fetchSlots());
+  };
 
   const {
     register,
@@ -130,6 +158,17 @@ export function DemoBookingForm() {
   useEffect(() => () => {
     if (advanceTimer.current) window.clearTimeout(advanceTimer.current);
   }, []);
+
+  /* campaign cookies are written in <head> before hydration */
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- cookies are only readable in the browser
+    setAttribution(readAttribution());
+  }, []);
+
+  useEffect(() => {
+    const n = step === "time" ? questions.length + 1 : questions.indexOf(step as Question) + 1;
+    track("demo_form_step", { form_name: "book_a_demo", form_step: step, form_step_number: n });
+  }, [step]);
 
   useEffect(() => {
     if (step === "contact") {
@@ -159,7 +198,14 @@ export function DemoBookingForm() {
     if (qIndex > 0) go(questions[qIndex - 1]);
   };
 
+  const markStarted = () => {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    track("demo_form_start", { form_name: "book_a_demo" });
+  };
+
   const toggleChallenge = (id: string) => {
+    markStarted();
     setChallengeHint(false);
     setChallenges((cur) => {
       if (cur.includes(id)) return cur.filter((c) => c !== id);
@@ -178,29 +224,69 @@ export function DemoBookingForm() {
     setGoals([...goals, g]);
   };
 
-  /* the work email usually names the company: prefill its website */
-  const prefillWebsite = () => {
-    const email = getValues("email")?.trim() ?? "";
-    const domain = email.split("@")[1];
-    if (domain && isCompanyEmail(email) && !getValues("website")) {
-      setValue("website", domain.toLowerCase(), { shouldValidate: true, shouldDirty: true });
+  /* the work email usually names the company: keep its website in step */
+  const syncWebsite = (raw: string) => {
+    const email = raw.trim().toLowerCase();
+    const domain = email.split("@")[1] ?? "";
+    const next = /^([a-z0-9-]+\.)+[a-z]{2,}$/.test(domain) && isCompanyEmail(email) ? domain : "";
+    const current = (getValues("website") ?? "").trim();
+    if (current && current !== autoWebsite) return;
+    setAutoWebsite(next);
+    if (next !== current) {
+      setValue("website", next, { shouldDirty: true, shouldValidate: !!next && !!errors.website });
     }
   };
 
+  const answers = () => ({
+    ...getValues(),
+    challenges,
+    adSpend: noAds ? null : spendStops[spendIndex],
+    noActiveAds: noAds,
+    aiTeam,
+    goals,
+    timeZone: tz,
+    attribution,
+    pageUrl: window.location.href,
+    referrer: document.referrer,
+  });
+
+  /* conversion 1: the lead reaches the leads webhook before the calendar.
+     A failure never blocks the visitor: the booking step sends it again. */
   const submitContact = async () => {
-    if (await trigger()) go("time");
+    if (!(await trigger())) return;
+    const payload = answers();
+    const key = JSON.stringify(payload);
+    if (leadSent.current !== key) {
+      setBusy(true);
+      const eventId = newEventId();
+      try {
+        const res = await fetch("/api/demo-lead", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...payload, eventId }),
+        });
+        if (res.ok) {
+          leadSent.current = key;
+          if (!leadTracked.current) {
+            leadTracked.current = true;
+            trackAfterConsent("lead_submitted", {
+              form_name: "book_a_demo",
+              event_id: eventId,
+              lead_challenges: challenges.join(","),
+              lead_ad_spend: noAds ? 0 : spendStops[spendIndex],
+              lead_ai_team: aiTeam,
+            });
+          }
+        }
+      } catch {
+        // offline or blocked: the booking request carries the lead again
+      }
+      setBusy(false);
+    }
+    go("time");
   };
 
   /* ---------- slots ---------- */
-  const tz = useMemo(
-    () => Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
-    [],
-  );
-  const [slotsState, setSlotsState] = useState<SlotsState>({ status: "loading" });
-  const loadSlots = async () => {
-    setSlotsState((cur) => (cur.status === "ready" ? cur : { status: "loading" }));
-    setSlotsState(await fetchSlots());
-  };
   /* fetch early so the calendar is ready by step 2 */
   useEffect(() => {
     let live = true;
@@ -230,23 +316,15 @@ export function DemoBookingForm() {
     setBusy(true);
     setServerError(null);
     try {
+      const eventId = newEventId();
       const res = await fetch("/api/demo-request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...getValues(),
-          challenges,
-          adSpend: noAds ? null : spendStops[spendIndex],
-          noActiveAds: noAds,
-          aiTeam,
-          goals,
-          slot,
-          timeZone: tz,
-        }),
+        body: JSON.stringify({ ...answers(), slot, eventId }),
       });
       if (res.ok) {
         const { email, firstName, website } = getValues();
-        saveDemoBooking({ email, firstName, website, slot, timeZone: tz });
+        saveDemoBooking({ email, firstName, website, slot, timeZone: tz, eventId });
         /* a full page load, so analytics records the confirmation page */
         window.location.assign("/demo-confirmation");
         return; // keep "Booking…" showing until the page changes
@@ -608,7 +686,7 @@ export function DemoBookingForm() {
               >
                 <QuestionHead title="Where should we send your invite?" />
                 <div className="mt-5 grid grid-cols-2 gap-3">
-                  <Field label="Work email" error={errors.email?.message} wide>
+                  <Field label="Work email" error={errors.email?.message}>
                     <input
                       type="email"
                       inputMode="email"
@@ -618,7 +696,20 @@ export function DemoBookingForm() {
                       className={styles.input}
                       required
                       aria-required
-                      {...register("email", { onBlur: prefillWebsite })}
+                      {...register("email", { onChange: (e) => syncWebsite(e.target.value) })}
+                    />
+                  </Field>
+                  <Field label="Phone number" error={errors.phone?.message}>
+                    <input
+                      type="tel"
+                      inputMode="tel"
+                      autoComplete="tel"
+                      placeholder="+385 91 234 5678"
+                      aria-invalid={!!errors.phone}
+                      className={styles.input}
+                      required
+                      aria-required
+                      {...register("phone")}
                     />
                   </Field>
                   <Field label="First name" error={errors.firstName?.message}>
@@ -655,15 +746,31 @@ export function DemoBookingForm() {
                         aria-invalid={!!errors.website}
                         className={`${styles.input} ${styles.inputIcon}`}
                         required
-                      aria-required
-                      {...register("website")}
+                        aria-required
+                        {...register("website")}
                       />
                     </div>
                   </Field>
                 </div>
+                {/* campaign attribution from the cg_attr_* cookies (last touch) */}
+                {ATTRIBUTION_FIELDS.map((k) => (
+                  <input key={k} type="hidden" name={k} value={attribution.last?.[k] ?? ""} readOnly />
+                ))}
+                <p className="mt-4 text-xs leading-relaxed text-muted">
+                  By submitting this form, you agree to be contacted by the Checkgrow team and accept our{" "}
+                  <a
+                    href="https://ai.checkgrow.com/privacy-policy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground underline underline-offset-2 hover:text-accent"
+                  >
+                    Privacy Policy
+                  </a>
+                  .
+                </p>
                 <Footer onBack={back}>
-                  <button type="submit" className={primaryBtn}>
-                    Choose a time <DemoIcon name="calendar" size={16} />
+                  <button type="submit" className={primaryBtn} disabled={busy}>
+                    {busy ? "Sending…" : "Request demo"} <DemoIcon name="arrowRight" size={16} />
                   </button>
                 </Footer>
               </form>

@@ -3,8 +3,8 @@
 /* Top of /demo-confirmation: a centred, friendly confirmation. With the
    booking hand-off from the form (sessionStorage, same tab) it names the
    visitor and shows the exact time in their zone; on a direct visit it
-   shows the general message. The generate_lead conversion fires here,
-   once per booking. */
+   shows the general message. The demo_booked conversion (dataLayer, for
+   GTM) fires here, once per booking. */
 
 import { useEffect, useMemo, useSyncExternalStore } from "react";
 import Link from "next/link";
@@ -13,12 +13,7 @@ import { DEMO_MINUTES } from "@/lib/demo";
 import { DEMO_BOOKING_KEY, saveDemoBooking, type DemoBookingSummary } from "@/lib/demoBooking";
 import { DemoIcon, type DemoIconName } from "./DemoIcons";
 import styles from "./Demo.module.css";
-
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-  }
-}
+import { trackAfterConsent } from "@/lib/track";
 
 const noSubscribe = () => () => {};
 const readRaw = () => {
@@ -51,7 +46,8 @@ export function DemoConfirmation() {
 
   useEffect(() => {
     if (!booking || booking.tracked) return;
-    window.gtag?.("event", "generate_lead", { method: "demo_request" });
+    /* conversion 2 (GTM): the calendar booking */
+    trackAfterConsent("demo_booked", { form_name: "book_a_demo", event_id: booking.eventId ?? "" });
     saveDemoBooking({ ...booking, tracked: true });
   }, [booking]);
 
