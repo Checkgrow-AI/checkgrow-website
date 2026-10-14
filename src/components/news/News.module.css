@@ -4,6 +4,8 @@
 .filters button:hover { color: var(--color-foreground); background: var(--color-surface); }
 .filters button[aria-pressed="true"] { color: var(--color-canvas); background: var(--color-foreground); }
 .filters button:focus-visible, .contact a:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
+.coverContain { background: #fff; }
+.coverContain img { object-fit: contain !important; padding: 12%; }
 .resultCount { font-size: 0.875rem; color: var(--color-muted); }
 .summary { margin-block: 2rem 3rem; padding: 1.5rem; border: 1px solid var(--color-line); border-radius: var(--radius-card); background: var(--color-surface); }
 .summary h2 { font-size: 1.125rem; font-weight: 500; margin-bottom: 1.25rem; }

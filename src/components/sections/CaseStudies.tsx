@@ -11,6 +11,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { Reveal } from "@/components/Reveal";
+import { newsCategoryHref } from "@/lib/newsCategories";
 
 type Study = {
   id: string;
@@ -438,6 +439,14 @@ export function CaseStudies({ afterBooking = false }: { afterBooking?: boolean }
         <Reveal delay={0.08}>
           <div className="mt-14">
             <Slider />
+          </div>
+          <div className="mt-12 flex justify-center">
+            <Link
+              href={newsCategoryHref("success-stories")}
+              className="inline-flex min-h-12 items-center gap-2 rounded-full border border-line px-7 text-sm font-semibold text-foreground transition-colors duration-200 hover:border-accent hover:text-accent"
+            >
+              Read the success stories <span aria-hidden>→</span>
+            </Link>
           </div>
           <DemoCard showBookCta={!afterBooking} />
         </Reveal>

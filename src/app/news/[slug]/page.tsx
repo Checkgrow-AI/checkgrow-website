@@ -6,6 +6,9 @@ import { newsPosts, getNewsPost, newsPath, categoryLabel, securitySections } fro
 import { SITE_URL } from "@/lib/seo";
 import { TutorialVideo } from "@/components/tutorials/TutorialVideo";
 import { SecurityArticle } from "@/components/news/SecurityArticle";
+import { SuccessStoryArticle, SuccessStoryHero } from "@/components/news/SuccessStoryArticle";
+import { getSuccessStory, storySectionId } from "@/lib/successStories";
+import { newsCategoryHref } from "@/lib/newsCategories";
 import styles from "@/components/tutorials/Tutorials.module.css";
 
 export const dynamicParams = false;
@@ -33,6 +36,7 @@ export default async function NewsArticlePage({ params }: Props) {
   const post = getNewsPost((await params).slug);
   if (!post) notFound();
   const tutorial = post.category === "tutorials" ? getTutorial(post.slug) : undefined;
+  const story = post.category === "success-stories" ? getSuccessStory(post.slug) : undefined;
   const url = `${SITE_URL}${newsPath(post.slug)}`;
   const videos = (tutorial?.videos ?? []).map(video => ({
     "@type": "VideoObject", "@id": `${url}#${video.id}`,
@@ -50,9 +54,18 @@ export default async function NewsArticlePage({ params }: Props) {
         publisher: { "@id": `${SITE_URL}/#organization` },
         image: `${SITE_URL}${post.social}`,
         articleSection: categoryLabel(post.category), inLanguage: "en-GB",
+        ...(story ? {
+          about: { "@type": "Organization", name: story.company },
+          ...(story.keywords?.length ? { keywords: story.keywords.join(", ") } : {}),
+          ...(story.takeaways?.length ? { abstract: story.takeaways.join(" ") } : {}),
+        } : {}),
         ...(videos.length ? { video: videos.map(video => ({ "@id": video["@id"] })) } : {}),
       },
       ...videos,
+      ...(story ? [{
+        "@type": "FAQPage", "@id": `${url}#faq`,
+        mainEntity: story.faq.map(item => ({ "@type": "Question", name: item.q, acceptedAnswer: { "@type": "Answer", text: item.a } })),
+      }] : []),
       { "@type": "BreadcrumbList", itemListElement: [
         { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
         { "@type": "ListItem", position: 2, name: "News", item: `${SITE_URL}/news` },
@@ -63,20 +76,26 @@ export default async function NewsArticlePage({ params }: Props) {
   return (
     <article className={`wrap ${styles.article}`}>
       <nav aria-label="Breadcrumb">
-        <Link href="/news" className={styles.back}><span aria-hidden>←</span> All news</Link>
+        {story
+          ? <Link href={newsCategoryHref("success-stories")} className={styles.back}><span aria-hidden>←</span> All success stories</Link>
+          : <Link href="/news" className={styles.back}><span aria-hidden>←</span> All news</Link>}
       </nav>
       <header className={styles.articleHeader}>
         <div className={styles.meta}><strong>{categoryLabel(post.category)}</strong><time dateTime={post.publishedAt}>{tutorialDate(post.publishedAt)}</time></div>
         <h1>{post.title}</h1>
         <p className={styles.subtitle}>{post.description}</p>
-        <p className={styles.author}>By Checkgrow · {tutorial ? "2 guided videos" : "Security update"}</p>
+        <p className={styles.author}>By Checkgrow · {tutorial ? "2 guided videos" : story ? story.kicker : "Security update"}</p>
       </header>
+      {story && <SuccessStoryHero story={story} />}
       <div className={styles.articleLayout}>
         <aside className={styles.contents}>
           <nav aria-label="On this page">
             <p>On this page</p>
             <ul>
-              {tutorial ? <>
+              {story ? <>
+                {story.sections.map(section => <li key={section.label}><a href={`#${storySectionId(section.label)}`}>{section.label.replace(/^The /, "").replace(/^./, c => c.toUpperCase())}</a></li>)}
+                <li><a href="#faq">FAQ</a></li>
+              </> : tutorial ? <>
               <li><a href={`#${tutorial.videos[0].id}`}>Short walkthrough</a></li>
               <li><a href="#step-by-step">Step by step</a></li>
               <li><a href={`#${tutorial.videos[1].id}`}>Full walkthrough</a></li>
@@ -89,7 +108,7 @@ export default async function NewsArticlePage({ params }: Props) {
           </nav>
         </aside>
         <div className={styles.reading}>
-          {tutorial ? <>
+          {story ? <SuccessStoryArticle story={story} /> : tutorial ? <>
           <p className={styles.intro}>{tutorial.introduction}</p>
           <p className={styles.prerequisites}><strong>Before you begin. </strong>{tutorial.prerequisites}</p>
           <TutorialVideo video={tutorial.videos[0]} />
@@ -108,7 +127,9 @@ export default async function NewsArticlePage({ params }: Props) {
           </> : <SecurityArticle />}
           <div className={styles.cta}>
             <Link href="/book-a-demo">Book a demo</Link>
-            <Link href="/news">All news <span aria-hidden>→</span></Link>
+            {story
+              ? <Link href={newsCategoryHref("success-stories")}>All success stories <span aria-hidden>→</span></Link>
+              : <Link href="/news">All news <span aria-hidden>→</span></Link>}
           </div>
         </div>
       </div>

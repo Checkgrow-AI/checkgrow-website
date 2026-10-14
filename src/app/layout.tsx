@@ -6,6 +6,11 @@ import {
   organizationJsonLd,
   websiteJsonLd,
   SITE_URL,
+  ICON_VERSION,
+  FAVICON_SVG,
+  ICON_192,
+  APPLE_TOUCH_ICON,
+  SOCIAL_IMAGE,
 } from "@/lib/seo";
 import { ATTRIBUTION_SCRIPT } from "@/lib/attribution";
 
@@ -42,8 +47,12 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/" },
   icons: {
-    icon: "/brand/logos/favicon-inverse.svg",
-    apple: "/apple-icon.png",
+    icon: [
+      { url: `/favicon.ico?v=${ICON_VERSION}`, sizes: "16x16 32x32 48x48" },
+      { url: FAVICON_SVG, type: "image/svg+xml" },
+      { url: ICON_192, sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: APPLE_TOUCH_ICON, sizes: "180x180", type: "image/png" }],
   },
   robots: {
     index: true,
@@ -64,21 +73,14 @@ export const metadata: Metadata = {
     siteName: "Checkgrow",
     type: "website",
     locale: "en_GB",
-    images: [
-      {
-        url: "/og.png",
-        width: 1200,
-        height: 630,
-        alt: "Checkgrow: the go-to-market engine that learns your business",
-      },
-    ],
+    images: [SOCIAL_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "Checkgrow · AI Native Growth Marketing",
     description:
       "One system where knowledge, research, execution and measurement connect and compound.",
-    images: ["/og.png"],
+    images: [SOCIAL_IMAGE.url],
   },
 };
 

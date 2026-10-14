@@ -1,12 +1,9 @@
 import { tutorials } from "./tutorials.ts";
+import { successStories } from "./successStories";
 
-export const newsCategories = [
-  { id: "all", label: "All news" },
-  { id: "tutorials", label: "Tutorials" },
-  { id: "security-releases", label: "Security Releases" },
-] as const;
+import { newsCategories, type NewsFilter } from "./newsCategories";
 
-export type NewsFilter = typeof newsCategories[number]["id"];
+export * from "./newsCategories";
 export type NewsPost = {
   slug: string;
   title: string;
@@ -14,6 +11,8 @@ export type NewsPost = {
   category: Exclude<NewsFilter, "all">;
   publishedAt: string;
   cover: string;
+  /* logo artwork: shown whole on white instead of cropped */
+  coverFit?: "contain";
   social: string;
 };
 
@@ -117,6 +116,11 @@ export const securitySections: readonly SecuritySection[] = [
 
 export const newsPosts: NewsPost[] = [
   securityRelease,
+  ...successStories.map(story => ({
+    slug: story.slug, title: story.title, description: story.description,
+    category: "success-stories" as const, publishedAt: story.publishedAt,
+    cover: story.hero.src, coverFit: story.coverFit, social: story.hero.src,
+  })),
   ...tutorials.map(tutorial => ({
     slug: tutorial.slug, title: tutorial.title, description: tutorial.description,
     category: "tutorials" as const, publishedAt: tutorial.publishedAt,
@@ -127,4 +131,9 @@ export const newsPosts: NewsPost[] = [
 export const getNewsPost = (slug: string) => newsPosts.find(post => post.slug === slug);
 export const newsPath = (slug: string) => `/news/${slug}`;
 export const categoryLabel = (id: NewsFilter) => newsCategories.find(category => category.id === id)!.label;
+export const readLinkLabel: Record<Exclude<NewsFilter, "all">, string> = {
+  "success-stories": "Read success story",
+  tutorials: "Watch tutorial",
+  "security-releases": "Read security update",
+};
 export const filterNews = (posts: NewsPost[], category: NewsFilter) => category === "all" ? posts : posts.filter(post => post.category === category);

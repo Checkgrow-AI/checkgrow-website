@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { newsCategoryHref } from "@/lib/newsCategories";
 import { PrivacySettingsLink } from "@/components/PrivacySettingsLink";
 
 export function Footer({ homePage = true }: { homePage?: boolean }) {
@@ -39,6 +40,9 @@ export function Footer({ homePage = true }: { homePage?: boolean }) {
             <a href={homeAnchor("faq")} className="transition-colors duration-200 hover:text-foreground">
               FAQ
             </a>
+            <Link href={newsCategoryHref("success-stories")} className="transition-colors duration-200 hover:text-foreground">
+              Success stories
+            </Link>
             <Link href="/news" className="transition-colors duration-200 hover:text-foreground">
               News
             </Link>

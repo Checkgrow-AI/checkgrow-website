@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { DemoBookingForm } from "@/components/demo/DemoBookingForm";
 import { DemoIcon, type DemoIconName } from "@/components/demo/DemoIcons";
 import { Trustpilot } from "@/components/Trustpilot";
-import { SITE_URL } from "@/lib/seo";
+import { SITE_URL, SOCIAL_IMAGE } from "@/lib/seo";
 import styles from "@/components/demo/Demo.module.css";
 
 const title = "Book a demo | Checkgrow";
@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   title,
   description,
   alternates: { canonical: "/book-a-demo" },
-  openGraph: { title, description, type: "website", url: "/book-a-demo", siteName: "Checkgrow", locale: "en_GB" },
-  twitter: { card: "summary_large_image", title, description },
+  openGraph: { title, description, type: "website", url: "/book-a-demo", siteName: "Checkgrow", locale: "en_GB", images: [SOCIAL_IMAGE] },
+  twitter: { card: "summary_large_image", title, description, images: [SOCIAL_IMAGE.url] },
 };
 
 type Benefit = { icon: DemoIconName; title: string; body: string };

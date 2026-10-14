@@ -6,6 +6,23 @@
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://checkgrow.com";
 
+/* Brand icon and default share image. File names carry a content hash, so
+   browsers and social networks always fetch the current version: replace
+   the file and its hash together (docs/brand-assets.md). /favicon.ico
+   stays at its fixed path because browsers and Google request it there. */
+export const ICON_VERSION = "fbe22783";
+export const FAVICON_SVG = `/brand/icons/checkgrow-favicon-${ICON_VERSION}.svg`;
+export const ICON_192 = `/brand/icons/checkgrow-icon-192-${ICON_VERSION}.png`;
+export const ICON_512 = `/brand/icons/checkgrow-icon-512-${ICON_VERSION}.png`;
+export const APPLE_TOUCH_ICON = `/brand/icons/checkgrow-apple-touch-icon-${ICON_VERSION}.png`;
+
+export const SOCIAL_IMAGE = {
+  url: "/social/checkgrow-growth-brain-scale-ups-enterprise-5ddcbbcc.jpg",
+  width: 1200,
+  height: 627,
+  alt: "Checkgrow: the growth brain for scale-ups and enterprise. Knowledge, campaigns, content and sales in one loop. Book a demo with free onboarding.",
+};
+
 export const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",

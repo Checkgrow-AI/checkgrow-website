@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { newsPosts, newsPath } from "@/lib/news";
 import { SITE_URL } from "@/lib/seo";
-import { NewsListing } from "@/components/news/NewsListing";
+import { Suspense } from "react";
+import { NewsGrid, NewsListing } from "@/components/news/NewsListing";
 import styles from "@/components/tutorials/Tutorials.module.css";
 
-const title = "Checkgrow News | Tutorials and security releases";
-const description = "Practical tutorials and security updates from Checkgrow. Explore the workflows and protections behind your connected growth platform.";
+const title = "Checkgrow News | Success stories, tutorials and security releases";
+const description = "Success stories, practical tutorials and security updates from Checkgrow. See how teams grow with the platform and the workflows behind it.";
 const image = "/features/backgrounds/13-brand-indigo-bloom.webp";
 export const metadata: Metadata = {
   title, description, alternates: { canonical: "/news" },
@@ -27,7 +28,9 @@ export default function NewsPage() {
         <h1>News</h1>
         <p>Inside Checkgrow.<br />Practical guides, platform progress and the work behind your workspace.</p>
       </header>
-      <NewsListing posts={newsPosts} />
+      <Suspense fallback={<NewsGrid posts={newsPosts} category="all" />}>
+        <NewsListing posts={newsPosts} />
+      </Suspense>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
     </div>
   );
