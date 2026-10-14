@@ -342,7 +342,7 @@ const allStories: SuccessStory[] = [
   {
     "slug": "boont-30x-cheaper-meta-purchases",
     "company": "Boont",
-    "draft": true,
+    "draft": false,
     "title": "How Croatian online insurer Boont made Meta purchases 30x cheaper",
     "description": "How Boont fixed what Meta could see, made its ads in Checkgrow Creative Studio and tested a new campaign: purchases 30x cheaper, then 2x conversions.",
     "kicker": "Insurance, Croatia",
@@ -631,11 +631,11 @@ const allStories: SuccessStory[] = [
   {
     "slug": "barner-croatia-launch-purchases-up-160",
     "company": "Barner",
-    "draft": true,
+    "draft": false,
     "title": "How Barner launched in Croatia with AI marketing: purchases up 160.6% in a month",
     "description": "How Barner launched its screen glasses in Croatia with Checkgrow: competitor research, 423 AI ad creatives and one connected funnel. Purchases up 160.6% in a month.",
     "kicker": "Eyewear, Croatia",
-    "publishedAt": "2026-10-19",
+    "publishedAt": "2026-10-14",
     "heroStats": [
       {
         "value": "357",
@@ -998,11 +998,11 @@ const allStories: SuccessStory[] = [
   {
     "slug": "wespa-2028-leads-in-a-month",
     "company": "WESPA",
-    "draft": true,
+    "draft": false,
     "title": "How WESPA, a Zagreb coworking and hospitality space, captured 2,028 leads with AI marketing",
     "description": "How Zagreb coworking and hospitality space WESPA used Checkgrow for competitor research, website audits, AI content and tasks: 2,028 leads, 6x WhatsApp chats.",
     "kicker": "Coworking and hospitality, Croatia",
-    "publishedAt": "2026-10-19",
+    "publishedAt": "2026-10-14",
     "heroStats": [
       {
         "value": "2,028",
