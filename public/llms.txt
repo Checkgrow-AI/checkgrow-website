@@ -13,7 +13,12 @@ Key facts:
 ## Pages
 
 - [Features](https://checkgrow.com/features): every platform feature shown in three steps: Knowledge Centre, Insights, Campaigns, Creative Studio, Content, Social Media, Competitors, Sales and the AI Assistant.
-- [News](https://checkgrow.com/news): Practical tutorials and security releases from Checkgrow, filterable by category.
+- [News](https://checkgrow.com/news): Success stories, practical tutorials and security releases from Checkgrow, filterable by category.
+- [Success stories](https://checkgrow.com/news?category=success-stories): Customer case studies (Cuixmala, Boont, Barner, WESPA) told feature by feature, with dated, client-confirmed figures.
+- [Use Cases](https://checkgrow.com/use-cases): The jobs marketing teams bring to Checkgrow, end to end: the problem, four steps inside the platform, the outcome and an honest FAQ.
+- [Use case: marketing operations](https://checkgrow.com/use-cases/marketing-operations): Plan, launch and report on marketing from one place: campaigns, creatives, one calendar and live results from GA4, Meta Ads and Google Ads. Ads keep running in Meta and Google; Checkgrow is not a CRM.
+- [Use case: AI that knows your brand](https://checkgrow.com/use-cases/brand-knowledge-ai): The Knowledge Center as one source of truth (company, brand voice, products, buyer personas, ICPs, use cases) that every draft starts from; changes apply only after approval, with a 30-day history.
+- [Use case: marketing reporting for the board](https://checkgrow.com/use-cases/marketing-reporting): One funnel from GA4, Meta Ads and Google Ads, cost per result per ad, Winning ads, UTM reporting and a live report link. No multi-touch attribution model.
 - [Sales outreach tutorial](https://checkgrow.com/news/sales-outreach): A short and full walkthrough of ICPs, company tracking, representative setup and LinkedIn outreach, with a six-stage written guide.
 - [October 2026 security update](https://checkgrow.com/news/security-update-october-2026): Checkgrow's public summary of account, company-data, integration and retention improvements. Based on internal review and release evidence; not an independent penetration-test attestation or compliance certification.
 

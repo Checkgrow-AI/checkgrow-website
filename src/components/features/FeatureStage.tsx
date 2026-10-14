@@ -82,7 +82,10 @@ export function FeatureStage({ id, name, background, backgroundColor, steps, scr
     };
   }, []);
 
-  const playing = !reduceMotion && !paused && !hovering && inView && pageVisible;
+  /* one screen (use case step mockups): no tabs, autoplay or pause button;
+     its layers still animate in when the frame scrolls into view */
+  const single = steps.length <= 1;
+  const playing = !single && !reduceMotion && !paused && !hovering && inView && pageVisible;
 
   useEffect(() => {
     if (!playing) return;
@@ -103,7 +106,7 @@ export function FeatureStage({ id, name, background, backgroundColor, steps, scr
     select(next, true);
   };
 
-  const showPause = !reduceMotion;
+  const showPause = !reduceMotion && !single;
 
   return (
     <div>
@@ -115,8 +118,8 @@ export function FeatureStage({ id, name, background, backgroundColor, steps, scr
         onPointerLeave={() => setHovering(false)}
       >
         <Image src={background} alt="" fill sizes="(max-width: 767px) 100vw, 640px" className={styles.background} />
-        <div id={`${id}-stage`} role="tabpanel" aria-labelledby={`${id}-tab-${active}`} aria-roledescription="animated product preview">
-          <p className="sr-only">{`${name}, step ${active + 1} of ${steps.length}: ${steps[active].caption}`}</p>
+        <div id={`${id}-stage`} role={single ? "img" : "tabpanel"} aria-labelledby={single ? undefined : `${id}-tab-${active}`} aria-label={single ? `${name}: ${steps[0].caption}` : undefined} aria-roledescription={single ? undefined : "animated product preview"}>
+          {!single && <p className="sr-only">{`${name}, step ${active + 1} of ${steps.length}: ${steps[active].caption}`}</p>}
           <div
             ref={artboardRef}
             className={styles.artboard}
@@ -150,7 +153,8 @@ export function FeatureStage({ id, name, background, backgroundColor, steps, scr
         )}
       </div>
 
-      <div className={styles.tabs} role="tablist" aria-label={`${name} in three steps`}>
+      {!single && <>
+      <div className={styles.tabs} role="tablist" aria-label={`${name} in ${steps.length} steps`}>
         {steps.map((step, index) => (
           <button
             key={step.label}
@@ -181,6 +185,7 @@ export function FeatureStage({ id, name, background, backgroundColor, steps, scr
         ))}
       </div>
       <p className={styles.caption} aria-hidden="true">{steps[active].caption}</p>
+      </>}
     </div>
   );
 }

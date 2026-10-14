@@ -40,6 +40,9 @@ export function Footer({ homePage = true }: { homePage?: boolean }) {
             <a href={homeAnchor("faq")} className="transition-colors duration-200 hover:text-foreground">
               FAQ
             </a>
+            <Link href="/use-cases" className="transition-colors duration-200 hover:text-foreground">
+              Use cases
+            </Link>
             <Link href={newsCategoryHref("success-stories")} className="transition-colors duration-200 hover:text-foreground">
               Success stories
             </Link>

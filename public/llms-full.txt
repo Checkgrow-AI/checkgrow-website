@@ -47,6 +47,19 @@ The loop: Your business -> Create -> Reach -> Measure -> Improve. What works get
 5. Competitors: Every competitor move, as it happens. Active LinkedIn and Meta ads, website, pricing, launch and hiring changes tracked automatically, with competitor ads usable as creative references.
 6. AI Assistant: One chat for everything Checkgrow knows. Multi-model chat (Claude, GPT, Gemini, Perplexity) grounded in your knowledge, campaigns and data, with actions across features straight from the answer.
 
+## Use case guides
+
+Full pages: https://checkgrow.com/use-cases
+
+### Plan, launch and report on your marketing from one place (marketing operations)
+Checkgrow brings campaign planning, creatives, scheduling and reporting into one workspace connected to Google Analytics, Meta Ads, Google Ads, Instagram and LinkedIn, with Notion, n8n and webhooks for anything else. How it works: plan every campaign in one list; build creatives inside the campaign, grouped by channel and funnel stage; see campaigns, social posts and tasks on one calendar; connect the tools you already use. Limits: ads keep running in Meta Ads Manager and Google Ads (Checkgrow reads their performance and does not publish ads); Checkgrow is not a CRM and does not sync with HubSpot or Salesforce today; Checkgrow MCP lets Claude, ChatGPT and other AI apps read workspace data; Slack, TikTok and Supabase are listed as coming soon.
+
+### AI that already knows your brand (Knowledge Center)
+Store company, brand, products and buyers once in the Knowledge Center; everything Checkgrow drafts starts from it. How it works: teach Checkgrow the business once (or upload files and links for it to draft, with a completeness score); write the tone of voice and brand message down; describe buyer personas; see how it connects in the Knowledge Graph. Limits: nothing is published without approval and chat changes apply only after you approve; every knowledge change is kept for 30 days; Creative Studio (beta) makes images and copy, not videos; each workspace keeps its own Knowledge Center, so agencies keep brands separate.
+
+### Show the board what marketing returns (Insights)
+Insights brings Google Analytics 4, Meta Ads and Google Ads into one funnel from first visit to conversion, an Advertising Smart Report with spend, CTR, cost per click and cost per result, Winning ads with share of spend and of results, UTM reporting by source and medium, and a live report link anyone can open. Limits: LinkedIn Ads is listed as coming soon; platforms count conversions differently, so Insights shows them side by side rather than adding them; Checkgrow does not build a multi-touch attribution model.
+
 ## All features
 
 Every feature is shown in three steps at https://checkgrow.com/features
