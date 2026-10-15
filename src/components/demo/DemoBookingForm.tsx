@@ -36,6 +36,7 @@ import {
 } from "@/lib/demo";
 import { DemoIcon } from "./DemoIcons";
 import { saveDemoBooking } from "@/lib/demoBooking";
+import { FoundersNote } from "./FoundersNote";
 import { ATTRIBUTION_FIELDS, readAttribution, type Attribution } from "@/lib/attribution";
 import { newEventId, track, trackAfterConsent } from "@/lib/track";
 import { isPhone } from "@/lib/phone";
@@ -363,7 +364,10 @@ export function DemoBookingForm() {
             {phase === 1 ? "60 sec" : `${DEMO_MINUTES} min`}
           </p>
         </div>
-        <p className="mt-3 text-sm leading-relaxed text-muted">
+        {/* phones and tablets: the founders note leads the form (the left
+            column, where it sits on desktop, is below the form there) */}
+        {phase === 1 && <FoundersNote className="mt-4 lg:hidden" />}
+        <p className={`mt-3 text-sm leading-relaxed text-muted ${phase === 1 ? "hidden lg:block" : ""}`}>
           {phase === 1
             ? "Your answers set up your onboarding: we prepare your competitor scan, website review and AI strategy before the call."
             : "Choose a slot that suits you. The invite and video link follow by email."}
@@ -373,14 +377,14 @@ export function DemoBookingForm() {
             <span
               key={q}
               className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
-                !inQuestions || i <= qIndex ? "bg-brand" : "bg-raised"
+                !inQuestions || i <= qIndex ? "bg-brand" : "bg-line"
               }`}
             />
           ))}
           <span className="w-2" />
           <span
             className={`h-1 flex-[1.6] rounded-full transition-colors duration-300 ${
-              step === "time" ? "bg-brand" : "bg-raised"
+              step === "time" ? "bg-brand" : "bg-line"
             }`}
           />
         </div>

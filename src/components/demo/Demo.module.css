@@ -57,12 +57,28 @@
 
 /* ---------- form panel ---------- */
 
+/* The form is the one light surface on the dark page, so it is the first
+   thing the eye lands on. The palette tokens are redefined here, so every
+   control inside (options, inputs, calendar, buttons) turns light with it;
+   the values come from the Checkgrow brand pack's light UI. */
 .panel {
+  --color-canvas: #ffffff;
+  --color-surface: #f7f7f5;
+  --color-raised: #ffffff;
+  --color-line: #e3e2de;
+  --color-control-line: #c4c2bc;
+  --color-foreground: #2a2722;
+  --color-muted: #5e5c57;
+  --color-accent: #4959d8;
+  --color-error: #b3261e;
+  --color-success: #1f7a4d;
   position: relative;
   overflow: hidden;
   border-radius: var(--radius-lg);
   background: var(--color-surface);
-  box-shadow: var(--shadow-raised), inset 0 0 0 1px var(--color-line);
+  color: var(--color-foreground);
+  color-scheme: light;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
   scroll-margin-top: calc(var(--header-clearance) + 12px);
 }
 
@@ -233,7 +249,7 @@
   background: var(--color-foreground);
   box-shadow:
     0 0 0 5px color-mix(in srgb, var(--color-brand) 35%, transparent),
-    0 4px 12px rgba(0, 0, 0, 0.5);
+    0 4px 12px rgba(42, 39, 34, 0.25);
   transition: box-shadow 160ms var(--ease-standard);
 }
 
@@ -249,7 +265,7 @@
 .range:active::-webkit-slider-thumb {
   box-shadow:
     0 0 0 8px color-mix(in srgb, var(--color-brand) 45%, transparent),
-    0 4px 12px rgba(0, 0, 0, 0.5);
+    0 4px 12px rgba(42, 39, 34, 0.25);
 }
 
 .range:focus-visible {

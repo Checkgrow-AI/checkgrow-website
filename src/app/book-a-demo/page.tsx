@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DemoBookingForm } from "@/components/demo/DemoBookingForm";
 import { DemoIcon, type DemoIconName } from "@/components/demo/DemoIcons";
 import { Trustpilot } from "@/components/Trustpilot";
+import { FoundersNote } from "@/components/demo/FoundersNote";
 import { SITE_URL, SOCIAL_IMAGE } from "@/lib/seo";
 import styles from "@/components/demo/Demo.module.css";
 
@@ -66,7 +67,8 @@ export default function BookDemoPage() {
           <h1 id="demo-title" className="text-h1 mt-4 max-w-xl">
             See your growth engine running in 30 minutes.
           </h1>
-          <p className="mt-5 max-w-lg text-lg leading-relaxed text-muted">
+          {/* phones: hidden, so the form starts in the first screen */}
+          <p className="mt-5 hidden max-w-lg text-lg leading-relaxed text-muted sm:block">
             A live session on your own company, competitors and website. You
             leave with Checkgrow set up and a clear plan for what to do next.
           </p>
@@ -85,6 +87,7 @@ export default function BookDemoPage() {
           <div className="mt-8 hidden lg:block">
             <Trustpilot />
           </div>
+          <FoundersNote className="mt-7 hidden lg:flex" />
         </section>
 
         <div className={`${styles.panelWrap} ${styles.form}`}>
