@@ -19,6 +19,7 @@
    pulsation/twinkle/breathing, and the cursor bends nearby particles.
    Reduced motion gets a single static scene. */
 
+import { HeroAmbient } from "./HeroAmbient";
 import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
@@ -928,6 +929,8 @@ export function HeroV2() {
         height: staticHero ? "auto" : `calc(var(--hero-viewport) * ${HERO_SCROLL_SCREENS + 1} - var(--header-clearance))`,
       } as CSSProperties}
     >
+      {/* fixed light behind the stage (painted first, so the stage covers it) */}
+      <HeroAmbient />
       <div
         ref={stageRef}
         className="hero-stage overflow-hidden"

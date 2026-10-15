@@ -19,7 +19,7 @@ import { softwareJsonLd, faqJsonLd, videosJsonLd } from "@/lib/seo";
 export default function Home() {
   return (
     <>
-      <Nav />
+      <Nav overLight />
       <MobileScrollRail />
       <main id="top">
         <HeroV2 />

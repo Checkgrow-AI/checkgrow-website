@@ -14,7 +14,9 @@ const links = [
   { href: "#faq", label: "FAQ" },
 ];
 
-export function Nav({ homePage = true }: { homePage?: boolean }) {
+/* overLight: the header stays transparent so the hero light can reach the
+   top of the window; the scrolled pill keeps its own glass background */
+export function Nav({ homePage = true, overLight = false }: { homePage?: boolean; overLight?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const progressRefs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -68,7 +70,7 @@ export function Nav({ homePage = true }: { homePage?: boolean }) {
   const pill = scrolled && !open;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-canvas">
+    <header className={`fixed inset-x-0 top-0 z-50 ${overLight && !open ? "bg-transparent" : "bg-canvas"}`}>
       <div
         className={`mx-auto transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] ${
           pill

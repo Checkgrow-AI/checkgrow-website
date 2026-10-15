@@ -1,0 +1,76 @@
+/* Soft moving light behind the hero particles ("aurora veil").
+   Sits under the canvas, never above it; fades to the canvas black before
+   the middle of the screen, so headline contrast and the particles stay
+   as they are. Motion is slow transform/opacity only (GPU), and stops for
+   reduced motion. */
+
+.ambient {
+  /* fixed to the window, so the light starts at the very top edge, behind
+     the transparent header; the hero stage paints over it (DOM order) and
+     the header pill floats above. Fully transparent before the hero scrolls
+     away (HeroAmbient), so it never shows behind later sections. */
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 100lvh;
+  overflow: hidden;
+  pointer-events: none;
+  transform-origin: 50% 0;
+  will-change: opacity, transform;
+  /* a long eased fade (many stops avoid banding): no edge anywhere */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.92) 12%, rgba(0, 0, 0, 0.74) 24%, rgba(0, 0, 0, 0.5) 36%, rgba(0, 0, 0, 0.28) 48%, rgba(0, 0, 0, 0.12) 60%, rgba(0, 0, 0, 0.03) 72%, transparent 84%);
+  mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.92) 12%, rgba(0, 0, 0, 0.74) 24%, rgba(0, 0, 0, 0.5) 36%, rgba(0, 0, 0, 0.28) 48%, rgba(0, 0, 0, 0.12) 60%, rgba(0, 0, 0, 0.03) 72%, transparent 84%);
+}
+
+.layer {
+  position: absolute;
+  will-change: transform, opacity;
+  border-radius: 50%;
+}
+
+/* ---------- A · Aurora veil: two very wide, very soft sheets wandering ----------
+   Low alpha and heavy blur so it reads as atmosphere, not a shape. Each
+   sheet loops through waypoints (position, rotation, stretch) at its own
+   speed, so the light keeps shifting without an obvious rhythm. */
+.aurora .one {
+  width: 150vw;
+  height: 90vh;
+  left: -30vw;
+  top: -48vh;
+  background: radial-gradient(closest-side, rgba(99, 115, 255, 0.17), rgba(99, 115, 255, 0.06) 55%, rgba(99, 115, 255, 0) 100%);
+  filter: blur(70px);
+  animation: wander-a 29s ease-in-out infinite;
+}
+.aurora .two {
+  width: 110vw;
+  height: 80vh;
+  right: -35vw;
+  top: -42vh;
+  background: radial-gradient(closest-side, rgba(207, 195, 217, 0.1), rgba(155, 166, 255, 0.04) 55%, rgba(155, 166, 255, 0) 100%);
+  filter: blur(80px);
+  animation: wander-b 37s ease-in-out infinite;
+}
+@keyframes wander-a {
+  0%   { transform: translate3d(-6vw, 0, 0) rotate(-4deg) scale(1, 1); opacity: 0.85; }
+  25%  { transform: translate3d(4vw, 4vh, 0) rotate(3deg) scale(1.1, 0.92); opacity: 1; }
+  50%  { transform: translate3d(9vw, -2vh, 0) rotate(6deg) scale(0.95, 1.1); opacity: 0.9; }
+  75%  { transform: translate3d(1vw, 5vh, 0) rotate(-2deg) scale(1.06, 1.02); opacity: 1; }
+  100% { transform: translate3d(-6vw, 0, 0) rotate(-4deg) scale(1, 1); opacity: 0.85; }
+}
+@keyframes wander-b {
+  0%   { transform: translate3d(4vw, 0, 0) rotate(5deg) scale(1.04, 1); opacity: 0.75; }
+  30%  { transform: translate3d(-8vw, 5vh, 0) rotate(-3deg) scale(0.94, 1.12); opacity: 1; }
+  60%  { transform: translate3d(-12vw, 1vh, 0) rotate(-7deg) scale(1.1, 0.9); opacity: 0.85; }
+  100% { transform: translate3d(4vw, 0, 0) rotate(5deg) scale(1.04, 1); opacity: 0.75; }
+}
+
+@media (max-width: 767px) {
+  /* phones: the light stays in the top third, above the headline */
+  .ambient {
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.8) 10%, rgba(0, 0, 0, 0.5) 20%, rgba(0, 0, 0, 0.22) 30%, rgba(0, 0, 0, 0.06) 40%, transparent 50%);
+    mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.8) 10%, rgba(0, 0, 0, 0.5) 20%, rgba(0, 0, 0, 0.22) 30%, rgba(0, 0, 0, 0.06) 40%, transparent 50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layer { animation: none !important; }
+}
