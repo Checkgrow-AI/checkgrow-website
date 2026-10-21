@@ -47,6 +47,12 @@ The loop: Your business -> Create -> Reach -> Measure -> Improve. What works get
 5. Competitors: Every competitor move, as it happens. Active LinkedIn and Meta ads, website, pricing, launch and hiring changes tracked automatically, with competitor ads usable as creative references.
 6. AI Assistant: One chat for everything Checkgrow knows. Multi-model chat (Claude, GPT, Gemini, Perplexity) grounded in your knowledge, campaigns and data, with actions across features straight from the answer.
 
+## How Checkgrow is different
+
+- **A company brain built for growth.** Brand, products, audiences, results and decisions live in one brain, structured and strategised for marketing and growth, not as random files in a drive or prompts spread across different chats. Every campaign, agent and report reads from it, and every result feeds back in.
+- **Human connection: the team learns by using it.** Checkgrow runs on the company's own marketing and growth data, and its interactive features take the team through every stage of the funnel, explaining why a number moved. People stay in the loop and get better at marketing as they work.
+- **Self-hosted and sovereign.** Enterprises and scale-ups ask to self-host Checkgrow on their own infrastructure. Their company knowledge stays structured for any AI model, inside their own security perimeter and under their own data-sovereignty rules.
+
 ## Use case guides
 
 Full pages: https://checkgrow.com/use-cases

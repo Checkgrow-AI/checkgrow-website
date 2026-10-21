@@ -81,9 +81,11 @@ export function Roles() {
                 <p className="mt-6 max-w-xl leading-relaxed text-muted">
                   Large teams get the same growth system, shaped around how
                   they already work: one knowledge core feeding every campaign,
-                  agent and report. For companies that need it, we build
-                  self-hosted, custom-developed setups that fit your stack,
-                  your security requirements and your scale.
+                  agent and report. Enterprises and scale-ups increasingly
+                  ask to self-host it: we build self-hosted, custom-developed
+                  setups that fit your stack, your security requirements and
+                  your scale, with your company knowledge structured for any
+                  AI model and kept under your own data sovereignty.
                 </p>
                 <Link
                   href="/book-a-demo"

@@ -6,6 +6,7 @@ import { Credibility } from "@/components/sections/Credibility";
 import { PlatformFilm } from "@/components/sections/PlatformFilm";
 import { Problem } from "@/components/sections/Problem";
 import { Shift } from "@/components/sections/Shift";
+import { Difference } from "@/components/sections/Difference";
 import { CaseStudies } from "@/components/sections/CaseStudies";
 import { UseCases } from "@/components/sections/UseCases";
 import { Roles } from "@/components/sections/Roles";
@@ -28,6 +29,7 @@ export default function Home() {
         <PlatformFilm />
         <Problem />
         <Shift />
+        <Difference />
         <CaseStudies />
         <UseCases />
         <Integrations />

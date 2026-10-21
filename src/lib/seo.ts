@@ -128,7 +128,7 @@ export const faqItems = [
   },
   {
     q: "How is Checkgrow different from ChatGPT or a generic AI tool?",
-    a: "A generic chat starts from zero every time and forgets what worked. Checkgrow keeps a persistent knowledge base of your brand, products, audience and numbers that every agent, campaign and report reads from, and every result feeds back in. The difference is memory and connected execution, not better prompts.",
+    a: "A generic chat starts from zero every time and forgets what worked; your context ends up as files in a drive and prompts scattered across different chats. Checkgrow keeps one company brain, structured and strategised for marketing and growth: your brand, products, audiences, numbers and decisions, which every agent, campaign and report reads from, and every result feeds back in. Because it runs on your own marketing data, your team also learns as it works, and enterprises can self-host it.",
   },
   {
     q: "What is a growth operating system?",
@@ -149,6 +149,14 @@ export const faqItems = [
   {
     q: "Who owns the data and knowledge I put in?",
     a: "You do. Your knowledge base, research and results stay yours: no lock-ins and no hidden rules. Companies should understand how things work and own their data; that is a founding principle, not a feature.",
+  },
+  {
+    q: "Can we self-host Checkgrow on our own infrastructure?",
+    a: "Yes. Enterprises and scale-ups increasingly ask to run Checkgrow on their own private infrastructure, and we build self-hosted setups around their stack and security requirements. Their company knowledge stays structured and ready for any AI model they choose, inside their own perimeter, which matters for data sovereignty and compliance.",
+  },
+  {
+    q: "Does my team need to be marketing experts to use Checkgrow?",
+    a: "No. Checkgrow works on your own marketing and growth data, so using it builds the skills. Interactive features walk your team through each stage of the funnel, from first touch to conversion, and explain what changed and why. People stay in the loop, make the decisions and get better at marketing as they go.",
   },
   {
     q: "How fast can I launch campaigns with Checkgrow?",

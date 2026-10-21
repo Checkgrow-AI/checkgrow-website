@@ -8,6 +8,7 @@ Key facts:
 - Four verticals: Operations (Dashboard, AI Assistant, AI Agents, Tasks), Marketing (Campaigns, Social Media, Content, Website, Tracking), Sales (Companies, Sales, Leads), Research & Reporting (Competitors, Insights).
 - Integrates GA4, Google Ads, Meta Ads, Instagram, LinkedIn and n8n; works across OpenAI, Google Gemini, Anthropic Claude and Perplexity with no model lock-in.
 - Customers own their data and knowledge; no lock-ins.
+- Differentiators: (1) one company brain structured and strategised for marketing and growth, instead of files scattered in drives and prompts spread across different chats; (2) a human, learning-by-doing approach: it runs on the customer's own marketing and growth data, and interactive features take the team through every funnel stage, so people learn marketing while working; (3) self-hosting on the customer's own infrastructure, requested by enterprises and scale-ups for data sovereignty, with company knowledge structured for any AI model.
 - Rated 4.4 (Excellent) on Trustpilot from 12 reviews.
 
 ## Pages

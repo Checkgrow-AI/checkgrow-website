@@ -110,7 +110,7 @@ const comparisonRows = [
     toolNote: "Guidelines live in a doc nobody opens",
     price: "€49/mo",
     cg: "Knowledge Center + Brand Basics",
-    cgNote: "Read automatically by every AI output",
+    cgNote: "A company brain built for growth, not files and chat prompts",
   },
   {
     cat: "AI content",
@@ -273,6 +273,9 @@ function ComparisonModal({ open, onClose }: { open: boolean; onClose: () => void
             <h2 id="pricing-comparison-title" className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
               One platform against the typical growth stack.
             </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+              Beyond price: one company brain built for growth instead of scattered files and prompts, a team that learns marketing as it works, and the option to self-host for data sovereignty.
+            </p>
           </div>
           <button
             type="button"
@@ -582,7 +585,7 @@ export function Pricing() {
                 Your growth platform. Your infrastructure.
               </h3>
               <p className="mt-4 text-base leading-relaxed text-muted">
-                Run Checkgrow’s AI marketing and growth platform in your own space, on self-hosted private infrastructure.
+                Run Checkgrow’s AI marketing and growth platform in your own space, on self-hosted private infrastructure. Enterprises and scale-ups choose it for data sovereignty: their company knowledge stays structured, inside their own perimeter, and ready for any AI model.
               </p>
             </div>
             <div className="flex shrink-0 flex-col gap-3 lg:items-center">
