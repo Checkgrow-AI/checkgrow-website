@@ -192,13 +192,13 @@ const rand01 = (seed: number) => {
 
 /* The brand token is a six-digit hex colour. Alpha-only stops keep even
    the brightest centre purple instead of bleaching it towards white. */
-function makeSprite(color: string, size = 64) {
+function makeSprite(color: string, size = 64, body = "8c") {
   const c = document.createElement("canvas");
   c.width = c.height = size;
   const ctx = c.getContext("2d")!;
   const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
   g.addColorStop(0, color);
-  g.addColorStop(0.35, `${color}8c`);
+  g.addColorStop(0.35, `${color}${body}`);
   g.addColorStop(1, `${color}00`);
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, size, size);
@@ -456,11 +456,28 @@ export function HeroV2() {
     if (!ctx) return;
 
     const particleColor = getComputedStyle(canvas).getPropertyValue("--color-brand").trim();
-    const sprite = makeSprite(particleColor);
+    /* particle palette: brand purple stays the majority; ~8% of particles
+       glow blush and ~13% of the small crisp dots glow mint. A pale colour
+       over black reads grey once it is blurred and faded, so the tint
+       sprites keep a denser body and are drawn a little stronger
+       (tintBoost). */
+    const mixPalette = true;
+    const palette = mixPalette ? [particleColor, "#b5f4c8", "#fcadb9"] : [particleColor];
+    const sprites = palette.map((c, i) => makeSprite(c, 64, i ? "d9" : "8c"));
+    const tintBoost = [1, 1.35, 1.35];
+    const sprite = sprites[0];
+    /* colour index for one particle: 0 = brand. Mint is kept for the
+       small crisp dots only (never the big soft glows); blush can be any. */
+    const tint = (small: boolean) => {
+      if (!mixPalette) return 0;
+      const r = Math.random();
+      if (r < 0.08) return 2;
+      return small && r < 0.21 ? 1 : 0;
+    };
 
     let isMobile = window.innerWidth < 1024;
     let isNarrow = window.innerWidth < 375;
-    const particles = buildParticles(isMobile ? 480 : 1000);
+    const particles = buildParticles(isMobile ? 480 : 1000).map((pt) => ({ ...pt, c: tint(pt.sharp) }));
     /* ambient dust spread over the whole viewport, alive in every scene;
        a share of it fully formed at full contrast */
     const ambient = Array.from({ length: isMobile ? 110 : 260 }, () => {
@@ -474,6 +491,7 @@ export function HeroV2() {
         a: solid ? 0.95 : 0.2 + Math.random() * 0.5,
         sharp,
         solid,
+        c: tint(sharp),
       };
     });
     /* strong star dots (#6373FF): crisp ~3px, spread everywhere, softly
@@ -484,6 +502,7 @@ export function HeroV2() {
       ph: Math.random() * Math.PI * 2,
       sz: 1.1 + Math.random() * 0.5,
       spd: 0.5 + Math.random() * 0.8,
+      c: tint(true),
     }));
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     let w = 0, h = 0, S = 0, headerClearance = 88;
@@ -646,16 +665,16 @@ export function HeroV2() {
           : am.solid
             ? 0.4 + 0.6 * (0.5 + 0.5 * Math.sin(t * (0.7 + (am.ph % 1)) + am.ph))
             : 0.55 + 0.45 * Math.sin(t * 1.3 + am.ph);
-        const a = am.a * tw * (isMobile && !am.solid ? 0.6 : 1);
+        const a = Math.min(1, am.a * tw * (isMobile && !am.solid ? 0.6 : 1) * tintBoost[am.c]);
         ctx.globalAlpha = a;
         if (am.sharp) {
-          ctx.fillStyle = particleColor;
+          ctx.fillStyle = palette[am.c];
           ctx.beginPath();
           ctx.arc(ax, ay, am.sz, 0, Math.PI * 2);
           ctx.fill();
         } else {
           const r = am.sz * 3;
-          ctx.drawImage(sprite, ax - r, ay - r, r * 2, r * 2);
+          ctx.drawImage(sprites[am.c], ax - r, ay - r, r * 2, r * 2);
         }
       }
       ctx.globalAlpha = 1;
@@ -668,7 +687,7 @@ export function HeroV2() {
           ? 0.8
           : 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * st.spd + st.ph));
         ctx.globalAlpha = blink;
-        ctx.fillStyle = particleColor;
+        ctx.fillStyle = palette[st.c];
         ctx.beginPath();
         ctx.arc(sx, sy, st.sz, 0, Math.PI * 2);
         ctx.fill();
@@ -763,15 +782,15 @@ export function HeroV2() {
           : 0.78 + 0.22 * Math.sin(t * 2 + pt.phase);
         const mobileDim = isMobile && e1 < 0.5 ? 0.35 : 1;
         if (pt.sharp) {
-          ctx.globalAlpha = pt.alpha * tw * mobileDim;
-          ctx.fillStyle = particleColor;
+          ctx.globalAlpha = Math.min(1, pt.alpha * tw * mobileDim * tintBoost[pt.c]);
+          ctx.fillStyle = palette[pt.c];
           ctx.beginPath();
           ctx.arc(x, y, pt.size * (0.8 + 0.4 * depth), 0, Math.PI * 2);
           ctx.fill();
         } else {
-          ctx.globalAlpha = pt.alpha * tw * (0.55 + 0.45 * depth) * mobileDim;
+          ctx.globalAlpha = Math.min(1, pt.alpha * tw * (0.55 + 0.45 * depth) * mobileDim * tintBoost[pt.c]);
           const r = pt.size * (0.7 + 0.5 * depth);
-          ctx.drawImage(sprite, x - r, y - r, r * 2, r * 2);
+          ctx.drawImage(sprites[pt.c], x - r, y - r, r * 2, r * 2);
         }
       }
       ctx.globalAlpha = 1;
@@ -947,7 +966,7 @@ export function HeroV2() {
               <p className="hero-intro-label text-label flex items-center gap-2.5 text-muted">
                 AI Native Growth Marketing
               </p>
-              <h1 className="hero-intro-title text-display mt-6 text-balance" style={{ fontWeight: 400 }}>
+              <h1 className="hero-intro-title text-display mt-6 text-balance">
                 The go-to-market engine that learns your{" "}
                 <span className="relative whitespace-nowrap">
                   <RotatingWord />
