@@ -96,7 +96,7 @@ Rated 4.4 (Excellent) on Trustpilot from 12 reviews: https://www.trustpilot.com/
 
 Eleven subscriptions, side by side with one. The typical stack (category examples at list prices): brand wikis (Notion or Frontify, €49/mo), AI content (Jasper or Copy.ai, €99/mo), campaign ops (CoSchedule or Monday, €79/mo), social suites (Hootsuite or Sprout Social, €149/mo), competitive intel (Semrush or Similarweb, €199/mo), prospecting (Apollo.io or ZoomInfo, €199/mo), conversion tooling (Hotjar, VWO or a CRO agency, €129/mo), analytics (Databox or Mixpanel, €99/mo), consent tracking (Cookiebot or OneTrust, €99/mo), work tracking (Asana or ClickUp, €59/mo), creative direction (Canva or Figma, €39/mo). Full stack: about €1,199/month, before seats and overages.
 
-Checkgrow: one platform, one source of truth, one bill. €79/month, with a free start via the waitlist.
+Checkgrow: one platform, one source of truth, one bill, from €499/month.
 
 ## Integrations
 
@@ -110,7 +110,12 @@ Channels and measurement: Google Analytics 4, Google Ads, Meta Ads, Instagram, L
 
 ## Pricing
 
-€79/month at launch. Joining the waitlist is free, guarantees free access at launch, and requires no payment details. Your data stays yours.
+- Business: €499/month. One brand, 5,000 Growth Credits a month, unlimited team seats, top up anytime.
+- Agency: €997/month. Unlimited brands, shared credit pool, 1 hour a month with our growth team.
+- Growth: €4,997/month. Dedicated account manager, ad management, creative production and customer success; up to 3 ad accounts, extra accounts billed separately.
+- Enterprise: custom. White-label and branded platform, custom development, self-hosted infrastructure, enhanced security and long-term agreements.
+
+Prices exclude VAT; annual billing saves 10%. Your data stays yours.
 
 ## FAQ
 
@@ -127,7 +132,7 @@ Q: How is Checkgrow different from ChatGPT or a generic AI tool?
 A: A generic chat starts from zero every time and forgets what worked. Checkgrow keeps a persistent knowledge base of your brand, products, audience and numbers that every agent, campaign and report reads from, and every result feeds back in. The difference is memory and connected execution, not better prompts.
 
 Q: Which tools does Checkgrow replace?
-A: The typical growth stack it covers spans eleven subscriptions: brand wikis, AI content tools, campaign ops boards, social suites, competitive intelligence, prospecting databases, CRO tooling, analytics dashboards, consent tracking, work tracking and creative direction. That stack commonly runs around €1,199 per month across tools; Checkgrow is one platform at €79 per month.
+A: The typical growth stack it covers spans eleven subscriptions: brand wikis, AI content tools, campaign ops boards, social suites, competitive intelligence, prospecting databases, CRO tooling, analytics dashboards, consent tracking, work tracking and creative direction. That stack commonly runs around €1,199 per month across tools; Checkgrow is one platform, from €499 per month.
 
 Q: Which platforms does Checkgrow connect to?
 A: Google Analytics 4, Google Ads, Meta Ads, Instagram and LinkedIn for channels and measurement, with automation via n8n. Model-side it works across OpenAI, Google Gemini, Anthropic Claude and Perplexity.
@@ -145,7 +150,7 @@ Q: Can a small team or a team without an agency use Checkgrow?
 A: Yes, that is the point. A growth team of three can operate like thirty: AI agents produce the work around the clock, marketing ops run without a dedicated project manager, reporting is board-ready without a data analyst, and there is no agency invoice.
 
 Q: How much does Checkgrow cost?
-A: €79 per month at launch, replacing a stack that typically costs around €1,199 per month. Joining the waitlist is free, guarantees free access at launch, and requires no payment details.
+A: Four plans: Business €499 per month for one brand, Agency €997 per month for unlimited brands with an hour a month with our growth team, Growth €4,997 per month with a dedicated account manager and ad management team for up to three ad accounts, and Enterprise on custom terms with white-label, self-hosting and long-term agreements. Growth Credits can be topped up anytime on every plan. Prices exclude VAT; annual billing saves 10%.
 
 Q: What do I get by joining the waitlist?
 A: Early access to the platform as we open new workspaces, plus a short onboarding session with our team to set up your knowledge base. No payment details are required to join.

@@ -72,11 +72,13 @@ export const softwareJsonLd = {
     "Website conversion audits with ranked fixes",
   ],
   offers: {
-    "@type": "Offer",
-    price: "79",
+    "@type": "AggregateOffer",
+    lowPrice: "499",
+    highPrice: "4997",
+    offerCount: "4",
     priceCurrency: "EUR",
-    availability: "https://schema.org/PreOrder",
-    description: "€79/month at launch. Early access via free waitlist.",
+    availability: "https://schema.org/InStock",
+    description: "Business from €499/month, Agency €997/month, Growth €4,997/month, Enterprise custom. Prices exclude VAT.",
   },
   aggregateRating: {
     "@type": "AggregateRating",
@@ -136,7 +138,7 @@ export const faqItems = [
   },
   {
     q: "Which tools does Checkgrow replace?",
-    a: "The typical growth stack it covers spans eleven subscriptions: brand wikis, AI content tools, campaign ops boards, social suites, competitive intelligence, prospecting databases, CRO tooling, analytics dashboards, consent tracking, work tracking and creative direction. That stack commonly runs around €1,199 per month across tools; Checkgrow is one platform at €79 per month.",
+    a: "The typical growth stack it covers spans eleven subscriptions: brand wikis, AI content tools, campaign ops boards, social suites, competitive intelligence, prospecting databases, CRO tooling, analytics dashboards, consent tracking, work tracking and creative direction. That stack commonly runs around €1,199 per month across tools; Checkgrow is one platform, from €499 per month.",
   },
   {
     q: "Which platforms does Checkgrow connect to?",
@@ -168,7 +170,7 @@ export const faqItems = [
   },
   {
     q: "How much does Checkgrow cost?",
-    a: "€79 per month at launch, replacing a stack that typically costs around €1,199 per month. Joining the waitlist is free, guarantees free access at launch, and requires no payment details.",
+    a: "Four plans: Business €499 per month for one brand, Agency €997 per month for unlimited brands with an hour a month with our growth team, Growth €4,997 per month with a dedicated account manager and ad management team for up to three ad accounts, and Enterprise on custom terms with white-label, self-hosting and long-term agreements. Growth Credits can be topped up anytime on every plan. Prices exclude VAT; annual billing saves 10%.",
   },
   {
     q: "What do I get by joining the waitlist?",

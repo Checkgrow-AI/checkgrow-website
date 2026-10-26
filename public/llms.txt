@@ -3,7 +3,7 @@
 > Checkgrow is a go-to-market engine that learns your product, buyers, market and channels. It connects company knowledge, market research, day-to-day marketing execution and measurement into one system, so every team works from the same context and every campaign starts from what the business already knows. Positioning: AI Native Growth Marketing. Built for CMOs, enterprise marketing teams, marketing and sales operations, growth teams and founders.
 
 Key facts:
-- One platform (€79/month at launch) covering what typically takes eleven marketing subscriptions (~€1,199/month).
+- One platform (from €499/month) covering what typically takes eleven marketing subscriptions (~€1,199/month).
 - A persistent Knowledge Centre (brand, products, audience, numbers) that every AI agent, campaign and report reads from; every result feeds back in.
 - Four verticals: Operations (Dashboard, AI Assistant, AI Agents, Tasks), Marketing (Campaigns, Social Media, Content, Website, Tracking), Sales (Companies, Sales, Leads), Research & Reporting (Competitors, Insights).
 - Integrates GA4, Google Ads, Meta Ads, Instagram, LinkedIn and n8n; works across OpenAI, Google Gemini, Anthropic Claude and Perplexity with no model lock-in.

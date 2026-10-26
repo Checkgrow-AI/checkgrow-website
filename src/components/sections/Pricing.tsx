@@ -6,101 +6,133 @@ import { Reveal } from "@/components/Reveal";
 
 type Billing = "monthly" | "annual";
 
+type Spec = { label: string; value: string; note?: string };
+
 type Plan = {
+  id: string;
   name: string;
-  eyebrow: string;
+  audience: string;
   description: string;
-  monthly: number;
-  featured?: boolean;
+  /* null = custom quote */
+  monthly: number | null;
+  featured?: string;
+  cta: { label: string; href: string; external?: boolean };
+  ctaNote: string;
+  specs: [Spec, Spec, Spec, Spec];
+  service: { title: string; body: string; team?: boolean };
   inheritance: string;
-  suite?: {
-    name: string;
-    items: string[];
-    note?: string;
-  };
-  included?: string[];
-  trialSales?: boolean;
-  features: Array<{
-    label: string;
-    note?: string;
-  }>;
+  includes: string[];
 };
 
+const SALES_CALENDAR = "https://calendar.app.google/HhKnzyVUaZGaQ4u39";
+
+/* Four plans in one row. Every card has the same blocks in the same order
+   (audience, name, price, CTA, four specs, service, inclusions), laid on a
+   shared subgrid so each block lines up across the row. */
 const plans: Plan[] = [
   {
-    name: "Starter",
-    eyebrow: "For lean teams looking to learn growth",
-    description: "Build your growth system with room for three collaborators.",
-    monthly: 79,
-    inheritance: "Included in Starter",
-    suite: {
-      name: "Marketing suite",
-      items: ["Social Media", "Influencers", "Campaigns", "Insights"],
-    },
-    trialSales: true,
-    features: [
-      { label: "750 Growth Credits / month" },
-      { label: "Unused credits carry over", note: "Up to 150 Growth Credits" },
-      { label: "3 team members" },
-      { label: "1 brand" },
-    ],
-  },
-  {
-    name: "Pro",
-    eyebrow: "For connected GTM teams",
-    description: "Connect marketing and sales in one growth operating system.",
-    monthly: 149,
-    featured: true,
-    inheritance: "Everything from Starter +",
-    suite: {
-      name: "Sales suite",
-      items: ["Track Companies", "LinkedIn Outreach", "UTM Leads"],
-      note: "Marketing suite included. Sales access continues after your trial.",
-    },
-    features: [
-      { label: "1,500 Growth Credits / month" },
-      { label: "Unused credits carry over", note: "Up to 300 Growth Credits" },
-      { label: "5 team members" },
-      { label: "1 brand" },
-    ],
-  },
-  {
+    id: "business",
     name: "Business",
-    eyebrow: "For companies scaling growth",
-    description: "Scale your growth across brands, with space for every team.",
+    audience: "For a single brand",
+    description: "The complete platform for a single brand, with room for the whole team.",
     monthly: 499,
-    inheritance: "Everything from all plans +",
-    included: ["Marketing suite", "Sales suite", "All features included"],
-    features: [
-      { label: "5,000 Growth Credits / month" },
-      { label: "20% credit carry-over", note: "Up to 1,000 unused Growth Credits" },
-      { label: "Unlimited team members" },
-      { label: "3 brands" },
+    cta: { label: "Book a demo", href: "/book-a-demo" },
+    ctaNote: "No credit card required",
+    specs: [
+      { label: "Brands", value: "1 brand" },
+      { label: "Growth Credits", value: "5,000 / month", note: "Top up anytime" },
+      { label: "Team seats", value: "Unlimited" },
+      { label: "Managed accounts", value: "Self-serve" },
+    ],
+    service: { title: "Help center & chat support", body: "Guides, tutorials and our team on chat when you need a hand." },
+    inheritance: "The full platform",
+    includes: [
+      "Company brain in the Knowledge Center",
+      "Marketing and Sales suites",
+      "Creative Studio and AI Assistant",
+      "Insights, funnel and smart reporting",
+      "GA4, Meta, Google Ads and LinkedIn",
+    ],
+  },
+  {
+    id: "agency",
+    name: "Agency",
+    audience: "For agencies and multi-brand teams",
+    description: "Every brand and client in its own workspace, with our team in your corner.",
+    monthly: 997,
+    cta: { label: "Book a demo", href: "/book-a-demo" },
+    ctaNote: "No credit card required",
+    specs: [
+      { label: "Brands", value: "Unlimited" },
+      { label: "Growth Credits", value: "5,000 / month", note: "Shared pool · top up anytime" },
+      { label: "Team seats", value: "Unlimited" },
+      { label: "Managed accounts", value: "Self-serve" },
+    ],
+    service: { title: "1 hour / month with our growth team", body: "A monthly customer-success session to review results and plan the next move." },
+    inheritance: "Everything in Business, plus",
+    includes: [
+      "Multi-brand: unlimited client brands",
+      "A separate company brain per brand",
+      "Switch between client workspaces",
+      "Monthly growth session with our team",
+    ],
+  },
+  {
+    id: "growth",
+    name: "Growth",
+    audience: "Your growth team, included",
+    description: "Our specialists run your ads, reports and follow-up, alongside your team.",
+    monthly: 4997,
+    featured: "Done with you",
+    cta: { label: "Talk to our team", href: SALES_CALENDAR, external: true },
+    ctaNote: "Book a call with our team",
+    specs: [
+      { label: "Brands", value: "Unlimited" },
+      { label: "Growth Credits", value: "5,000 / month", note: "Top up anytime" },
+      { label: "Team seats", value: "Unlimited" },
+      { label: "Managed accounts", value: "Up to 3", note: "Extra accounts billed separately" },
+    ],
+    service: { title: "A dedicated growth team", body: "", team: true },
+    inheritance: "Everything in Agency, plus",
+    includes: [
+      "Dedicated account manager",
+      "Ad management: ads created, launched and optimised",
+      "Performance reports for every account",
+      "Customer success across your accounts",
+    ],
+  },
+  {
+    id: "enterprise",
+    name: "Enterprise",
+    audience: "Built around your organisation",
+    description: "Your growth platform, on your infrastructure, under your brand.",
+    monthly: null,
+    cta: { label: "Contact sales", href: SALES_CALENDAR, external: true },
+    ctaNote: "Book a call with our team",
+    specs: [
+      { label: "Brands", value: "Unlimited" },
+      { label: "Growth Credits", value: "Custom" },
+      { label: "Team seats", value: "Unlimited" },
+      { label: "Managed accounts", value: "Custom" },
+    ],
+    service: { title: "A custom team for your build", body: "Engineers and growth specialists dedicated to your roll-out." },
+    inheritance: "Everything in Growth, plus",
+    includes: [
+      "Custom development and integrations",
+      "White-label, branded platform",
+      "Self-hosted infrastructure and data sovereignty",
+      "Advanced security and compliance reviews",
+      "Long-term agreements",
     ],
   },
 ];
 
-const sharedFeatures = [
-  {
-    title: "Leads inbox & management",
-    description: "View and organise every imported lead.",
-  },
-  {
-    title: "Insights reporting",
-    description: "Dashboards, GA and Meta reports, conversion events.",
-  },
-  {
-    title: "Integrations",
-    description: "Connect GA, Meta, Google Ads and more.",
-  },
-  {
-    title: "Team & permissions",
-    description: "Roles, feature access and company switching.",
-  },
-  {
-    title: "Reports & exports",
-    description: "Read every generated report and export your data.",
-  },
+/* The Growth plan's team: the roles that work on your accounts */
+const growthTeam = [
+  { initials: "AM", role: "Account manager" },
+  { initials: "AD", role: "Ad management" },
+  { initials: "CR", role: "Creative production" },
+  { initials: "CS", role: "Customer success" },
 ];
 
 const comparisonRows = [
@@ -211,14 +243,6 @@ function Check() {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-    </svg>
-  );
-}
-
-function CornerDownRight() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden className="mt-0.5 shrink-0 text-accent">
-      <path d="M3 2v5a2 2 0 0 0 2 2h7M9 6l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -350,7 +374,7 @@ function ComparisonModal({ open, onClose }: { open: boolean; onClose: () => void
             </div>
             <div className="rounded-card bg-brand-strong p-6 text-white shadow-raised">
               <p className="text-label text-white">Checkgrow</p>
-              <p className="mt-2 text-3xl font-semibold tracking-tight">From €79/mo</p>
+              <p className="mt-2 text-3xl font-semibold tracking-tight">From €499/mo</p>
               <p className="mt-2 text-sm leading-relaxed text-white">
                 One operating system, one source of truth and one bill.
               </p>
@@ -385,9 +409,9 @@ export function Pricing() {
             <p className="text-label flex items-center gap-2.5 text-muted">
               Pricing
             </p>
-            <h2 className="text-h1 mt-6 text-balance">Choose the capacity your growth team needs.</h2>
+            <h2 className="text-h1 mt-6 text-balance">The platform, the brands, or the whole team.</h2>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
-              Every plan connects your knowledge, marketing and reporting. Move up when your team needs more credits, people and sales capacity.
+              Every plan runs on the same company brain. Choose one brand, every brand, or our specialists running growth with you.
             </p>
           </Reveal>
 
@@ -428,183 +452,144 @@ export function Pricing() {
           </Reveal>
         </div>
 
-        {/* Reveal each card independently: the stacked mobile grid can be
-            taller than the viewport's intersection threshold. */}
-        <div className="mt-10 grid items-stretch gap-5 lg:grid-cols-3">
+        {/* One row of four. On large screens every card spans the same 8
+            rows of a shared subgrid, so names, prices, buttons, specs,
+            service and inclusions line up across the row. */}
+        <div className="mt-12 grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-[repeat(8,auto)] xl:gap-x-4 xl:gap-y-0">
           {plans.map((plan) => {
-            const displayPrice = billing === "monthly" ? plan.monthly : plan.monthly * 0.9;
-            const annualTotal = plan.monthly * 12 * 0.9;
-            const featured = plan.featured;
-
+            const price = plan.monthly === null ? null : billing === "monthly" ? plan.monthly : plan.monthly * 0.9;
+            const featured = Boolean(plan.featured);
+            const external = plan.cta.external;
             return (
-              <Reveal key={plan.name} className="h-full">
+              <Reveal key={plan.id} className="h-full xl:row-span-8 xl:grid xl:grid-rows-subgrid">
                 <article
-                  aria-labelledby={`plan-${plan.name.toLowerCase()}`}
-                  className={`relative flex h-full flex-col overflow-hidden rounded-card ${
+                  aria-labelledby={`plan-${plan.id}`}
+                  className={`relative flex h-full flex-col overflow-hidden rounded-card xl:row-span-8 xl:grid xl:grid-rows-subgrid ${
                     featured
-                      ? "bg-raised bg-linear-to-br from-brand/10 via-transparent to-brand/5 text-foreground shadow-[0_0_64px_-24px_var(--color-brand)] ring-1 ring-accent/60"
-                      : "bg-surface text-foreground shadow-soft ring-1 ring-line"
+                      ? "bg-raised bg-linear-to-b from-brand/12 via-transparent to-transparent shadow-[0_0_72px_-28px_var(--color-brand)] ring-1 ring-accent/60"
+                      : "bg-canvas shadow-soft ring-1 ring-line"
                   }`}
                 >
-                  <div className={`flex min-h-16 items-center border-b px-6 py-2 ${featured ? "border-brand bg-brand-strong text-white" : "border-line text-muted"}`}>
-                    <p className={`text-sm leading-5 ${featured ? "font-semibold" : "font-medium"}`}>
-                      {featured ? "Best to start and scale" : plan.eyebrow}
+                  {/* 1 · audience band */}
+                  <div className={`flex min-h-14 items-center justify-between gap-3 border-b px-6 ${featured ? "border-brand bg-brand-strong text-white" : "border-line text-muted"}`}>
+                    <p className={`truncate text-sm leading-5 ${featured ? "font-semibold" : "font-medium"}`}>{plan.audience}</p>
+                  </div>
+
+                  {/* 2 · name and promise */}
+                  <div className="px-6 pt-6">
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 id={`plan-${plan.id}`} className="text-2xl font-semibold tracking-tight">{plan.name}</h3>
+                      {plan.featured && <span className="shrink-0 rounded-full bg-brand/20 px-2.5 py-1 text-[11px] font-semibold text-accent ring-1 ring-accent/40">{plan.featured}</span>}
+                    </div>
+                    <p className="mt-2 text-sm leading-5 text-muted">{plan.description}</p>
+                  </div>
+
+                  {/* 3 · price */}
+                  <div className="px-6 pt-5" aria-live="polite">
+                    {price === null ? (
+                      <div className="flex items-end gap-1.5">
+                        <span className="text-4xl font-semibold tracking-[-0.045em]">Custom</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-end gap-1.5">
+                        <span className="text-4xl font-semibold tracking-[-0.045em]">€{formatPrice(price)}</span>
+                        <span className="pb-1 text-sm text-muted">/month</span>
+                      </div>
+                    )}
+                    <p className="mt-2 text-xs text-muted">
+                      {price === null
+                        ? "Tailored agreement"
+                        : billing === "monthly"
+                          ? "Billed monthly, excl. VAT"
+                          : `€${formatPrice((plan.monthly ?? 0) * 12 * 0.9)} billed yearly`}
                     </p>
                   </div>
 
-                  <div className="flex flex-1 flex-col p-6">
-                    <h3 id={`plan-${plan.name.toLowerCase()}`} className="text-2xl font-semibold tracking-tight">{plan.name}</h3>
-                    <p className="mt-2 text-sm leading-5 text-muted lg:min-h-10">
-                      {plan.description}
-                    </p>
+                  {/* 4 · call to action */}
+                  <div className="px-6 pt-5">
+                    {external ? (
+                      <a
+                        href={plan.cta.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`inline-flex min-h-12 w-full items-center justify-center rounded-full px-6 text-sm font-semibold transition-colors duration-200 ${
+                          featured ? "bg-brand-strong text-white hover:bg-brand-hover" : "border border-brand text-accent hover:bg-brand-strong hover:text-white"
+                        }`}
+                      >
+                        {plan.cta.label}
+                        <span className="sr-only"> (opens booking calendar in a new tab)</span>
+                      </a>
+                    ) : (
+                      <Link
+                        href={plan.cta.href}
+                        className={`inline-flex min-h-12 w-full items-center justify-center rounded-full px-6 text-sm font-semibold transition-colors duration-200 ${
+                          featured ? "bg-brand-strong text-white hover:bg-brand-hover" : "border border-brand text-accent hover:bg-brand-strong hover:text-white"
+                        }`}
+                      >
+                        {plan.cta.label}
+                      </Link>
+                    )}
+                    <p className="mt-2 text-center text-xs text-muted">{plan.ctaNote}</p>
+                  </div>
 
-                    <div
-                      aria-live="polite"
-                      className="mt-4"
-                    >
-                      <div className="flex items-end gap-1.5">
-                        <span className="text-4xl font-semibold tracking-[-0.045em] sm:text-5xl">
-                          €{formatPrice(displayPrice)}
-                        </span>
-                        <span className="pb-1 text-sm text-muted">/month</span>
+                  {/* 5 · the four specs, same labels on every plan */}
+                  <dl className="mx-6 mt-6 divide-y divide-line border-y border-line">
+                    {plan.specs.map((spec) => (
+                      <div key={spec.label} className="flex h-[4.25rem] flex-col justify-center gap-0.5">
+                        <dt className="text-[11px] uppercase tracking-[0.08em] text-muted">{spec.label}</dt>
+                        <dd className="flex flex-wrap items-baseline gap-x-2">
+                          <span className="text-sm font-semibold">{spec.value}</span>
+                          {spec.note && <span className="text-[11px] leading-4 text-muted">{spec.note}</span>}
+                        </dd>
                       </div>
-                      <p className="mt-2 text-xs text-muted">
-                        {billing === "monthly" ? "Billed monthly" : `€${formatPrice(annualTotal)} billed yearly`}
-                      </p>
-                    </div>
+                    ))}
+                  </dl>
 
-                    <Link
-                      href="/book-a-demo"
-                      className={`mt-5 inline-flex min-h-12 items-center justify-center rounded-full px-7 text-sm font-semibold transition-colors duration-200 ${
-                        featured
-                          ? "bg-brand-strong text-white hover:bg-brand-hover"
-                          : "border border-brand text-accent hover:bg-brand-strong hover:text-white"
-                      }`}
-                    >
-                      Book a demo
-                    </Link>
-                    <div className="mt-2 text-center text-xs leading-relaxed">
-                      <p className="font-medium text-foreground">3 months free, guaranteed</p>
-                      <p className="mt-0.5 text-muted">No credit card required</p>
-                    </div>
-
-                    <ul role="list" className="mt-5 flex flex-col gap-2.5 border-t border-line pt-5">
-                      {plan.features.map((feature) => (
-                        <li key={feature.label} className="flex items-start gap-3 text-sm leading-relaxed">
-                          <Check />
-                          <div>
-                            <span>{feature.label}</span>
-                            {feature.note && (
-                              <p className="mt-1 text-xs text-muted">{feature.note}</p>
-                            )}
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-
-                    <div className="mt-5 flex-1">
-                      <p className="text-sm font-semibold text-foreground">{plan.inheritance}</p>
-                      {plan.suite && <ul role="list" className="mt-3">
-                        <li>
-                          <div className="flex items-start gap-3 text-sm font-semibold">
-                            <Check />
-                            {plan.suite.name}
-                          </div>
-                          <ul role="list" className="mt-2 space-y-1.5 text-sm leading-5 text-muted">
-                            {plan.suite.items.map((item) => (
-                              <li key={item} className="flex items-start gap-3">
-                                <CornerDownRight />
-                                <span>{item}</span>
+                  {/* 6 · the human service that comes with the plan */}
+                  <div className="px-6 pt-6">
+                    <div className={`h-full rounded-card p-4 ${featured ? "bg-brand/12 ring-1 ring-accent/30" : "bg-surface ring-1 ring-line"}`}>
+                      <p className="text-sm font-semibold">{plan.service.title}</p>
+                      {plan.service.team ? (
+                        <>
+                          <p className="mt-1 text-xs text-muted">{growthTeam.length} specialist roles on your accounts</p>
+                          <ul role="list" className="mt-3 grid gap-2">
+                            {growthTeam.map((m) => (
+                              <li key={m.role} className="flex items-center gap-2.5 text-xs">
+                                <span aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-full bg-brand-strong text-[10px] font-semibold tracking-wide text-white">
+                                  {m.initials}
+                                </span>
+                                <span className="text-foreground">{m.role}</span>
                               </li>
                             ))}
                           </ul>
-                          {plan.suite.note && <p className="mt-3 text-xs leading-relaxed text-muted">{plan.suite.note}</p>}
-                        </li>
-                      </ul>}
-                      {plan.included && (
-                        <ul role="list" className="mt-3 space-y-2.5">
-                          {plan.included.map((item) => (
-                            <li key={item} className="flex items-start gap-3 text-sm leading-5">
-                              <Check />
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                      {plan.trialSales && (
-                        <p className="mt-3 text-xs leading-relaxed text-muted">
-                          <span className="font-semibold text-accent">Plus Sales suite during your free trial.</span>{" "}
-                          Sales access ends when the trial finishes.
-                        </p>
+                        </>
+                      ) : (
+                        <p className="mt-1.5 text-xs leading-relaxed text-muted">{plan.service.body}</p>
                       )}
                     </div>
-
                   </div>
+
+                  {/* 7 · inheritance */}
+                  <p className="px-6 pt-6 text-sm font-semibold">{plan.inheritance}</p>
+
+                  {/* 8 · inclusions */}
+                  <ul role="list" className="flex-1 space-y-2.5 px-6 pb-7 pt-3">
+                    {plan.includes.map((item) => (
+                      <li key={item} className="flex items-start gap-3 text-sm leading-5">
+                        <Check />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </article>
               </Reveal>
             );
           })}
         </div>
 
-        <Reveal delay={0.08}>
-          <div className="mt-5 overflow-hidden rounded-card bg-raised p-6 text-foreground ring-1 ring-line shadow-soft sm:p-8">
-            <div className="grid gap-4 border-b border-white/10 pb-6 md:grid-cols-[1fr_1.2fr] md:items-end">
-              <h3 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                Included on every plan. No credits needed.
-              </h3>
-              <p className="text-sm leading-relaxed text-muted md:text-right">
-                Credits are only spent when an action calls a paid AI or data provider. Reading and managing your existing information never costs Growth Credits.
-              </p>
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3">
-              {sharedFeatures.map((feature, index) => (
-                <div
-                  key={feature.title}
-                  className={`flex gap-3 border-white/10 py-5 md:px-5 ${
-                    index > 0 ? "border-t" : ""
-                  } ${index % 2 === 1 ? "md:border-l" : ""} ${index > 1 ? "md:border-t" : ""} ${
-                    index % 3 !== 0 ? "lg:border-l" : "lg:border-l-0"
-                  } ${index > 2 ? "lg:border-t" : "lg:border-t-0"}`}
-                >
-                  <Check />
-                  <div>
-                    <p className="text-sm font-semibold">{feature.title}</p>
-                    <p className="mt-1 text-xs leading-relaxed text-muted">{feature.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Reveal>
-
-        <Reveal delay={0.1}>
-          <article aria-labelledby="enterprise-pricing-title" className="mt-5 flex flex-col gap-8 rounded-card bg-canvas p-6 shadow-raised ring-1 ring-line sm:p-8 lg:flex-row lg:items-center lg:justify-between">
-            <div className="max-w-2xl">
-              <p className="text-label text-accent">Enterprise</p>
-              <h3 id="enterprise-pricing-title" className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
-                Your growth platform. Your infrastructure.
-              </h3>
-              <p className="mt-4 text-base leading-relaxed text-muted">
-                Run Checkgrow’s AI marketing and growth platform in your own space, on self-hosted private infrastructure. Enterprises and scale-ups choose it for data sovereignty: their company knowledge stays structured, inside their own perimeter, and ready for any AI model.
-              </p>
-            </div>
-            <div className="flex shrink-0 flex-col gap-3 lg:items-center">
-              <a
-                href="https://calendar.app.google/HhKnzyVUaZGaQ4u39"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-foreground px-7 text-sm font-semibold text-canvas transition-colors duration-200 hover:bg-brand-strong hover:text-white"
-              >
-                Contact sales
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
-                  <path d="M3 11 11 3M3 3h8v8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <span className="sr-only"> (opens booking calendar in a new tab)</span>
-              </a>
-              <p className="text-center text-xs text-muted">Book a call with our team</p>
-            </div>
-          </article>
-        </Reveal>
+        <p className="mt-5 text-center text-xs text-muted">
+          Need more Growth Credits? Top up anytime on any plan. Prices exclude VAT.
+        </p>
 
         <Reveal delay={0.1}>
           <div className="mt-10 flex flex-col gap-6 px-6 py-2 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
