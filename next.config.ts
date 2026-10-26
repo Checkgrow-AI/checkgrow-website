@@ -41,6 +41,28 @@ const nextConfig: NextConfig = {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
 
+  /* Markdown for AI assistants (src/lib/markdown.ts): every key page at
+     its URL plus ".md" (/index.md for the homepage), and the same markdown
+     for requests that ask for it with Accept: text/markdown. Runs before
+     the pages so content negotiation can take over a page URL. */
+  async rewrites() {
+    const wantsMarkdown = [{ type: "header" as const, key: "accept", value: "(.*)text/markdown(.*)" }];
+    return {
+      beforeFiles: [
+        { source: "/index.md", destination: "/markdown" },
+        { source: "/:path(.+)\\.md", destination: "/markdown/:path" },
+        { source: "/", has: wantsMarkdown, destination: "/markdown" },
+        ...["/features", "/use-cases", "/use-cases/:slug", "/news", "/news/:slug"].map((source) => ({
+          source,
+          has: wantsMarkdown,
+          destination: `/markdown${source}`,
+        })),
+      ],
+      afterFiles: [],
+      fallback: [],
+    };
+  },
+
   /* one canonical host: www collapses onto the apex */
   async redirects() {
     return [

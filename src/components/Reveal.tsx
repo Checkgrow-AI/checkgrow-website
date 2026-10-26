@@ -6,7 +6,9 @@ import type { ReactNode } from "react";
 /* Scroll reveal in the brand motion language: enter easing
    cubic-bezier(0,0,0.2,1), slow duration 360ms, once only.
    Reduced motion is handled globally by MotionProvider
-   (MotionConfig reducedMotion="user") — no tree branching here. */
+   (MotionConfig reducedMotion="user") — no tree branching here.
+   data-reveal lets the root layout show the content when JavaScript is
+   off (the server renders the hidden start state). */
 export function Reveal({
   children,
   delay = 0,
@@ -20,6 +22,7 @@ export function Reveal({
 }) {
   return (
     <motion.div
+      data-reveal
       className={className}
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -64,6 +67,7 @@ export function RevealItem({
 }) {
   return (
     <motion.div
+      data-reveal
       className={className}
       variants={{
         hidden: { opacity: 0, y },

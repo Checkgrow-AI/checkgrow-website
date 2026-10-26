@@ -13,7 +13,7 @@ const image = "/features/social.webp";
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical: featurePath() },
+  alternates: { canonical: featurePath(), types: { "text/markdown": `${featurePath()}.md` } },
   openGraph: {
     title, description, type: "website", url: featurePath(), siteName: "Checkgrow", locale: "en_GB",
     images: [{ url: image, width: 1200, height: 630, alt: "Checkgrow features: AI growth marketing in one platform" }],

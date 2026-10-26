@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     "board-ready marketing dashboard",
     "marketing without an agency",
   ],
-  alternates: { canonical: "/" },
+  alternates: { canonical: "/", types: { "text/markdown": "/index.md" } },
   icons: {
     icon: [
       { url: `/favicon.ico?v=${ICON_VERSION}`, sizes: "16x16 32x32 48x48" },
@@ -124,6 +124,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','${GTM_ID}');`,
           }}
         />
+        {/* scroll reveals start hidden and are animated in by JavaScript;
+            without it, show everything (components/Reveal.tsx) */}
+        <noscript>
+          <style>{"[data-reveal]{opacity:1!important;transform:none!important}"}</style>
+        </noscript>
       </head>
       <body>
         <noscript>

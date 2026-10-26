@@ -1,6 +1,6 @@
 import { Reveal, RevealStagger, RevealItem } from "@/components/Reveal";
 
-const integrations = [
+export const integrations = [
   {
     name: "Google Analytics",
     icon: "/brand-icons/google-analytics.svg",

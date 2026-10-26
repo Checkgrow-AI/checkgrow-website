@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const url = pathToUseCase(item.slug);
   return {
     title, description: item.description, keywords: item.keywords,
-    alternates: { canonical: url },
+    alternates: { canonical: url, types: { "text/markdown": `${url}.md` } },
     openGraph: { type: "article", title, description: item.description, url, siteName: "Checkgrow", modifiedTime: item.updatedAt, section: item.feature, images: [{ url: item.socialImage, width: 1200, height: 630, alt: `${item.title} Checkgrow ${item.feature} product screen.` }] },
     twitter: { card: "summary_large_image", title, description: item.description, images: [item.socialImage] },
   };

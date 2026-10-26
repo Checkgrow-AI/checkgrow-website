@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const image = post.social;
   return {
     title, description: post.description,
-    alternates: { canonical: newsPath(post.slug) },
+    alternates: { canonical: newsPath(post.slug), types: { "text/markdown": `${newsPath(post.slug)}.md` } },
     openGraph: {
       type: "article", title, description: post.description, url: newsPath(post.slug), siteName: "Checkgrow",
       publishedTime: post.publishedAt, authors: ["Checkgrow"], section: categoryLabel(post.category),

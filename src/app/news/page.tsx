@@ -9,7 +9,7 @@ const title = "Checkgrow News | Success stories, tutorials and security releases
 const description = "Success stories, practical tutorials and security updates from Checkgrow. See how teams grow with the platform and the workflows behind it.";
 const image = "/features/backgrounds/13-brand-indigo-bloom.webp";
 export const metadata: Metadata = {
-  title, description, alternates: { canonical: "/news" },
+  title, description, alternates: { canonical: "/news", types: { "text/markdown": "/news.md" } },
   openGraph: { title, description, type: "website", url: "/news", siteName: "Checkgrow", images: [{ url: image, alt: "Checkgrow News" }] },
   twitter: { card: "summary_large_image", title, description, images: [image] },
 };

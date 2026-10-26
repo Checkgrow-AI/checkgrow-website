@@ -9,7 +9,7 @@ const title = "Checkgrow Use Cases | How teams run marketing with Checkgrow";
 const description = "See how marketing teams use Checkgrow to plan and report in one place, write with AI that knows their brand, and show the board what marketing returns.";
 
 export const metadata: Metadata = {
-  title, description, alternates: { canonical: "/use-cases" },
+  title, description, alternates: { canonical: "/use-cases", types: { "text/markdown": "/use-cases.md" } },
   openGraph: { title, description, type: "website", url: "/use-cases", siteName: "Checkgrow", images: [SOCIAL_IMAGE] },
   twitter: { card: "summary_large_image", title, description, images: [SOCIAL_IMAGE.url] },
 };
