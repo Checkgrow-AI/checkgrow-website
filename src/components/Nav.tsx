@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useStableVh } from "@/lib/useStableVh";
 
@@ -10,13 +11,15 @@ const links = [
   { href: "#solution", label: "Solution" },
   { href: "#stories", label: "Real stories" },
   { href: "#use-cases", label: "Features" },
-  { href: "#pricing", label: "Pricing" },
+  { href: "/pricing", label: "Pricing", sectionId: "pricing" },
   { href: "#faq", label: "FAQ" },
 ];
 
 /* overLight: the header stays transparent so the hero light can reach the
    top of the window; the scrolled pill keeps its own glass background */
 export function Nav({ homePage = true, overLight = false }: { homePage?: boolean; overLight?: boolean }) {
+  const pathname = usePathname();
+  const linkHref = (href: string) => !homePage && href.startsWith("#") ? `/${href}` : href;
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const progressRefs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -43,7 +46,7 @@ export function Nav({ homePage = true, overLight = false }: { homePage?: boolean
      section, so the page always maps onto exactly one filling line) */
   useEffect(() => {
     if (!homePage) return;
-    const ids = links.map((l) => l.href.slice(1)).concat("waitlist");
+    const ids = links.map((l) => l.sectionId ?? l.href.slice(1)).concat("waitlist");
     let raf = 0;
     const frame = () => {
       raf = requestAnimationFrame(frame);
@@ -112,10 +115,11 @@ export function Nav({ homePage = true, overLight = false }: { homePage?: boolean
           }`}
         >
           {links.map((l, i) => (
-            <a
+            <Link
               key={l.href}
-              href={homePage ? l.href : `/${l.href}`}
-              className="relative text-sm text-muted transition-colors duration-200 hover:text-foreground"
+              href={linkHref(l.href)}
+              aria-current={pathname === l.href ? "page" : undefined}
+              className="relative text-sm text-muted transition-colors duration-200 hover:text-foreground aria-[current=page]:text-foreground"
             >
               {l.label}
               <span
@@ -124,9 +128,9 @@ export function Nav({ homePage = true, overLight = false }: { homePage?: boolean
                   progressRefs.current[i] = el;
                 }}
                 className="absolute -bottom-1 left-0 h-[2px] w-full origin-left rounded-full bg-[#6373FF]"
-                style={{ transform: "scaleX(0)" }}
+                style={{ transform: pathname === l.href ? "scaleX(1)" : "scaleX(0)" }}
               />
-            </a>
+            </Link>
           ))}
         </div>
         <div className="flex items-center gap-3">
@@ -168,14 +172,15 @@ export function Nav({ homePage = true, overLight = false }: { homePage?: boolean
           </Link>
           <div className="flex flex-col">
             {links.map((l) => (
-              <a
+              <Link
                 key={l.href}
-                href={homePage ? l.href : `/${l.href}`}
+                href={linkHref(l.href)}
+                aria-current={pathname === l.href ? "page" : undefined}
                 onClick={() => setOpen(false)}
-                className="flex min-h-12 items-center border-b border-line text-base text-foreground"
+                className="flex min-h-12 items-center border-b border-line text-base text-foreground aria-[current=page]:text-accent"
               >
                 {l.label}
-              </a>
+              </Link>
             ))}
           </div>
         </div>

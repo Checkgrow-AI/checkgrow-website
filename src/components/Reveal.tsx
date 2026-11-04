@@ -14,17 +14,19 @@ export function Reveal({
   delay = 0,
   y = 24,
   className,
+  immediate = false,
 }: {
   children: ReactNode;
   delay?: number;
   y?: number;
   className?: string;
+  immediate?: boolean;
 }) {
   return (
     <motion.div
       data-reveal
       className={className}
-      initial={{ opacity: 0, y }}
+      initial={immediate ? false : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.25 }}
       transition={{ duration: 0.36, delay, ease: [0, 0, 0.2, 1] }}

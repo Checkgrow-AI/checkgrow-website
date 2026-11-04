@@ -13,7 +13,7 @@ import { useCases, pathToUseCase } from "./useCases";
 import { successStories, type StoryBlock } from "./successStories";
 import { tutorials, videoDuration } from "./tutorials";
 import { newsPosts, newsPath, securityRelease, securitySections, categoryLabel } from "./news";
-import { ANNUAL_DISCOUNT, comparisonRows, growthTeam, plans, SALES_CALENDAR } from "./pricing";
+import { ANNUAL_DISCOUNT, comparisonRows, growthTeam, plans, pricingDescription, pricingFaqItems } from "./pricing";
 import { differentiators } from "./differentiators";
 import { testimonials } from "./testimonials";
 import { problemTools } from "./problemCards";
@@ -50,8 +50,7 @@ const contact = () =>
   join(
     "## Contact",
     list([
-      `Book a demo: ${BOOK_DEMO}`,
-      `Talk to our team (Growth and Enterprise plans): ${SALES_CALENDAR}`,
+      `Book a demo or talk to our team (all plans): ${BOOK_DEMO}`,
       "Email: bruno@checkgrow.com",
       `Trustpilot reviews: https://www.trustpilot.com/review/checkgrow.com`,
     ]),
@@ -81,6 +80,8 @@ function pricingBody() {
       "| --- | --- | --- | --- |",
       ...comparisonRows.map((r) => `| ${r.cat} | ${r.tools} | ${r.price} | ${r.cg}: ${r.cgNote} |`),
     ].join("\n"),
+    "## Pricing questions",
+    faq(pricingFaqItems),
   );
 }
 
@@ -273,7 +274,7 @@ export const markdownPages: MarkdownPage[] = [
   {
     path: "/pricing",
     title: "Checkgrow pricing",
-    description: "Business €499/month for one brand, Agency €997/month for unlimited brands, Growth €4,997/month with a dedicated growth team, and custom Enterprise plans.",
+    description: pricingDescription,
     body: pricingBody,
   },
   {
@@ -304,7 +305,7 @@ export const getMarkdownPage = (path: string) => markdownPages.find((page) => pa
 
 /* The full markdown document for one page */
 export function renderMarkdown(page: MarkdownPage) {
-  const html = page.path === "/pricing" ? `${SITE_URL}/#pricing` : url(page.path);
+  const html = url(page.path);
   return `# ${page.title}\n\n> ${page.description}\n\nSource: ${html}\n\n${page.body()}\n`;
 }
 

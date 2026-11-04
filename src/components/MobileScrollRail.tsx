@@ -8,25 +8,28 @@
    never sees it. */
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useStableVh } from "@/lib/useStableVh";
 
-const SECTIONS: Array<{ id: string; label: string }> = [
+const SECTIONS: Array<{ id: string; label: string; href?: string }> = [
   { id: "platform", label: "Platform" },
   { id: "solution", label: "Solution" },
   { id: "stories", label: "Real Stories" },
   { id: "use-cases", label: "Features" },
   { id: "pricing", label: "Pricing" },
   { id: "faq", label: "FAQ" },
-  { id: "waitlist", label: "Book a demo" },
+  { id: "waitlist", label: "Book a demo", href: "/book-a-demo" },
 ];
 
 export function MobileScrollRail() {
+  const router = useRouter();
   const railRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(0);
   const [active, setActive] = useState(false);
   const [shown, setShown] = useState(false);
   const dragging = useRef(false);
   const moved = useRef(false);
+  const pointerStart = useRef<{ x: number; y: number } | null>(null);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { vhRef: stableVhRef } = useStableVh();
 
@@ -91,20 +94,28 @@ export function MobileScrollRail() {
       onPointerDown={(e) => {
         dragging.current = true;
         moved.current = false;
+        pointerStart.current = { x: e.clientX, y: e.clientY };
         show();
-        (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
       }}
       onPointerMove={(e) => {
-        if (!dragging.current) return;
+        if (!dragging.current || !pointerStart.current) return;
+        if (!moved.current) {
+          /* Capture only after a real drag: capturing on pointer-down
+             retargets a simple tap to the rail instead of its button. */
+          if (Math.hypot(e.clientX - pointerStart.current.x, e.clientY - pointerStart.current.y) < 6) return;
+          e.currentTarget.setPointerCapture(e.pointerId);
+        }
         moved.current = true;
         scrubTo(e.clientY);
       }}
       onPointerUp={() => {
         dragging.current = false;
+        pointerStart.current = null;
         hideSoon();
       }}
       onPointerCancel={() => {
         dragging.current = false;
+        pointerStart.current = null;
         hideSoon();
       }}
     >
@@ -114,9 +125,13 @@ export function MobileScrollRail() {
           type="button"
           aria-label={`Go to ${s.label}`}
           className="relative flex items-center py-0.5"
-          onClick={() => {
+          onClick={(e) => {
             /* a drag that ends on a line must not double as a jump */
-            if (moved.current) return;
+            if (moved.current && e.detail !== 0) return;
+            if (s.href) {
+              router.push(s.href);
+              return;
+            }
             document.getElementById(s.id)?.scrollIntoView();
           }}
         >

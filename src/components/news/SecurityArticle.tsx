@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { securitySections } from "@/lib/news";
 import editorial from "@/components/tutorials/Tutorials.module.css";
 import styles from "./News.module.css";
@@ -44,7 +45,7 @@ export function SecurityArticle() {
       <section id="security-review" className={styles.contact} aria-labelledby="security-review-title">
         <h2 id="security-review-title">Planning a security review or POC?</h2>
         <p>Share your onboarding checklist and the assurance your organisation needs. Our team can clarify the controls relevant to your use case and discuss the scope and availability of supporting evidence. If you require an independent assessment, ask us to confirm that requirement separately.</p>
-        <a href="mailto:bruno@checkgrow.com?subject=Checkgrow%20security%20review">Discuss your security requirements <span aria-hidden>↗</span></a>
+        <Link href="/book-a-demo">Discuss your security requirements <span aria-hidden>↗</span></Link>
       </section>
     </>
   );

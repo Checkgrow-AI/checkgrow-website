@@ -3,6 +3,8 @@
    the structured data. All copy is grounded in what the site itself
    states; nothing here invents numbers or claims. */
 
+import { pricingFaqItems } from "./pricing";
+
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://checkgrow.com";
 
@@ -168,34 +170,7 @@ export const faqItems = [
     q: "Can a small team or a team without an agency use Checkgrow?",
     a: "Yes, that is the point. A growth team of three can operate like thirty: AI agents produce the work around the clock, marketing ops run without a dedicated project manager, reporting is board-ready without a data analyst, and there is no agency invoice.",
   },
-  {
-    q: "How much does Checkgrow cost?",
-    a: "There are four plans. Business is €499 per month for one brand. Agency is €997 per month for unlimited brands, with an hour a month with our growth team. Growth is €4,997 per month and adds a dedicated growth team that runs ads for up to three ad accounts. Enterprise is priced to your organisation. Prices exclude VAT, and annual billing saves 10%.",
-  },
-  {
-    q: "What is the difference between the Business and Agency plans?",
-    a: "Business is the full platform for a single brand. Agency adds unlimited brands, each in its own workspace with its own company brain, so agencies and multi-brand teams keep clients separate and switch between them. Agency also includes a one-hour customer-success session with our growth team every month to review results and plan the next move.",
-  },
-  {
-    q: "What does the Growth plan include?",
-    a: "Everything in Agency, plus a dedicated team working on your accounts: an account manager, ad management (ads created, launched and optimised), creative production and customer success, with performance reports for every account. It covers up to three ad accounts; extra accounts are billed separately.",
-  },
-  {
-    q: "What does the Enterprise plan include?",
-    a: "Everything in Growth, built around your organisation: custom development and integrations, a white-label platform under your own brand, self-hosting on your infrastructure for data sovereignty, advanced security and compliance reviews, a custom team for the roll-out and long-term agreements.",
-  },
-  {
-    q: "What are Growth Credits?",
-    a: "Growth Credits are the monthly allowance for the AI work you run in Checkgrow. Business, Agency and Growth include 5,000 a month (on Agency the pool is shared across brands), and you can top up anytime on any plan. Enterprise volumes are set in your agreement.",
-  },
-  {
-    q: "How many people can use Checkgrow?",
-    a: "Every plan includes unlimited team seats, so marketing, sales and leadership can all work from the same system without paying per user.",
-  },
-  {
-    q: "How do I get started?",
-    a: "Book a demo: we walk you through Checkgrow on your own brand and help you choose a plan, with no credit card required. For the Growth and Enterprise plans, book a call with our team.",
-  },
+  ...pricingFaqItems,
 ];
 
 export const faqJsonLd = {

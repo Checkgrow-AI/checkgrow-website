@@ -52,7 +52,7 @@ const nextConfig: NextConfig = {
         { source: "/index.md", destination: "/markdown" },
         { source: "/:path(.+)\\.md", destination: "/markdown/:path" },
         { source: "/", has: wantsMarkdown, destination: "/markdown" },
-        ...["/features", "/use-cases", "/use-cases/:slug", "/news", "/news/:slug"].map((source) => ({
+        ...["/pricing", "/features", "/use-cases", "/use-cases/:slug", "/news", "/news/:slug"].map((source) => ({
           source,
           has: wantsMarkdown,
           destination: `/markdown${source}`,

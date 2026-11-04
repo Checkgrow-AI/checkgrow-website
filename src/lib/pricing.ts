@@ -13,15 +13,13 @@ export type Plan = {
   /* null = custom quote */
   monthly: number | null;
   featured?: string;
-  cta: { label: string; href: string; external?: boolean };
+  cta: { label: string; href: "/book-a-demo" };
   ctaNote: string;
   specs: [Spec, Spec, Spec, Spec];
   service: { title: string; body: string; team?: boolean };
   inheritance: string;
   includes: string[];
 };
-
-export const SALES_CALENDAR = "https://calendar.app.google/HhKnzyVUaZGaQ4u39";
 
 /* Four plans in one row. Every card has the same blocks in the same order
    (audience, name, price, CTA, four specs, service, inclusions), laid on a
@@ -81,7 +79,7 @@ export const plans: Plan[] = [
     description: "Our specialists run your ads, reports and follow-up, alongside your team.",
     monthly: 4997,
     featured: "Done with you",
-    cta: { label: "Talk to our team", href: SALES_CALENDAR, external: true },
+    cta: { label: "Talk to our team", href: "/book-a-demo" },
     ctaNote: "Book a call with our team",
     specs: [
       { label: "Brands", value: "Unlimited" },
@@ -104,7 +102,7 @@ export const plans: Plan[] = [
     audience: "Built around your organisation",
     description: "Your growth platform, on your infrastructure, under your brand.",
     monthly: null,
-    cta: { label: "Contact sales", href: SALES_CALENDAR, external: true },
+    cta: { label: "Contact sales", href: "/book-a-demo" },
     ctaNote: "Book a call with our team",
     specs: [
       { label: "Brands", value: "Unlimited" },
@@ -225,3 +223,62 @@ export const comparisonRows = [
 
 /* annual billing saves 10% */
 export const ANNUAL_DISCOUNT = 0.1;
+
+export function formatPrice(value: number) {
+  return new Intl.NumberFormat("en-GB", {
+    minimumFractionDigits: Number.isInteger(value) ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(value);
+}
+
+export function planPrice(plan: Plan, billing: Billing) {
+  return plan.monthly === null ? null : plan.monthly * (billing === "annual" ? 1 - ANNUAL_DISCOUNT : 1);
+}
+
+export const pricingDescription = plans.map((plan) =>
+  `${plan.name}: ${plan.monthly === null ? "custom pricing" : `€${formatPrice(plan.monthly)}/month`}`,
+).join(". ") + `. Save ${ANNUAL_DISCOUNT * 100}% with annual billing. Prices exclude VAT.`;
+
+/* These buying answers are shared by both pages, their structured data
+   and the AI-readable pricing page. Commercial facts come from the plans. */
+export const pricingFaqItems = [
+  { q: "How much does Checkgrow cost?", a: pricingDescription },
+  {
+    q: "Which plan is right for my team?",
+    a: plans.map((plan) => `${plan.name}: ${plan.description}`).join(" "),
+  },
+  {
+    q: "What is the difference between the Business and Agency plans?",
+    a: plans.filter((plan) => ["business", "agency"].includes(plan.id)).map((plan) =>
+      `${plan.name}: ${plan.specs[0].value.toLowerCase()}. ${plan.service.title}. ${plan.service.body}`,
+    ).join(" "),
+  },
+  {
+    q: "What does the Growth plan include?",
+    a: plans.filter((plan) => plan.id === "growth").map((plan) =>
+      `${plan.inheritance.toLowerCase()}: ${plan.includes.join("; ")}. Your team covers ${growthTeam.map((member) => member.role.toLowerCase()).join(", ")}. Managed accounts: ${plan.specs[3].value.toLowerCase()}. ${plan.specs[3].note}.`,
+    ).join(""),
+  },
+  {
+    q: "What does the Enterprise plan include?",
+    a: plans.filter((plan) => plan.id === "enterprise").map((plan) =>
+      `${plan.description} ${plan.includes.join("; ")}. ${plan.service.body} Talk to our team about your requirements and a tailored agreement.`,
+    ).join(""),
+  },
+  {
+    q: "What are Growth Credits?",
+    a: `Growth Credits are the allowance for the AI work you run in Checkgrow. ${plans.map((plan) => `${plan.name}: ${plan.specs[1].value.toLowerCase()}${plan.specs[1].note ? ` (${plan.specs[1].note.toLowerCase()})` : ""}`).join(". ")}. You can top up anytime on any plan. Enterprise volumes are set in your agreement.`,
+  },
+  {
+    q: "How many people can use Checkgrow?",
+    a: `${plans.map((plan) => `${plan.name}: ${plan.specs[2].value.toLowerCase()} team seats`).join(". ")}. Bring marketing, sales and leadership into the same system.`,
+  },
+  {
+    q: "How does annual billing work?",
+    a: `Annual billing saves ${ANNUAL_DISCOUNT * 100}% on the listed monthly plan prices. The toggle shows the monthly equivalent and the full amount billed yearly. All prices exclude VAT. Enterprise has a tailored agreement.`,
+  },
+  {
+    q: "How do I get started?",
+    a: "Book a demo: we walk you through Checkgrow on your own brand and help you choose a plan, with no credit card required. The same booking page connects you with our team for every plan, including Growth and Enterprise.",
+  },
+];

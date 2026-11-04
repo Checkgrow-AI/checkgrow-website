@@ -3,10 +3,11 @@ import test from 'node:test';
 import { readFileSync, statSync } from 'node:fs';
 import { newsPosts, newsCategories, getNewsPost, newsPath, filterNews, categoryLabel, securityRelease, securitySections } from '../src/lib/news.ts';
 import { tutorials } from '../src/lib/tutorials.ts';
+import { successStories } from '../src/lib/successStories.ts';
 
 test('News records have unique routes, newest first, and every tutorial is retained', () => {
   assert.equal(new Set(newsPosts.map(post => post.slug)).size, newsPosts.length);
-  assert.equal(newsPosts[0], securityRelease);
+  assert.equal(getNewsPost(securityRelease.slug), securityRelease);
   assert.deepEqual(newsPosts.map(post => post.publishedAt), newsPosts.map(post => post.publishedAt).sort().reverse());
   for (const post of newsPosts) {
     assert.match(post.slug, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
@@ -16,16 +17,21 @@ test('News records have unique routes, newest first, and every tutorial is retai
     for (const path of [post.cover, post.social]) assert.ok(statSync(new URL(`../public${path}`, import.meta.url)).size > 0);
   }
   for (const tutorial of tutorials) assert.equal(getNewsPost(tutorial.slug).title, tutorial.title);
+  for (const story of successStories) {
+    assert.equal(getNewsPost(story.slug).title, story.title);
+    assert.equal(getNewsPost(story.slug).category, 'success-stories');
+  }
   assert.equal(getNewsPost('missing'), undefined);
   assert.equal(getNewsPost('../security-update-october-2026'), undefined);
 });
 
 test('categories filter immediately without changing the source collection', () => {
-  assert.deepEqual(newsCategories.map(category => category.label), ['All news', 'Tutorials', 'Security Releases']);
+  assert.deepEqual(newsCategories.map(category => category.label), ['All news', 'Success Stories', 'Tutorials', 'Security Releases']);
   const before = JSON.stringify(newsPosts);
   assert.deepEqual(filterNews(newsPosts, 'all'), newsPosts);
   assert.equal(filterNews(newsPosts, 'tutorials').length, tutorials.length);
   assert.deepEqual(filterNews(newsPosts, 'security-releases'), [securityRelease]);
+  assert.deepEqual(filterNews(newsPosts, 'success-stories').map(post => post.slug).sort(), successStories.map(story => story.slug).sort());
   assert.deepEqual(filterNews([], 'tutorials'), []);
   assert.equal(JSON.stringify(newsPosts), before);
 });

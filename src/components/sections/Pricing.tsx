@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Reveal } from "@/components/Reveal";
-import { ANNUAL_DISCOUNT, comparisonRows, growthTeam, plans, type Billing } from "@/lib/pricing";
+import { ANNUAL_DISCOUNT, comparisonRows, formatPrice, growthTeam, planPrice, plans, type Billing } from "@/lib/pricing";
 
 function Check() {
   return (
@@ -24,13 +24,6 @@ function Check() {
       />
     </svg>
   );
-}
-
-function formatPrice(value: number) {
-  return new Intl.NumberFormat("en-GB", {
-    minimumFractionDigits: Number.isInteger(value) ? 0 : 2,
-    maximumFractionDigits: 2,
-  }).format(value);
 }
 
 function ComparisonModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -153,7 +146,7 @@ function ComparisonModal({ open, onClose }: { open: boolean; onClose: () => void
             </div>
             <div className="rounded-card bg-brand-strong p-6 text-white shadow-raised">
               <p className="text-label text-white">Checkgrow</p>
-              <p className="mt-2 text-3xl font-semibold tracking-tight">From €499/mo</p>
+              <p className="mt-2 text-3xl font-semibold tracking-tight">From €{formatPrice(Math.min(...plans.flatMap((plan) => plan.monthly === null ? [] : [plan.monthly])))}/mo</p>
               <p className="mt-2 text-sm leading-relaxed text-white">
                 One operating system, one source of truth and one bill.
               </p>
@@ -176,25 +169,34 @@ function ComparisonModal({ open, onClose }: { open: boolean; onClose: () => void
   );
 }
 
-export function Pricing() {
+export function Pricing({ standalone = false }: { standalone?: boolean }) {
   const [billing, setBilling] = useState<Billing>("monthly");
   const [comparisonOpen, setComparisonOpen] = useState(false);
+  const Heading = standalone ? "h1" : "h2";
+  const PlanHeading = standalone ? "h2" : "h3";
 
   return (
-    <section className="border-t border-line bg-surface py-24 md:py-32" id="pricing">
+    <section className={standalone ? "bg-surface pb-16 pt-28 md:pb-20" : "border-t border-line bg-surface py-24 md:py-32"} id="pricing">
       <div className="wrap">
         <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_auto]">
-          <Reveal className="max-w-2xl">
+          <Reveal className="max-w-2xl" immediate={standalone}>
             <p className="text-label flex items-center gap-2.5 text-muted">
               Pricing
             </p>
-            <h2 className="text-h1 mt-6 text-balance">The platform, the brands, or the whole team.</h2>
+            <Heading className="text-h1 mt-6 text-balance">The platform, the brands, or the whole team.</Heading>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
               Every plan runs on the same company brain. Choose one brand, every brand, or our specialists running growth with you.
             </p>
+            {standalone && (
+              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+                <Link href="/book-a-demo" className="inline-flex min-h-11 items-center rounded-full bg-foreground px-6 font-medium text-canvas transition-colors hover:bg-accent sm:hidden">Book a demo</Link>
+                <a href="#customer-results" className="inline-flex min-h-11 items-center text-muted underline underline-offset-4 hover:text-foreground">Customer results</a>
+                <a href="#pricing-questions" className="inline-flex min-h-11 items-center text-muted underline underline-offset-4 hover:text-foreground">Pricing questions</a>
+              </div>
+            )}
           </Reveal>
 
-          <Reveal delay={0.06}>
+          <Reveal delay={0.06} immediate={standalone}>
             <div
               className="inline-flex w-full rounded-full bg-raised p-1.5 shadow-soft ring-1 ring-line sm:w-auto"
               role="group"
@@ -223,8 +225,8 @@ export function Pricing() {
                 }`}
               >
                 Annual
-                <span className={`rounded-full px-2 py-0.5 text-[10px] ${billing === "annual" ? "bg-canvas/10 text-canvas" : "bg-brand/10 text-accent"}`}>
-                  Save 10%
+                <span className={`shrink-0 whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] ${billing === "annual" ? "bg-canvas/10 text-canvas" : "bg-brand/10 text-accent"}`}>
+                  Save {ANNUAL_DISCOUNT * 100}%
                 </span>
               </button>
             </div>
@@ -236,11 +238,10 @@ export function Pricing() {
             service and inclusions line up across the row. */}
         <div className="mt-12 grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-[repeat(8,auto)] xl:gap-x-4 xl:gap-y-0">
           {plans.map((plan) => {
-            const price = plan.monthly === null ? null : billing === "monthly" ? plan.monthly : plan.monthly * (1 - ANNUAL_DISCOUNT);
+            const price = planPrice(plan, billing);
             const featured = Boolean(plan.featured);
-            const external = plan.cta.external;
             return (
-              <Reveal key={plan.id} className="h-full xl:row-span-8 xl:grid xl:grid-rows-subgrid">
+              <Reveal key={plan.id} className="h-full xl:row-span-8 xl:grid xl:grid-rows-subgrid" immediate={standalone}>
                 <article
                   aria-labelledby={`plan-${plan.id}`}
                   className={`relative flex h-full flex-col overflow-hidden rounded-card xl:row-span-8 xl:grid xl:grid-rows-subgrid ${
@@ -257,7 +258,7 @@ export function Pricing() {
                   {/* 2 · name and promise */}
                   <div className="px-6 pt-6">
                     <div className="flex items-center justify-between gap-3">
-                      <h3 id={`plan-${plan.id}`} className="text-2xl font-semibold tracking-tight">{plan.name}</h3>
+                      <PlanHeading id={`plan-${plan.id}`} className="text-2xl font-semibold tracking-tight">{plan.name}</PlanHeading>
                       {plan.featured && <span className="shrink-0 rounded-full bg-brand/20 px-2.5 py-1 text-[11px] font-semibold text-accent ring-1 ring-accent/40">{plan.featured}</span>}
                     </div>
                     <p className="mt-2 text-sm leading-5 text-muted">{plan.description}</p>
@@ -280,34 +281,20 @@ export function Pricing() {
                         ? "Tailored agreement"
                         : billing === "monthly"
                           ? "Billed monthly, excl. VAT"
-                          : `€${formatPrice((plan.monthly ?? 0) * 12 * (1 - ANNUAL_DISCOUNT))} billed yearly`}
+                          : `€${formatPrice((price ?? 0) * 12)} billed yearly`}
                     </p>
                   </div>
 
                   {/* 4 · call to action */}
                   <div className="px-6 pt-5">
-                    {external ? (
-                      <a
-                        href={plan.cta.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`inline-flex min-h-12 w-full items-center justify-center rounded-full px-6 text-sm font-semibold transition-colors duration-200 ${
-                          featured ? "bg-brand-strong text-white hover:bg-brand-hover" : "border border-brand text-accent hover:bg-brand-strong hover:text-white"
-                        }`}
-                      >
-                        {plan.cta.label}
-                        <span className="sr-only"> (opens booking calendar in a new tab)</span>
-                      </a>
-                    ) : (
-                      <Link
-                        href={plan.cta.href}
-                        className={`inline-flex min-h-12 w-full items-center justify-center rounded-full px-6 text-sm font-semibold transition-colors duration-200 ${
-                          featured ? "bg-brand-strong text-white hover:bg-brand-hover" : "border border-brand text-accent hover:bg-brand-strong hover:text-white"
-                        }`}
-                      >
-                        {plan.cta.label}
-                      </Link>
-                    )}
+                    <Link
+                      href={plan.cta.href}
+                      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full px-6 text-sm font-semibold transition-colors duration-200 ${
+                        featured ? "bg-brand-strong text-white hover:bg-brand-hover" : "border border-brand text-accent hover:bg-brand-strong hover:text-white"
+                      }`}
+                    >
+                      {plan.cta.label}
+                    </Link>
                     <p className="mt-2 text-center text-xs text-muted">{plan.ctaNote}</p>
                   </div>
 
@@ -376,9 +363,9 @@ export function Pricing() {
               <p className="text-label text-muted">
                 Compare the full stack
               </p>
-              <h3 className="mt-3 text-xl font-semibold tracking-tight sm:text-2xl">
+              <PlanHeading className="mt-3 text-xl font-semibold tracking-tight sm:text-2xl">
                 See everything Checkgrow replaces.
-              </h3>
+              </PlanHeading>
               <p className="mt-2 text-sm leading-relaxed text-muted sm:text-base">
                 Compare Checkgrow with the 11 subscriptions, logins and disconnected workflows a typical growth team manages today.
               </p>
