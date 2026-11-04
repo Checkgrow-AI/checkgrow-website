@@ -72,6 +72,67 @@ for the keyword or audience.
 `event_id` is the Google Ads order id and the Meta eventID, ready for
 deduplication with server-side conversions later.
 
+## Production security policy and tracking verification
+
+The website's production CSP is defined in `src/lib/contentSecurityPolicy.ts`
+and applied to all routes by `next.config.ts`. GTM loading or a tag showing
+"Fired" does **not** prove that its vendor SDK loaded or its event was sent.
+A stub such as `window.fbq` can exist while CSP blocks `fbevents.js`, leaving
+events queued indefinitely.
+
+The policy explicitly permits the configured vendors' script, connection,
+image and frame destinations. Meta's larger-event fallback submits a hidden
+form to a frame: both `form-action` and `frame-src` permit only its
+`https://www.facebook.com/tr/` path, not arbitrary external form targets.
+Google regional measurement hosts are pinned
+from its [official list](https://www.google.com/supported_domains), following
+the [Google CSP guidance](https://developers.google.com/tag-platform/security/guides/csp).
+Those regional hosts are measurement-only, not script origins. Host-only
+sources inherit HTTPS on the production site, keeping the CSP below 7,500
+bytes. Check the **whole response header size** as well when adding vendors,
+since reverse proxies can have an 8 KiB response-header buffer.
+
+Consent still belongs to Usercentrics and GTM. The CSP does not grant consent.
+Do not remove the consent gates, add `unsafe-eval`, allow all HTTPS hosts, or
+disable CSP to make a tag fire. Update the existing policy at its source;
+adding a second, more permissive CSP header cannot override the first.
+
+### Required checks before a tracking release
+
+1. Run the unit tests, typecheck, lint and `pnpm build`. The regression tests
+   in `tests/contentSecurityPolicy.test.mjs` check vendor destinations,
+   regional hosts, header size and retained security boundaries.
+2. Serve the **production build** on a separate local port. `pnpm dev` does
+   not emit the production CSP and is not sufficient for this check.
+3. In an isolated browser, intercept measurement requests and mock all lead,
+   calendar and email-producing requests. Load the real public GTM and vendor
+   scripts, but never send synthetic conversions to the advertising accounts.
+4. With cookies rejected, verify Meta/LinkedIn SDKs and events stay blocked.
+   Google may send consent-mode, cookieless pings; that is a different mechanism.
+5. With cookies accepted, verify that the actual Meta runtime has loaded
+   (`fbq.callMethod`, not merely `fbq`). Observe outgoing `PageView`, `Lead`
+   and `Schedule` requests, the two Google Ads labels above, and both LinkedIn
+   conversion IDs. Check CSP violations as well as GTM firing status.
+6. Exercise the form with mocked successful and failed lead/booking responses;
+   a failed booking must not fire `demo_booked`, and refreshing confirmation
+   must not duplicate it. No contact details belong in the dataLayer.
+7. After an approved deployment, check the live response headers, then verify
+   receipt in Meta Test Events and GTM Preview. An intercepted local request
+   proves the browser attempted delivery, **not** that a vendor received it.
+
+Use regular Chrome for the final browser check. During the November 2026
+checks, Meta loaded in headless Chrome but emitted no beacons; regular Chrome
+emitted all three events under the same test conditions. Keep this distinction
+separate from CSP failures and from receipt in Events Manager.
+
+### Custom destinations need explicit approval
+
+The Pixel's remote configuration can introduce additional server-side event
+gateways. These are not automatically trusted just because a Meta script
+references them. Confirm ownership and purpose before adding exact endpoints;
+never allow all `*.cloud.run` or `*.on.aws` hosts. Standard Meta browser events
+can work while an unapproved gateway remains blocked.
+
 ## Import and publish
 
 1. GTM → Admin → **Import container** → `GTM-WZ5LH56L_checkgrow-site.json`.

@@ -1,27 +1,11 @@
 import type { NextConfig } from "next";
+import { contentSecurityPolicy } from "./src/lib/contentSecurityPolicy";
 
 const isProd = process.env.NODE_ENV === "production";
 
-/* Everything on this site is self-hosted (fonts, images, videos) except the
-   Usercentrics consent banner, so the CSP stays tight: 'self' plus the
-   usercentrics.eu origins it loads its script, API calls and vendor logos
-   from. 'unsafe-inline' for scripts/styles is required by Next's hydration
-   payload and Tailwind's inline style attributes. CSP only ships in
-   production so dev HMR (which needs eval) keeps working. */
-const csp = [
-  "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://*.usercentrics.eu https://www.googletagmanager.com",
-  "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://*.usercentrics.eu https://*.google-analytics.com https://www.googletagmanager.com",
-  "font-src 'self' https://*.usercentrics.eu",
-  "media-src 'self'",
-  "connect-src 'self' https://*.usercentrics.eu https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com",
-  "object-src 'none'",
-  "frame-ancestors 'none'",
-  "base-uri 'self'",
-  "form-action 'self'",
-  "upgrade-insecure-requests",
-].join("; ");
+/* CSP only ships in production so dev HMR keeps working. Verify tracking
+   against a production build: a tag firing is not proof its SDK or beacon
+   passed CSP. Vendor allowlists live in one regression-tested module. */
 
 const securityHeaders = [
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
@@ -29,7 +13,7 @@ const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), browsing-topics=()" },
-  ...(isProd ? [{ key: "Content-Security-Policy", value: csp }] : []),
+  ...(isProd ? [{ key: "Content-Security-Policy", value: contentSecurityPolicy }] : []),
 ];
 
 const nextConfig: NextConfig = {
