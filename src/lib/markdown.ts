@@ -78,7 +78,7 @@ function pricingBody() {
     [
       "| Category | Typical tools | Typical price | In Checkgrow |",
       "| --- | --- | --- | --- |",
-      ...comparisonRows.map((r) => `| ${r.cat} | ${r.tools} | ${r.price} | ${r.cg}: ${r.cgNote} |`),
+      ...comparisonRows.map((r) => `| ${r.cat} | ${r.tools} | ${euro(r.monthly)}/mo | ${r.cg}: ${r.cgNote} |`),
     ].join("\n"),
     "## Pricing questions",
     faq(pricingFaqItems),

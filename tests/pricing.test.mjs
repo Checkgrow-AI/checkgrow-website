@@ -37,7 +37,8 @@ test('every plan uses the same internal demo booking destination', () => {
   }
   const component = readFileSync(new URL('../src/components/sections/Pricing.tsx', import.meta.url), 'utf8');
   assert.match(component, /<Link\s+href=\{plan\.cta\.href\}/);
-  assert.doesNotMatch(component, /target="_blank"|opens booking calendar/);
+  assert.doesNotMatch(component, /opens booking calendar/);
+  assert.doesNotMatch(component, /<Link\s+href=\{plan\.cta\.href\}[^>]*target=/);
 });
 
 test('mobile booking shortcut and machine-readable contact use the demo flow', () => {
@@ -59,4 +60,25 @@ test('the standalone route reuses pricing and the shared FAQ rather than copying
   assert.match(page, /items=\{pricingFaqItems\}/);
   assert.match(page, /canonical: "\/pricing"/);
   assert.doesNotMatch(page, /499|997|4997/);
+});
+
+test('the branded currency menu precedes billing in the shared pricing component', () => {
+  const component = readFileSync(new URL('../src/components/sections/Pricing.tsx', import.meta.url), 'utf8');
+  const currency = component.indexOf('<CurrencySelect ');
+  assert.ok(currency > 0 && currency < component.indexOf('aria-label="Billing frequency"'));
+  assert.doesNotMatch(component, /<select/);
+  const menu = readFileSync(new URL('../src/components/pricing/CurrencySelect.tsx', import.meta.url), 'utf8');
+  assert.match(menu, /role="combobox"/);
+  assert.match(menu, /role="listbox"/);
+  assert.match(menu, /aria-activedescendant=/);
+  assert.match(menu, /aria-disabled=/);
+  assert.match(menu, /rounded-card bg-raised/);
+});
+
+test('pricing keeps the table prominent and puts currency disclosures below the plans', () => {
+  const component = readFileSync(new URL('../src/components/sections/Pricing.tsx', import.meta.url), 'utf8');
+  assert.doesNotMatch(component, /href="#customer-results"|href="#pricing-questions"/);
+  const plansEnd = component.indexOf('Need more Growth Credits?');
+  assert.ok(plansEnd > 0 && component.indexOf('id="pricing-currency-note"') > plansEnd);
+  assert.match(component, /id="pricing-currency-note"[^>]*role="status"/);
 });

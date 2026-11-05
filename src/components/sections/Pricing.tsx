@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Reveal } from "@/components/Reveal";
-import { ANNUAL_DISCOUNT, comparisonRows, formatPrice, growthTeam, planPrice, plans, type Billing } from "@/lib/pricing";
+import { ANNUAL_DISCOUNT, comparisonRows, growthTeam, planPrice, plans, type Billing } from "@/lib/pricing";
+import { displayPrice, rateDateLabel, type Currency } from "@/lib/pricingCurrency";
+import { usePricingCurrency } from "@/lib/usePricingCurrency";
+import { CurrencySelect } from "@/components/pricing/CurrencySelect";
 
 function Check() {
   return (
@@ -26,7 +29,7 @@ function Check() {
   );
 }
 
-function ComparisonModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+function ComparisonModal({ open, onClose, currency, rate }: { open: boolean; onClose: () => void; currency: Currency; rate: number }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -121,7 +124,7 @@ function ComparisonModal({ open, onClose }: { open: boolean; onClose: () => void
                     <td className="px-6 py-4 align-top">
                       <p className="text-sm font-semibold">{row.tools}</p>
                       <p className="mt-0.5 text-xs leading-relaxed text-muted">{row.toolNote}</p>
-                      <p className="mt-1 text-xs font-semibold text-muted">{row.price}</p>
+                      <p className="mt-1 text-xs font-semibold text-muted">{displayPrice(row.monthly, currency, rate)}/mo</p>
                     </td>
                     <td className="bg-brand/10 px-6 py-4 align-top">
                       <p className="text-sm font-semibold">{row.cg}</p>
@@ -138,7 +141,7 @@ function ComparisonModal({ open, onClose }: { open: boolean; onClose: () => void
             <div className="rounded-card bg-raised p-6 ring-1 ring-line">
               <p className="text-label text-muted">Typical full stack</p>
               <p className="mt-2 text-3xl font-semibold tracking-tight text-muted line-through decoration-muted/85 decoration-[4px]">
-                €1,199/mo
+                {displayPrice(1199, currency, rate)}/mo
               </p>
               <p className="mt-2 text-sm leading-relaxed text-muted">
                 Before seats, overages and the time spent stitching every tool together.
@@ -146,7 +149,7 @@ function ComparisonModal({ open, onClose }: { open: boolean; onClose: () => void
             </div>
             <div className="rounded-card bg-brand-strong p-6 text-white shadow-raised">
               <p className="text-label text-white">Checkgrow</p>
-              <p className="mt-2 text-3xl font-semibold tracking-tight">From €{formatPrice(Math.min(...plans.flatMap((plan) => plan.monthly === null ? [] : [plan.monthly])))}/mo</p>
+              <p className="mt-2 text-3xl font-semibold tracking-tight">From {displayPrice(Math.min(...plans.flatMap((plan) => plan.monthly === null ? [] : [plan.monthly])), currency, rate)}/mo</p>
               <p className="mt-2 text-sm leading-relaxed text-white">
                 One operating system, one source of truth and one bill.
               </p>
@@ -161,7 +164,7 @@ function ComparisonModal({ open, onClose }: { open: boolean; onClose: () => void
           </div>
 
           <p className="mt-5 text-xs leading-relaxed text-muted">
-            Third-party tools are category examples. Prices are typical list prices for comparable plans.
+            Third-party tools are category examples. Prices are typical monthly list prices for comparable plans. Whole-number estimates in {currency}; Checkgrow billing remains in EUR.
           </p>
         </div>
       </div>
@@ -172,13 +175,14 @@ function ComparisonModal({ open, onClose }: { open: boolean; onClose: () => void
 export function Pricing({ standalone = false }: { standalone?: boolean }) {
   const [billing, setBilling] = useState<Billing>("monthly");
   const [comparisonOpen, setComparisonOpen] = useState(false);
+  const { currency, rate, snapshot, status, selectCurrency, retry } = usePricingCurrency();
   const Heading = standalone ? "h1" : "h2";
   const PlanHeading = standalone ? "h2" : "h3";
 
   return (
     <section className={standalone ? "bg-surface pb-16 pt-28 md:pb-20" : "border-t border-line bg-surface py-24 md:py-32"} id="pricing">
       <div className="wrap">
-        <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_auto]">
+        <div className="grid items-end gap-8 xl:grid-cols-[minmax(0,1fr)_auto]">
           <Reveal className="max-w-2xl" immediate={standalone}>
             <p className="text-label flex items-center gap-2.5 text-muted">
               Pricing
@@ -188,47 +192,46 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
               Every plan runs on the same company brain. Choose one brand, every brand, or our specialists running growth with you.
             </p>
             {standalone && (
-              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-                <Link href="/book-a-demo" className="inline-flex min-h-11 items-center rounded-full bg-foreground px-6 font-medium text-canvas transition-colors hover:bg-accent sm:hidden">Book a demo</Link>
-                <a href="#customer-results" className="inline-flex min-h-11 items-center text-muted underline underline-offset-4 hover:text-foreground">Customer results</a>
-                <a href="#pricing-questions" className="inline-flex min-h-11 items-center text-muted underline underline-offset-4 hover:text-foreground">Pricing questions</a>
-              </div>
+              <Link href="/book-a-demo" className="mt-6 inline-flex min-h-11 items-center rounded-full bg-foreground px-6 text-sm font-medium text-canvas transition-colors hover:bg-accent sm:hidden">Book a demo</Link>
             )}
           </Reveal>
 
-          <Reveal delay={0.06} immediate={standalone}>
-            <div
-              className="inline-flex w-full rounded-full bg-raised p-1.5 shadow-soft ring-1 ring-line sm:w-auto"
-              role="group"
-              aria-label="Billing frequency"
-            >
-              <button
-                type="button"
-                aria-pressed={billing === "monthly"}
-                onClick={() => setBilling("monthly")}
-                className={`min-h-11 flex-1 rounded-full px-5 text-sm font-semibold transition-all duration-200 sm:flex-none ${
-                  billing === "monthly"
-                    ? "bg-foreground text-canvas shadow-soft"
-                    : "text-muted hover:text-foreground"
-                }`}
+          <Reveal delay={0.06} immediate={standalone} className="relative z-20">
+            <div className="flex flex-wrap items-center gap-2" aria-label="Pricing options">
+              <CurrencySelect value={currency} ratesReady={status === "ready"} onChange={selectCurrency} />
+              <div
+                className="inline-flex rounded-full bg-raised p-1.5 shadow-soft ring-1 ring-line"
+                role="group"
+                aria-label="Billing frequency"
               >
-                Monthly
-              </button>
-              <button
-                type="button"
-                aria-pressed={billing === "annual"}
-                onClick={() => setBilling("annual")}
-                className={`flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold transition-all duration-200 sm:flex-none ${
-                  billing === "annual"
-                    ? "bg-foreground text-canvas shadow-soft"
-                    : "text-muted hover:text-foreground"
-                }`}
-              >
-                Annual
-                <span className={`shrink-0 whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] ${billing === "annual" ? "bg-canvas/10 text-canvas" : "bg-brand/10 text-accent"}`}>
-                  Save {ANNUAL_DISCOUNT * 100}%
-                </span>
-              </button>
+                <button
+                  type="button"
+                  aria-pressed={billing === "monthly"}
+                  onClick={() => setBilling("monthly")}
+                  className={`min-h-11 flex-1 rounded-full px-3 text-sm font-semibold transition-all duration-200 sm:flex-none sm:px-5 ${
+                    billing === "monthly"
+                      ? "bg-foreground text-canvas shadow-soft"
+                      : "text-muted hover:text-foreground"
+                  }`}
+                >
+                  Monthly
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={billing === "annual"}
+                  onClick={() => setBilling("annual")}
+                  className={`flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full px-3 text-sm font-semibold transition-all duration-200 sm:flex-none sm:px-5 ${
+                    billing === "annual"
+                      ? "bg-foreground text-canvas shadow-soft"
+                      : "text-muted hover:text-foreground"
+                  }`}
+                >
+                  Yearly
+                  <span className={`shrink-0 whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] ${billing === "annual" ? "bg-canvas/10 text-canvas" : "bg-brand/10 text-accent"}`}>
+                    Save {ANNUAL_DISCOUNT * 100}%
+                  </span>
+                </button>
+              </div>
             </div>
           </Reveal>
         </div>
@@ -251,7 +254,7 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
                   }`}
                 >
                   {/* 1 · audience band */}
-                  <div className={`flex min-h-14 items-center justify-between gap-3 border-b px-6 ${featured ? "border-brand bg-brand-strong text-white" : "border-line text-muted"}`}>
+                  <div className={`flex min-h-14 min-w-0 items-center justify-between gap-3 border-b px-6 ${featured ? "border-brand bg-brand-strong text-white" : "border-line text-muted"}`}>
                     <p className={`truncate text-sm leading-5 ${featured ? "font-semibold" : "font-medium"}`}>{plan.audience}</p>
                   </div>
 
@@ -271,8 +274,8 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
                         <span className="text-4xl font-semibold tracking-[-0.045em]">Custom</span>
                       </div>
                     ) : (
-                      <div className="flex items-end gap-1.5">
-                        <span className="text-4xl font-semibold tracking-[-0.045em]">€{formatPrice(price)}</span>
+                      <div className="flex flex-wrap items-end gap-x-1.5 gap-y-1">
+                        <span className={`${currency === "EUR" ? "text-4xl" : "text-3xl"} whitespace-nowrap font-semibold tabular-nums tracking-[-0.045em]`} data-plan-price>{displayPrice(price, currency, rate)}</span>
                         <span className="pb-1 text-sm text-muted">/month</span>
                       </div>
                     )}
@@ -280,8 +283,8 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
                       {price === null
                         ? "Tailored agreement"
                         : billing === "monthly"
-                          ? "Billed monthly, excl. VAT"
-                          : `€${formatPrice((price ?? 0) * 12)} billed yearly`}
+                          ? currency === "EUR" ? "Billed monthly, excl. VAT" : "Monthly estimate · billed in EUR"
+                          : `${displayPrice(price * 12, currency, rate)} per year${currency === "EUR" ? ", excl. VAT" : " · billed in EUR"}`}
                     </p>
                   </div>
 
@@ -354,8 +357,19 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
         </div>
 
         <p className="mt-5 text-center text-xs text-muted">
-          Need more Growth Credits? Top up anytime on any plan. Prices exclude VAT.
+          Need more Growth Credits? Top up anytime on any plan.
         </p>
+
+        <div id="pricing-currency-note" className="mt-3 min-h-10 text-center text-xs leading-relaxed text-muted" role="status" aria-live="polite" aria-atomic="true">
+          <p>Whole-number estimates, decimals omitted. Billing in EUR. Prices exclude VAT.</p>
+          {status === "loading" ? (
+            <p>Loading exchange rates. EUR prices are ready.</p>
+          ) : status === "error" ? (
+            <p>Currency conversion is temporarily unavailable. Showing EUR. <button type="button" onClick={retry} className="inline-flex min-h-11 items-center text-accent underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-accent">Retry rates</button></p>
+          ) : snapshot && (
+            <p><a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-foreground">ECB reference rates</a> via Frankfurter · {rateDateLabel(snapshot.date)} · Updated each working day.</p>
+          )}
+        </div>
 
         <Reveal delay={0.1}>
           <div className="mt-10 flex flex-col gap-6 px-6 py-2 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
@@ -384,7 +398,7 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
         </Reveal>
       </div>
 
-      <ComparisonModal open={comparisonOpen} onClose={() => setComparisonOpen(false)} />
+      <ComparisonModal open={comparisonOpen} onClose={() => setComparisonOpen(false)} currency={currency} rate={rate} />
     </section>
   );
 }

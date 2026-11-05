@@ -42,3 +42,11 @@ All of them are server-only secrets: never commit them or expose them to the cli
 5. Restart `pnpm dev`. Copy the three Google variables into Easy Panel before deploying. Re-running step 4 issues a new refresh token, so update `GOOGLE_CALENDAR_REFRESH_TOKEN` in Easy Panel too.
 
 To revoke access: Google Account → Security → Third-party connections, then run step 4 again.
+
+## CTA navigation and scroll position
+
+`DemoScrollReset` is mounted only in the `/book-a-demo` layout. On entry it resets the document to the top immediately, then reasserts once on the next animation frame after the router's scroll pass. This covers links and programmatic navigation from any page, without editing individual CTA destinations.
+
+Ordinary clicks on a same-origin, non-anchored `/book-a-demo` link also reset the current demo page, because clicking a same-page CTA does not remount the layout. Modified clicks, new-tab/download links and explicit hash navigation retain their native behaviour. The listener and pending frame are cleaned up on leaving the layout. Form answers, question progression, booking APIs, tracking and scroll restoration on other pages are unchanged; there is no continuous scroll lock.
+
+Baseline reproduction: the demo footer CTA left the page 688px down in both development and production-mode Chrome. The explicit reset brought it to 0px. Fresh visits and revisits from pricing/homepage CTA paths are checked separately, without submitting any real leads or bookings.
