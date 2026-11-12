@@ -19,6 +19,7 @@ import { testimonials } from "./testimonials";
 import { problemTools } from "./problemCards";
 import { shiftBenefits } from "./shiftStory";
 import { faqItems, SITE_URL } from "./seo";
+import { faqCategories } from "./faq";
 import { integrations } from "@/components/sections/Integrations";
 
 export type MarkdownPage = {
@@ -122,6 +123,17 @@ function homeBody() {
     `Full plan details: ${mdLink("Pricing", "/pricing")}`,
     "## FAQ",
     faq(faqItems),
+    `Every question, by topic: ${mdLink("FAQ", "/faq")}`,
+    contact(),
+  );
+}
+
+/* ---------- FAQ ---------- */
+
+function faqBody() {
+  return join(
+    "Everything teams ask about Checkgrow: the platform, the company brain, integrations and AI models, sales outreach, pricing and security.",
+    ...faqCategories.map((c) => join(`## ${c.title}`, c.intro, faq(c.items))),
     contact(),
   );
 }
@@ -272,6 +284,12 @@ export const markdownPages: MarkdownPage[] = [
     body: homeBody,
   },
   {
+    path: "/faq",
+    title: "Checkgrow FAQ",
+    description: "Answers about Checkgrow: the platform, how it learns your company, integrations and AI models, LinkedIn outreach, pricing and plans, and data security and GDPR.",
+    body: faqBody,
+  },
+  {
     path: "/pricing",
     title: "Checkgrow pricing",
     description: pricingDescription,
@@ -324,7 +342,7 @@ export function renderLlmsTxt() {
       "Every link below is markdown: each page is available at its URL plus .md (/index.md for the homepage), or by requesting the page with Accept: text/markdown.",
     ]),
     "## Key pages",
-    ["/", "/pricing", "/features", "/use-cases", "/news"].map((p) => link(getMarkdownPage(p)!)).join("\n"),
+    ["/", "/pricing", "/faq", "/features", "/use-cases", "/news"].map((p) => link(getMarkdownPage(p)!)).join("\n"),
     "## Use cases",
     byPrefix("/use-cases/").map(link).join("\n"),
     "## Success stories",

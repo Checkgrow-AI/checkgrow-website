@@ -3,7 +3,7 @@
    the structured data. All copy is grounded in what the site itself
    states; nothing here invents numbers or claims. */
 
-import { pricingFaqItems } from "./pricing";
+import { homeFaqItems } from "./faq";
 
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://checkgrow.com";
@@ -96,10 +96,10 @@ export const videosJsonLd = [
     "@type": "VideoObject",
     name: "Checkgrow platform tour",
     description:
-      "A guided look inside Checkgrow: the Knowledge Centre, campaigns, AI agents, competitor intelligence and insights working as one growth operating system.",
-    thumbnailUrl: `${SITE_URL}/videos/checkgrow-platform-poster.jpg`,
-    contentUrl: `${SITE_URL}/videos/checkgrow-platform.mp4`,
-    uploadDate: "2026-08-11",
+      "A guided look inside Checkgrow: the Knowledge Center and integrations, competitors, social media, content, website, campaigns and creatives, insights, sales lists, outreach and leads, and the Grow chat, working as one growth operating system.",
+    thumbnailUrl: `${SITE_URL}/videos/checkgrow-platform-v2-poster.jpg`,
+    contentUrl: `${SITE_URL}/videos/checkgrow-platform-v2.mp4`,
+    uploadDate: "2026-11-12",
     duration: "PT2M26S",
     publisher: { "@id": `${SITE_URL}/#organization` },
   },
@@ -117,61 +117,8 @@ export const videosJsonLd = [
   },
 ];
 
-export const faqItems = [
-  {
-    q: "What is Checkgrow?",
-    a: "Checkgrow is a go-to-market engine for marketing teams, founders and enterprises. It connects your company knowledge, market research, day-to-day execution and measurement in one system, so every team works from the same context and every campaign starts from what the business already knows.",
-  },
-  {
-    q: "Who is Checkgrow for?",
-    a: "Founders and CMOs who set direction, marketing and sales operations teams who execute, and growth and analytics people who close the loop. It fits companies from scale-ups to enterprise marketing teams that are tired of re-explaining the business to every tool, agency and AI prompt.",
-  },
-  {
-    q: "What can I actually do with Checkgrow?",
-    a: "Onboard your brand from your website, then run real work: build a funnel strategy in an afternoon, generate Meta and Google campaign strategies linked to your paid channels, turn AI output into owned and approved tasks, read GA4, Meta and Google Ads as plain-language insights, track competitors' live ads, and run consultant-grade conversion audits of your website on demand.",
-  },
-  {
-    q: "How is Checkgrow different from ChatGPT or a generic AI tool?",
-    a: "A generic chat starts from zero every time and forgets what worked; your context ends up as files in a drive and prompts scattered across different chats. Checkgrow keeps one company brain, structured and strategised for marketing and growth: your brand, products, audiences, numbers and decisions, which every agent, campaign and report reads from, and every result feeds back in. Because it runs on your own marketing data, your team also learns as it works, and enterprises can self-host it.",
-  },
-  {
-    q: "What is a growth operating system?",
-    a: "A growth operating system connects company knowledge, strategy, execution, market intelligence and performance data in one place, so decisions are grounded and every result feeds back in. Checkgrow is that system for go-to-market teams: one shared brain for strategy, content, campaigns, sales intelligence and reporting.",
-  },
-  {
-    q: "Which tools does Checkgrow replace?",
-    a: "The typical growth stack it covers spans eleven subscriptions: brand wikis, AI content tools, campaign ops boards, social suites, competitive intelligence, prospecting databases, CRO tooling, analytics dashboards, consent tracking, work tracking and creative direction. That stack commonly runs around €1,199 per month across tools; Checkgrow is one platform, from €499 per month.",
-  },
-  {
-    q: "Which platforms does Checkgrow connect to?",
-    a: "Google Analytics 4, Google Ads, Meta Ads, Instagram and LinkedIn for channels and measurement, with automation via n8n. Model-side it works across OpenAI, Google Gemini, Anthropic Claude and Perplexity.",
-  },
-  {
-    q: "Which AI models does Checkgrow use?",
-    a: "Checkgrow works across multiple frontier models, including OpenAI, Google Gemini, Perplexity and Anthropic Claude. You choose the model per job, keep costs visible, and are never locked in.",
-  },
-  {
-    q: "Who owns the data and knowledge I put in?",
-    a: "You do. Your knowledge base, research and results stay yours: no lock-ins and no hidden rules. Companies should understand how things work and own their data; that is a founding principle, not a feature.",
-  },
-  {
-    q: "Can we self-host Checkgrow on our own infrastructure?",
-    a: "Yes. Enterprises and scale-ups increasingly ask to run Checkgrow on their own private infrastructure, and we build self-hosted setups around their stack and security requirements. Their company knowledge stays structured and ready for any AI model they choose, inside their own perimeter, which matters for data sovereignty and compliance.",
-  },
-  {
-    q: "Does my team need to be marketing experts to use Checkgrow?",
-    a: "No. Checkgrow works on your own marketing and growth data, so using it builds the skills. Interactive features walk your team through each stage of the funnel, from first touch to conversion, and explain what changed and why. People stay in the loop, make the decisions and get better at marketing as they go.",
-  },
-  {
-    q: "How fast can I launch campaigns with Checkgrow?",
-    a: "In hours, not weeks. One brief becomes Meta and Google campaign strategies, brainstorms, creatives and deployment, all linked to your paid channels, and the funnel is readable the same day: from insight to live ad in the same afternoon.",
-  },
-  {
-    q: "Can a small team or a team without an agency use Checkgrow?",
-    a: "Yes, that is the point. A growth team of three can operate like thirty: AI agents produce the work around the clock, marketing ops run without a dedicated project manager, reporting is board-ready without a data analyst, and there is no agency invoice.",
-  },
-  ...pricingFaqItems,
-];
+/* the homepage FAQ: a short selection; every question lives on /faq */
+export const faqItems = homeFaqItems;
 
 export const faqJsonLd = {
   "@context": "https://schema.org",

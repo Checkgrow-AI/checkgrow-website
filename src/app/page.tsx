@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { MobileScrollRail } from "@/components/MobileScrollRail";
 import { HeroV2 } from "@/components/sections/HeroV2";
@@ -35,7 +36,11 @@ export default function Home() {
         <Integrations />
         <Roles />
         <Pricing />
-        <Faq />
+        <Faq>
+          <Link href="/faq" className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm text-accent underline underline-offset-4 transition-colors hover:text-foreground">
+            See all questions <span aria-hidden>→</span>
+          </Link>
+        </Faq>
         <FinalCta />
       </main>
       <Footer />

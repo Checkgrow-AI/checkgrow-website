@@ -22,11 +22,11 @@ const ramp = (p: number, a: number, b: number) => smooth(clamp01((p - a) / (b - 
 
 /* film chapters: click to jump, the active tab follows playback */
 const CHAPTERS: Array<{ label: string; t: number }> = [
-  { label: "Knowledge", t: 3 },
-  { label: "Marketing", t: 36 },
-  { label: "Insights", t: 86 },
-  { label: "Sales", t: 99 },
-  { label: "AI Chat", t: 133 },
+  { label: "Knowledge", t: 4 }, // Knowledge Center, Integrations
+  { label: "Marketing", t: 23 }, // Competitors, Social Media, Content, Website, Campaigns, Creatives
+  { label: "Insights", t: 87 },
+  { label: "Sales", t: 97 }, // Lists, Outreach, Leads
+  { label: "AI Chat", t: 124 }, // Grow Chat
 ];
 
 export function PlatformFilm() {
@@ -183,7 +183,7 @@ export function PlatformFilm() {
           style={{ opacity: 0 }}
         >
           <Image
-            src="/backgrounds/periwinkle-lilac.webp"
+            src="/backgrounds/graphite-light.webp"
             alt=""
             aria-hidden
             fill
@@ -225,13 +225,13 @@ export function PlatformFilm() {
             </div>
             <video
               ref={videoRef}
-              src="/videos/checkgrow-platform.mp4"
+              src="/videos/checkgrow-platform-v2.mp4"
               autoPlay
               muted
               loop
               playsInline
               preload="metadata"
-              poster="/videos/checkgrow-platform-poster.jpg"
+              poster="/videos/checkgrow-platform-v2-poster.jpg"
               className="block w-full cursor-pointer"
               aria-label="Checkgrow platform tour"
               onClick={() => {
