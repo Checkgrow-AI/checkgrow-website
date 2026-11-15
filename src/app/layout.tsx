@@ -127,7 +127,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         {/* scroll reveals start hidden and are animated in by JavaScript;
             without it, show everything (components/Reveal.tsx) */}
         <noscript>
-          <style>{"[data-reveal]{opacity:1!important;transform:none!important}"}</style>
+          <style>{"[data-reveal]{opacity:1!important;transform:none!important}.sales-mockup *{animation-play-state:running!important}"}</style>
         </noscript>
       </head>
       <body>

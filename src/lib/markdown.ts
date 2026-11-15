@@ -20,6 +20,7 @@ import { problemTools } from "./problemCards";
 import { shiftBenefits } from "./shiftStory";
 import { faqItems, SITE_URL } from "./seo";
 import { faqCategories } from "./faq";
+import { salesCompany, salesControls, salesFaq, salesHero, salesModules, salesPillars } from "./sales";
 import { integrations } from "@/components/sections/Integrations";
 
 export type MarkdownPage = {
@@ -124,6 +125,33 @@ function homeBody() {
     "## FAQ",
     faq(faqItems),
     `Every question, by topic: ${mdLink("FAQ", "/faq")}`,
+    contact(),
+  );
+}
+
+/* ---------- Sales ---------- */
+
+function salesBody() {
+  return join(
+    salesHero.intro,
+    `Book a demo: ${BOOK_DEMO}`,
+    "## Three modules, one Sales Brain",
+    ...salesModules.map((m, i) =>
+      join(
+        `### ${i + 1}. ${m.name}: ${m.title}`,
+        m.intro,
+        m.functions.map((f, j) => `${i * 3 + j + 1}. **${f.title}.** ${f.body}`).join("\n"),
+      ),
+    ),
+    "## Why Checkgrow Sales",
+    "Most tools send messages. Checkgrow builds your sales brain: every conversation becomes company knowledge, a proprietary dataset of what your buyers respond to, owned by you and compounding with every rep.",
+    salesPillars.map((p) => `- **${p.title}:** ${p.body}`).join("\n"),
+    "## Built for enterprise go-to-market",
+    salesControls.map((c) => `- **${c.title}:** ${c.body}`).join("\n"),
+    `## ${salesCompany.title}`,
+    ...salesCompany.body,
+    "## FAQ",
+    faq(salesFaq),
     contact(),
   );
 }
@@ -284,6 +312,12 @@ export const markdownPages: MarkdownPage[] = [
     body: homeBody,
   },
   {
+    path: "/sales",
+    title: "Checkgrow Sales",
+    description: "The AI Sales Brain for go-to-market teams: ICP-ranked lists, approved LinkedIn outreach in every rep's voice, replies sorted for you, and one sales history leadership can follow.",
+    body: salesBody,
+  },
+  {
     path: "/faq",
     title: "Checkgrow FAQ",
     description: "Answers about Checkgrow: the platform, how it learns your company, integrations and AI models, LinkedIn outreach, pricing and plans, and data security and GDPR.",
@@ -342,7 +376,7 @@ export function renderLlmsTxt() {
       "Every link below is markdown: each page is available at its URL plus .md (/index.md for the homepage), or by requesting the page with Accept: text/markdown.",
     ]),
     "## Key pages",
-    ["/", "/pricing", "/faq", "/features", "/use-cases", "/news"].map((p) => link(getMarkdownPage(p)!)).join("\n"),
+    ["/", "/pricing", "/sales", "/faq", "/features", "/use-cases", "/news"].map((p) => link(getMarkdownPage(p)!)).join("\n"),
     "## Use cases",
     byPrefix("/use-cases/").map(link).join("\n"),
     "## Success stories",

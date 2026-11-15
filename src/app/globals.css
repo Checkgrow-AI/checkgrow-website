@@ -549,3 +549,30 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Sales mockups (components/sales/SalesMockup.tsx): CSS keyframes run only
+   while the screen is on view; reduced motion holds one telling frame. */
+.sales-mockup[data-playing="false"] * {
+  animation-play-state: paused !important;
+}
+.sales-mockup[data-reduced="true"] * {
+  animation-delay: var(--still) !important;
+}
+.sales-progress {
+  animation-name: sales-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+@keyframes sales-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.sales-progress-y {
+  animation-name: sales-progress-y;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+@keyframes sales-progress-y {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}

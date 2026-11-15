@@ -34,6 +34,9 @@ export function Footer({ homePage = true }: { homePage?: boolean }) {
             <Link href="/features" className="transition-colors duration-200 hover:text-foreground">
               Features
             </Link>
+            <Link href="/sales" className="transition-colors duration-200 hover:text-foreground">
+              Sales
+            </Link>
             <Link href="/pricing" className="transition-colors duration-200 hover:text-foreground">
               Pricing
             </Link>
