@@ -4,7 +4,8 @@ import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
 import { LogoMarquee } from "@/components/sections/LogoMarquee";
 import { Faq } from "@/components/sections/Faq";
-import { SalesMockup } from "@/components/sales/SalesMockup";
+import { SalesFilm } from "@/components/sales/SalesFilm";
+import { SALES_FILM } from "@/lib/salesFilm";
 import { ModuleShowcase } from "@/components/sales/ModuleShowcase";
 import { SalesIcon } from "@/components/sales/SalesIcon";
 import { salesCompany, salesControls, salesFaq, salesHero, salesModules, salesPillars } from "@/lib/sales";
@@ -24,7 +25,6 @@ export const metadata: Metadata = {
 };
 
 const quotes = ["salim-sayed", "minka", "amanda-bester"].map((id) => testimonials.find((t) => t.id === id)!);
-const heroScreen = salesModules[2].functions[1];
 
 /* keep "go-to-market" on one line in headlines */
 const noBreak = (text: string) =>
@@ -54,6 +54,18 @@ export default function SalesPage() {
         mainEntity: salesFaq.map((item) => ({ "@type": "Question", name: item.q, acceptedAnswer: { "@type": "Answer", text: item.a } })),
       },
       {
+        "@type": "VideoObject",
+        "@id": `${url}#walkthrough`,
+        name: "Checkgrow Sales walkthrough",
+        description:
+          "A walkthrough of Checkgrow Sales: the team's LinkedIn pipeline from invitations to meetings, replies sorted by Grow, drafts written in each rep's voice for approval, and the Sales Brain that learns from every conversation.",
+        thumbnailUrl: `${SITE_URL}${SALES_FILM.poster}`,
+        contentUrl: `${SITE_URL}${SALES_FILM.src}`,
+        uploadDate: SALES_FILM.uploadDate,
+        duration: SALES_FILM.duration,
+        publisher: { "@id": `${SITE_URL}/#organization` },
+      },
+      {
         "@type": "BreadcrumbList",
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
@@ -81,10 +93,10 @@ export default function SalesPage() {
           </Reveal>
 
           <Reveal delay={0.1} className="relative mx-auto mt-16 max-w-6xl md:mt-20">
-            <div className="relative overflow-hidden rounded-card p-4 sm:p-10 md:p-14 lg:p-20">
+            <div className="relative overflow-hidden rounded-card p-3 sm:p-8 md:p-12 lg:p-16">
               <Image src="/backgrounds/graphite-light.webp" alt="" aria-hidden fill sizes="(min-width: 1200px) 1152px, 100vw" className="pointer-events-none object-cover" priority />
-              <div className="relative mx-auto max-w-2xl">
-                <SalesMockup id={heroScreen.mockup} label={heroScreen.screen} className="shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] ring-1 ring-white/10" />
+              <div className="relative">
+                <SalesFilm />
               </div>
             </div>
           </Reveal>
