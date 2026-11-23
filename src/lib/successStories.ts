@@ -49,18 +49,23 @@ const allStories: SuccessStory[] = [
     "slug": "cuixmala-first-campaign-us-27000-booking",
     "company": "Cuixmala",
     "draft": false,
-    "title": "How luxury resort Cuixmala's first Google Ads campaign brought a US$27,000 booking",
-    "description": "How Mexican luxury resort Cuixmala launched its first ads with Checkgrow: competitor research, campaigns in two languages and a US$27,000 first booking.",
+    "title": "How luxury resort Cuixmala passed US$300,000 in bookings with its first campaigns",
+    "description": "How Mexican luxury resort Cuixmala launched its first ads with Checkgrow: US$307,650 in bookings, revenue up 369% and a US$27,000 first booking.",
     "kicker": "Hospitality, Mexico",
     "publishedAt": "2026-10-06",
     "heroStats": [
       {
-        "value": "US$27,000",
-        "label": "the first booking from Cuixmala's Google Ads campaigns, confirmed in its booking system"
+        "value": "US$307,650",
+        "label": "in bookings recorded in Google Analytics while Checkgrow ran Cuixmala's campaigns, 15 September to 22 November",
+        "big": true
       },
       {
-        "value": "49,403",
-        "label": "people reached by Cuixmala's first Meta ads"
+        "value": "369%",
+        "label": "growth in booking revenue on the same number of days before"
+      },
+      {
+        "value": "US$27,000",
+        "label": "the first booking from Cuixmala's Google Ads campaigns, confirmed in its booking system"
       }
     ],
     "features": [
@@ -94,16 +99,17 @@ const allStories: SuccessStory[] = [
         },
         {
           "label": "Period covered",
-          "value": "15 September to 5 October 2026"
+          "value": "15 September to 22 November 2026"
         }
       ]
     },
-    "lead": "Cuixmala has welcomed guests to its resort on Mexico's Pacific coast since 1987, but it had never advertised. Its first paid campaigns, run by Checkgrow, went live on Google and Meta in September. Within weeks, Google Ads recorded the first booking: a stay worth US$27,000, confirmed against Cuixmala's own booking system. Checking that booking also revealed a tracking gap worth fixing early.",
+    "lead": "Cuixmala has welcomed guests to its resort on Mexico's Pacific coast since 1987, but it had never advertised. Its first paid campaigns, run by Checkgrow, went live on Google and Meta in September. Within weeks, Google Ads recorded the first booking: a stay worth US$27,000, confirmed against Cuixmala's own booking system. By 22 November, Google Analytics had recorded US$307,650 in bookings since launch, 369% more than in the same number of days before. Checking that first booking also revealed a tracking gap worth fixing early.",
     "takeaways": [
       "Cuixmala's company brain in Checkgrow's Knowledge Center set out its offer in detail: 6 products, 4 buyer personas, 3 ideal customer profiles and 5 use cases.",
       "Checkgrow Competitors tracked 14 rival resorts: 8 were advertising, with 166 live ads on Meta, while Cuixmala's 210,000 Instagram followers ranked it 3rd of the 14.",
       "Checkgrow planned Cuixmala: The Reserve Awaits and generated its ads in Creative Studio from the resort's own photography, in English for the United States and in Spanish for Mexico.",
       "Google Ads recorded the first booking, worth US$27,000, and it matched Cuixmala's booking system exactly.",
+      "From 15 September to 22 November, Google Analytics recorded 44 bookings worth US$307,650, booking revenue up 369% on the same number of days before. Google was the first channel for US$270,230 of it.",
       "Insights showed that Google Analytics had recorded the purchase without its source, a tagging gap found in the first weeks rather than months later."
     ],
     "keywords": [
@@ -272,27 +278,32 @@ const allStories: SuccessStory[] = [
       },
       {
         "label": "The results",
-        "title": "A first booking worth US$27,000",
+        "title": "More than US$300,000 in bookings, revenue up 369%",
         "blocks": [
           {
             "type": "p",
-            "text": "The launch delivered the result that matters most to a resort: a real, confirmed booking from paid search, worth US$27,000, within the campaign's first weeks."
+            "text": "The launch delivered the result that matters most to a resort: real, confirmed bookings. The first, from paid search, was worth US$27,000 and came within the campaign's first weeks. By 22 November, Google Analytics had recorded 44 bookings worth US$307,650 since launch, against 6 in the same number of days before, and booking revenue was up 369%. Google was the first channel for US$270,230 of it, followed by direct visits with US$21,155 and Instagram with US$12,002."
           },
           {
             "type": "stats",
             "variant": "results",
             "items": [
               {
+                "value": "US$307,650",
+                "label": "in bookings recorded in Google Analytics, 15 September to 22 November",
+                "big": true
+              },
+              {
+                "value": "369%",
+                "label": "growth in booking revenue on the same number of days before"
+              },
+              {
+                "value": "44",
+                "label": "bookings, against 6 in the same number of days before"
+              },
+              {
                 "value": "US$27,000",
                 "label": "first booking from Google Ads, matched to Cuixmala's booking system"
-              },
-              {
-                "value": "4,228",
-                "label": "clicks on Cuixmala's Google Ads campaigns in September"
-              },
-              {
-                "value": "3.45%",
-                "label": "click-through rate on Cuixmala's first Meta ads"
               }
             ]
           },
@@ -304,13 +315,13 @@ const allStories: SuccessStory[] = [
       }
     ],
     "statement": {
-      "text": "Cuixmala's first Google Ads booking was worth US$27,000. Checking it against the booking system also showed where the tracking breaks down, and that is exactly what you want to know early, before a campaign grows.",
+      "text": "In its first ten weeks of campaigns with Checkgrow, Cuixmala passed US$300,000 in bookings, with revenue up 369%. Its first Google Ads booking, worth US$27,000, also showed where the tracking broke down, and that is exactly what you want to know early, before a campaign grows.",
       "cite": "Checkgrow"
     },
     "faq": [
       {
         "q": "How can a luxury hotel or resort start advertising online with Checkgrow?",
-        "a": "By running the launch from one Checkgrow workspace: describe the property, its guests and offers in the Knowledge Center, research rival hotels in Competitors, plan the campaigns in Campaigns and measure every channel together in Insights. Cuixmala, a luxury resort in Mexico, launched its first paid campaigns this way and recorded a US$27,000 booking within weeks."
+        "a": "By running the launch from one Checkgrow workspace: describe the property, its guests and offers in the Knowledge Center, research rival hotels in Competitors, plan the campaigns in Campaigns and measure every channel together in Insights. Cuixmala, a luxury resort in Mexico, launched its first paid campaigns this way, recorded a US$27,000 booking within weeks and passed US$300,000 in bookings in its first ten weeks."
       },
       {
         "q": "What should a hotel put in its company brain?",
@@ -337,7 +348,7 @@ const allStories: SuccessStory[] = [
         "a": "Yes. A Checkgrow campaign can carry the same creative in several languages for different markets while keeping one strategy. Cuixmala's campaign ran in English for travellers in the United States and in Spanish for the Mexican market."
       }
     ],
-    "footnote": "Figures from Cuixmala's Checkgrow workspace, covering 15 September to 5 October 2026; website and Google Ads figures cover September. The booking value was confirmed by Cuixmala. Social media follower counts last read 27 April 2026."
+    "footnote": "Figures from Cuixmala's Checkgrow workspace. Booking revenue, bookings and first channels are Google Analytics purchase figures for 15 September to 22 November 2026, compared with the same number of days before. Other campaign and competitor figures cover 15 September to 5 October 2026; website and Google Ads click figures cover September. The US$27,000 booking value was confirmed by Cuixmala. Social media follower counts last read 27 April 2026."
   },
   {
     "slug": "boont-30x-cheaper-meta-purchases",

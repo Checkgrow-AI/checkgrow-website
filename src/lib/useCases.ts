@@ -256,7 +256,7 @@ export const useCases: UseCase[] = [
     },
     proof: [
       { slug: "barner-croatia-launch-purchases-up-160", company: "Barner", line: "Built its company brain first, then generated 423 ad creatives in its own voice." },
-      { slug: "cuixmala-first-campaign-us-27000-booking", company: "Cuixmala", line: "Set out 6 products, 4 personas and 3 ICPs before its first campaign brought a US$27,000 booking." },
+      { slug: "cuixmala-first-campaign-us-27000-booking", company: "Cuixmala", line: "Set out 6 products, 4 personas and 3 ICPs before its first campaigns brought more than US$300,000 in bookings." },
     ],
     faq: [
       { q: "What is a brand knowledge base for AI?", a: "It is one structured place that holds what makes your company specific, such as your brand voice, products, buyer personas, ideal customer profiles and use cases, so AI tools write from your facts instead of generic assumptions. In Checkgrow it is the Knowledge Center, and every AI feature reads from it." },
