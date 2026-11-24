@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { useT } from "@/i18n/client";
 
-const WORDS = ["product", "buyers", "market", "channels"];
 const HOLD_MS = 2600;
 
 /* deterministic pseudo-random in [0,1) so every render of a word scatters
@@ -20,24 +20,27 @@ const SPARK_OPACITIES = [0.95, 0.72, 0.5];
    particles pop off each letter as it lands and dissolve again; the word
    blurs away before the next one types in. SSR and pre-hydration render
    the plain first word; the cycle only starts client-side, and never for
-   reduced-motion users. */
+   reduced-motion users. The words are copy (`home` dictionary:
+   hero.rotatingWords). */
 export function RotatingWord() {
+  const words = useT("home").hero.rotatingWords;
+  const count = words.length;
   const [index, setIndex] = useState(0);
   const [running, setRunning] = useState(false);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const raf = requestAnimationFrame(() => setRunning(true));
-    const t = setInterval(() => setIndex((i) => (i + 1) % WORDS.length), HOLD_MS);
+    const t = setInterval(() => setIndex((i) => (i + 1) % count), HOLD_MS);
     return () => {
       cancelAnimationFrame(raf);
       clearInterval(t);
     };
-  }, []);
+  }, [count]);
 
-  if (!running) return <span>{WORDS[0]}</span>;
+  if (!running) return <span>{words[0]}</span>;
 
-  const word = WORDS[index];
+  const word = words[index];
   return (
     <AnimatePresence mode="wait" initial={false}>
       <motion.span

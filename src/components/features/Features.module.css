@@ -92,6 +92,8 @@
 
 .tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1.25rem; }
 .tab {
+  /* a grid item may shrink below its longest word (translations hyphenate) */
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
@@ -109,6 +111,8 @@
 .tab[aria-selected="true"] .fill[data-playing="true"] { animation: step-progress var(--step-ms) linear both; }
 @keyframes step-progress { from { transform: scaleX(0); } to { transform: none; } }
 .tabLabel { display: flex; align-items: baseline; gap: 0.5rem; font-size: 0.875rem; line-height: 1.4; font-weight: 500; }
+/* German compounds in the three short step labels may hyphenate rather than widen the row */
+:global(:lang(de)) .tabLabel { hyphens: auto; }
 .tabIndex { font-size: 0.75rem; font-variant-numeric: tabular-nums; color: var(--color-accent); }
 .caption { margin-top: 0.75rem; min-height: 3em; font-size: 0.875rem; line-height: 1.5; color: var(--color-muted); }
 

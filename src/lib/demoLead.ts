@@ -17,6 +17,7 @@ import {
   aiTeamOptions,
   challengeGroups,
   challengeLabel,
+  type AiTeamId,
   DEMO_MINUTES,
   DEMO_TIME_ZONE,
   describeSpend,
@@ -26,6 +27,9 @@ import {
 } from "./demo";
 import { isPhone, PHONE_MAX } from "./phone";
 import { CLICK_ID_KEYS, cleanTouch, type Touch } from "./attribution";
+import { locales, type Locale } from "@/i18n/config";
+/* the sales team reads every lead in English, whatever the visitor's language */
+import { demo as englishCopy } from "@/i18n/dictionaries/en/demo";
 
 const WEBHOOK_URL = process.env.DEMO_REQUEST_WEBHOOK_URL;
 export const LEAD_SOURCE = "Website demo form";
@@ -46,10 +50,12 @@ export type DemoLead = {
   pageUrl: string;
   referrer: string;
   eventId: string;
+  /* the visitor's site language */
+  language: Locale;
 };
 
 const challengeIds = new Set<string>(challengeGroups.flatMap((g) => g.items.map((i) => i.id)));
-const teamIds = new Set(aiTeamOptions.map((o) => o.id));
+const teamIds = new Set<string>(aiTeamOptions.map((o) => o.id));
 export const text = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 const url = (v: unknown) => {
   const s = text(v, 500);
@@ -107,6 +113,7 @@ export function parseDemoLead(body: Record<string, unknown>): { lead: DemoLead }
       pageUrl: url(body.pageUrl),
       referrer: url(body.referrer),
       eventId: text(body.eventId, 64),
+      language: (locales as readonly unknown[]).includes(body.language) ? (body.language as Locale) : "en",
     },
   };
 }
@@ -115,9 +122,9 @@ export function parseDemoLead(body: Record<string, unknown>): { lead: DemoLead }
 export function describeLead(lead: DemoLead) {
   return {
     name: `${lead.firstName} ${lead.lastName}`,
-    challenges: lead.challenges.map(challengeLabel),
+    challenges: lead.challenges.map((id) => challengeLabel(id, englishCopy.form.challenges.labels)),
     spend: lead.noActiveAds ? "No active ads" : `${describeSpend(lead.adSpend as number)} / month`,
-    aiTeam: aiTeamOptions.find((o) => o.id === lead.aiTeam)?.label ?? lead.aiTeam,
+    aiTeam: englishCopy.form.team.options[lead.aiTeam as AiTeamId] ?? lead.aiTeam,
     goals: lead.goals.length ? lead.goals.join("; ") : "not given",
   };
 }
@@ -201,7 +208,7 @@ export function leadWebhookPayload(lead: DemoLead, stage: LeadStage) {
     website: site,
     notes: leadNotes(lead, stage),
     source: LEAD_SOURCE,
-    language: "en",
+    language: lead.language,
     page_url: lead.pageUrl,
     referrer: lead.last?.referrer || lead.referrer,
     utm_source: lead.last?.utm_source ?? "",

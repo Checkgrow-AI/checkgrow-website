@@ -1,3 +1,5 @@
+import type { Dictionary } from "@/i18n/dictionaries";
+
 const TP_GREEN = "#00B67A";
 const TP_URL = "https://www.trustpilot.com/review/checkgrow.com";
 
@@ -13,19 +15,21 @@ function Star({ size = 12, color = "#FFFFFF" }: { size?: number; color?: string 
 }
 
 /* Compact horizontal Trustpilot strip: logo · star boxes · rating · reviews.
-   Source: trustpilot.com/review/checkgrow.com (4.4 · Excellent · 12 reviews). */
-export function Trustpilot() {
+   Source: trustpilot.com/review/checkgrow.com (4.4 · Excellent · 12 reviews).
+   Rendered by server pages and by the client hero alike, so it takes its
+   copy as a prop (`home` dictionary: trustpilot). */
+export function Trustpilot({ copy }: { copy: Dictionary["home"]["trustpilot"] }) {
   return (
     <a
       href={TP_URL}
       target="_blank"
       rel="noopener noreferrer"
       className="inline-flex flex-wrap items-center gap-x-3 gap-y-2 transition-opacity duration-200 hover:opacity-75"
-      aria-label="Checkgrow is rated 4.4 out of 5, Excellent, from 12 reviews on Trustpilot"
+      aria-label={copy.label}
     >
       <span className="flex items-center gap-1.5">
         <Star size={16} color={TP_GREEN} />
-        <span className="text-sm font-semibold tracking-tight">Trustpilot</span>
+        <span className="text-sm font-semibold tracking-tight">{"Trustpilot"}</span>
       </span>
 
       <span className="flex gap-0.5" aria-hidden>
@@ -50,8 +54,7 @@ export function Trustpilot() {
       </span>
 
       <span className="text-sm text-muted" aria-hidden>
-        <strong className="font-semibold text-foreground">4.4</strong> Excellent ·
-        12 reviews
+        <strong className="font-semibold text-foreground">{copy.score}</strong> {copy.rating} · {copy.reviews}
       </span>
     </a>
   );

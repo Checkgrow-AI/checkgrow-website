@@ -24,8 +24,9 @@ Every release remains approval-gated: show the complete working-tree manifest an
 1. Confirm the repository, direct `main` target and clean Git operation state.
 2. Fetch `origin/main` and inspect the entire local working tree.
 3. Confirm there are no Supabase migrations or edge functions. This frontend-only repository has no Supabase deployment step.
-4. Run `pnpm exec tsc --noEmit --incremental false`, `pnpm lint` and `pnpm build`.
-5. For UI changes, inspect the result at 390px, 768px and 1440px and check for horizontal overflow.
+4. Run `pnpm exec tsc --noEmit --incremental false`, `pnpm lint` and `pnpm build`. `pnpm build` starts with `pnpm i18n:check`: every visible string must exist in English, Português (Brasil), Deutsch and Français (`docs/i18n.md`).
+5. For UI changes, inspect the result at 390px, 768px and 1440px and check for horizontal overflow, in every language: `pnpm i18n:layout` against the running site (it reports only issues a translation introduced).
+5a. For changes touching tracking, consent, UTMs or the demo flow, run `pnpm i18n:flow` (and with `--locale=/pt-br`, `/de`, `/fr`, `--consent`): attribution, consent-gated cookies, lead and booking payloads and the event sequence must pass in every language.
 6. Print every file that `git add -A` will stage and wait for explicit approval.
 7. Switch to `main` when needed, preserving the approved working tree, then run `git add -A` and commit everything with a descriptive subject.
 8. Push directly to `origin/main`.

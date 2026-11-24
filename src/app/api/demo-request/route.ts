@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { bookDemo, CalendarUnavailableError, SlotTakenError } from "@/lib/demoAvailability";
 import { sendLeadEmail, type LeadEmail } from "@/lib/leadEmail";
+import { localeInfo } from "@/i18n/config";
 import {
   auditLog,
   clientIp,
@@ -65,6 +66,7 @@ export async function POST(req: Request) {
       slot,
       visitorTimeZone,
       campaign,
+      language: lead.language,
     })
       .then(() => ({ emailed: true as const }))
       .catch((err: unknown) => {
@@ -92,6 +94,7 @@ export async function POST(req: Request) {
         `Goals: ${d.goals}`,
         `Campaign: ${campaign || "direct"}`,
         `Visitor time zone: ${visitorTimeZone || "unknown"}`,
+        `Language: ${localeInfo[lead.language].name}`,
       ],
     });
   } catch (e) {

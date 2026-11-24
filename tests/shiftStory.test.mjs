@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { shiftBenefits, shiftStepFromProgress } from '../src/lib/shiftStory.ts';
+import { shiftBenefits as buildShiftBenefits, shiftStepFromProgress } from '../src/lib/shiftStory.ts';
+import { home } from '../src/i18n/dictionaries/en/home.ts';
+
+const shiftBenefits = buildShiftBenefits(home.shift.benefits);
 
 const COUNT = shiftBenefits.length;
 

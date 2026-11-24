@@ -10,9 +10,9 @@
    The speaker chip always shows the ACTUAL audio state and doubles as a
    manual override. */
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { LocalLink as Link, useT } from "@/i18n/client";
 import { passProgress } from "@/lib/scrollProgress";
 import { useStableVh } from "@/lib/useStableVh";
 
@@ -20,16 +20,19 @@ const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 const smooth = (v: number) => v * v * (3 - 2 * v);
 const ramp = (p: number, a: number, b: number) => smooth(clamp01((p - a) / (b - a)));
 
-/* film chapters: click to jump, the active tab follows playback */
-const CHAPTERS: Array<{ label: string; t: number }> = [
-  { label: "Knowledge", t: 4 }, // Knowledge Center, Integrations
-  { label: "Marketing", t: 23 }, // Competitors, Social Media, Content, Website, Campaigns, Creatives
-  { label: "Insights", t: 87 },
-  { label: "Sales", t: 97 }, // Lists, Outreach, Leads
-  { label: "AI Chat", t: 124 }, // Grow Chat
+/* film chapters: click to jump, the active tab follows playback. The
+   start times (seconds) live here; the labels, in the same order, are copy
+   (`home` dictionary: platformFilm.chapters). */
+const CHAPTERS: Array<{ t: number }> = [
+  { t: 4 }, // Knowledge: Knowledge Center, Integrations
+  { t: 23 }, // Marketing: Competitors, Social Media, Content, Website, Campaigns, Creatives
+  { t: 87 }, // Insights
+  { t: 97 }, // Sales: Lists, Outreach, Leads
+  { t: 124 }, // AI Chat: Grow Chat
 ];
 
 export function PlatformFilm() {
+  const copy = useT("home").platformFilm;
   const secRef = useRef<HTMLElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -192,10 +195,10 @@ export function PlatformFilm() {
           />
           <div className="relative overflow-hidden rounded-card bg-raised shadow-raised ring-1 ring-line">
             {/* chapter tabs spanning the top edge of the film */}
-            <div className="flex w-full overflow-x-auto bg-raised" role="tablist" aria-label="Film chapters">
+            <div className="flex w-full overflow-x-auto bg-raised" role="tablist" aria-label={copy.chaptersLabel}>
               {CHAPTERS.map((c, i) => (
                 <button
-                  key={c.label}
+                  key={copy.chapters[i]}
                   type="button"
                   role="tab"
                   aria-selected={chapter === i}
@@ -214,7 +217,7 @@ export function PlatformFilm() {
                     chapter === i ? "text-accent" : "text-muted hover:text-foreground"
                   }`}
                 >
-                  {c.label}
+                  {copy.chapters[i]}
                   <span
                     aria-hidden
                     className="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-[#6373FF] transition-transform duration-300 ease-out"
@@ -233,7 +236,7 @@ export function PlatformFilm() {
               preload="metadata"
               poster="/videos/checkgrow-platform-v2-poster.jpg"
               className="block w-full cursor-pointer"
-              aria-label="Checkgrow platform tour"
+              aria-label={copy.videoLabel}
               onClick={() => {
                 engaged.current = true;
                 vetoed.current = false;
@@ -254,7 +257,7 @@ export function PlatformFilm() {
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-75" />
                   <span className="relative inline-flex size-2 rounded-full bg-accent" />
                 </span>
-                Tap for sound
+                {copy.tapForSound}
               </button>
             )}
             <button
@@ -268,7 +271,7 @@ export function PlatformFilm() {
                   v.play().catch(() => {});
                 }
               }}
-              aria-label="Restart the platform film"
+              aria-label={copy.restart}
               className="absolute bottom-4 right-18 flex size-11 items-center justify-center rounded-full bg-canvas/80 text-foreground backdrop-blur-sm transition-colors duration-200 hover:bg-surface"
             >
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -295,7 +298,7 @@ export function PlatformFilm() {
                 vetoed.current = false;
                 setSound(!audible);
               }}
-              aria-label={audible ? "Mute the platform film" : "Unmute the platform film"}
+              aria-label={audible ? copy.mute : copy.unmute}
               className="absolute bottom-4 right-4 flex size-11 items-center justify-center rounded-full bg-canvas/80 text-foreground backdrop-blur-sm transition-colors duration-200 hover:bg-surface"
             >
               {audible ? (
@@ -330,7 +333,7 @@ export function PlatformFilm() {
             href="/book-a-demo"
             className="inline-flex min-h-12 items-center rounded-full bg-foreground px-8 text-sm font-semibold text-canvas transition-colors duration-200 hover:bg-accent"
           >
-            Book a demo
+            {copy.bookDemo}
           </Link>
         </div>
       </div>

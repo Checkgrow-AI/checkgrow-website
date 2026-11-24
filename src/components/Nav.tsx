@@ -1,24 +1,28 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useStableVh } from "@/lib/useStableVh";
+import { LocalLink as Link, useLocalePath, useT } from "@/i18n/client";
+import { LanguageSelector } from "@/components/LanguageSelector";
 
 const links = [
-  { href: "#platform", label: "Platform" },
-  { href: "#solution", label: "Solution" },
-  { href: "#stories", label: "Real stories" },
-  { href: "#use-cases", label: "Features" },
-  { href: "/pricing", label: "Pricing", sectionId: "pricing" },
-  { href: "#faq", label: "FAQ" },
-];
+  { href: "#platform", key: "platform" },
+  { href: "#solution", key: "solution" },
+  { href: "#stories", key: "stories" },
+  { href: "#use-cases", key: "features" },
+  { href: "/pricing", key: "pricing", sectionId: "pricing" },
+  { href: "#faq", key: "faq" },
+] as const;
 
 /* overLight: the header stays transparent so the hero light can reach the
    top of the window; the scrolled pill keeps its own glass background */
 export function Nav({ homePage = true, overLight = false }: { homePage?: boolean; overLight?: boolean }) {
   const pathname = usePathname();
+  const t = useT("common").nav;
+  const lp = useLocalePath();
+  const isCurrent = (href: string) => href.startsWith("/") && pathname === lp(href);
   const linkHref = (href: string) => !homePage && href.startsWith("#") ? `/${href}` : href;
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -46,7 +50,7 @@ export function Nav({ homePage = true, overLight = false }: { homePage?: boolean
      section, so the page always maps onto exactly one filling line) */
   useEffect(() => {
     if (!homePage) return;
-    const ids = links.map((l) => l.sectionId ?? l.href.slice(1)).concat("waitlist");
+    const ids = links.map((l) => ("sectionId" in l ? l.sectionId : l.href.slice(1)) as string).concat("waitlist");
     let raf = 0;
     const frame = () => {
       raf = requestAnimationFrame(frame);
@@ -89,7 +93,7 @@ export function Nav({ homePage = true, overLight = false }: { homePage?: boolean
         >
         <Link
           href={homePage ? "/" : "/#top"}
-          aria-label="Checkgrow home"
+          aria-label={t.homeLabel}
           className="shrink-0"
           onClick={(e) => {
             if (!homePage) return;
@@ -118,33 +122,34 @@ export function Nav({ homePage = true, overLight = false }: { homePage?: boolean
             <Link
               key={l.href}
               href={linkHref(l.href)}
-              aria-current={pathname === l.href ? "page" : undefined}
-              className="relative text-sm text-muted transition-colors duration-200 hover:text-foreground aria-[current=page]:text-foreground"
+              aria-current={isCurrent(l.href) ? "page" : undefined}
+              className="relative whitespace-nowrap text-sm text-muted transition-colors duration-200 hover:text-foreground aria-[current=page]:text-foreground"
             >
-              {l.label}
+              {t.links[l.key]}
               <span
                 aria-hidden
                 ref={(el) => {
                   progressRefs.current[i] = el;
                 }}
                 className="absolute -bottom-1 left-0 h-[2px] w-full origin-left rounded-full bg-[#6373FF]"
-                style={{ transform: pathname === l.href ? "scaleX(1)" : "scaleX(0)" }}
+                style={{ transform: isCurrent(l.href) ? "scaleX(1)" : "scaleX(0)" }}
               />
             </Link>
           ))}
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <LanguageSelector compact={pill} />
           <Link
             href="/book-a-demo"
             className={`hidden shrink-0 items-center whitespace-nowrap rounded-full border border-[#6373FF] bg-transparent text-sm font-medium text-accent transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] hover:bg-brand-strong hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6373FF] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas sm:inline-flex ${
               pill ? "min-h-11 px-5" : "min-h-11 px-6"
             }`}
           >
-            Book a demo
+            {t.bookDemo}
           </Link>
           <button
             type="button"
-            aria-label={open ? "Close menu" : "Open menu"}
+            aria-label={open ? t.closeMenu : t.openMenu}
             aria-expanded={open}
             onClick={() => setOpen(!open)}
             className="flex size-11 items-center justify-center rounded-md lg:hidden"
@@ -168,18 +173,18 @@ export function Nav({ homePage = true, overLight = false }: { homePage?: boolean
             onClick={() => setOpen(false)}
             className="mb-4 flex min-h-12 items-center justify-center rounded-full border border-[#6373FF] bg-transparent text-sm font-medium text-accent transition-colors duration-200 hover:bg-brand-strong hover:text-white active:bg-brand-strong active:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6373FF] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
           >
-            Book a demo
+            {t.bookDemo}
           </Link>
           <div className="flex flex-col">
             {links.map((l) => (
               <Link
                 key={l.href}
                 href={linkHref(l.href)}
-                aria-current={pathname === l.href ? "page" : undefined}
+                aria-current={isCurrent(l.href) ? "page" : undefined}
                 onClick={() => setOpen(false)}
                 className="flex min-h-12 items-center border-b border-line text-base text-foreground aria-[current=page]:text-accent"
               >
-                {l.label}
+                {t.links[l.key]}
               </Link>
             ))}
           </div>

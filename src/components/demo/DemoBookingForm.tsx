@@ -21,7 +21,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "motion/react";
-import { isCompanyEmail, COMPANY_EMAIL_MESSAGE } from "@/lib/freeEmailDomains";
+import { isCompanyEmail } from "@/lib/freeEmailDomains";
 import {
   aiTeamOptions,
   challengeGroups,
@@ -40,32 +40,40 @@ import { FoundersNote } from "./FoundersNote";
 import { ATTRIBUTION_FIELDS, readAttribution, type Attribution } from "@/lib/attribution";
 import { newEventId, track, trackAfterConsent } from "@/lib/track";
 import { isPhone } from "@/lib/phone";
+import { useLang, useLocalePath, useT } from "@/i18n/client";
+import { localeInfo, type Locale } from "@/i18n/config";
+import { fmt } from "@/i18n/format";
+import type { Dictionary } from "@/i18n/dictionaries";
 import styles from "./Demo.module.css";
 
-const contactSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .email("Enter a valid work email")
-    .refine(isCompanyEmail, COMPANY_EMAIL_MESSAGE),
-  phone: z
-    .string()
-    .trim()
-    .min(1, "Add your phone number")
-    .refine(isPhone, "Enter a valid phone number, e.g. +385 91 234 5678"),
-  firstName: z.string().trim().min(1, "Add your first name").max(80),
-  lastName: z.string().trim().min(1, "Add your last name").max(80),
-  website: z
-    .string()
-    .trim()
-    .min(1, "Add your company website")
-    .max(200)
-    .refine(
-      (v) => /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(\/\S*)?$/i.test(v),
-      "Enter a website like company.com",
-    ),
-});
-type Contact = z.infer<typeof contactSchema>;
+type FormCopy = Dictionary["demo"]["form"];
+
+/* same rules in every language; only the messages are copy */
+const contactSchema = (e: FormCopy["errors"]) =>
+  z.object({
+    email: z
+      .string()
+      .trim()
+      .email(e.email)
+      .refine(isCompanyEmail, e.companyEmail),
+    phone: z
+      .string()
+      .trim()
+      .min(1, e.phoneRequired)
+      .refine(isPhone, e.phoneInvalid),
+    firstName: z.string().trim().min(1, e.firstName).max(80),
+    lastName: z.string().trim().min(1, e.lastName).max(80),
+    website: z
+      .string()
+      .trim()
+      .min(1, e.websiteRequired)
+      .max(200)
+      .refine(
+        (v) => /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(\/\S*)?$/i.test(v),
+        e.websiteInvalid,
+      ),
+  });
+type Contact = z.infer<ReturnType<typeof contactSchema>>;
 
 const questions = ["challenges", "spend", "team", "goals", "contact"] as const;
 type Question = (typeof questions)[number];
@@ -78,8 +86,12 @@ const slide = {
   transition: { duration: 0.28, ease: [0.2, 0, 0, 1] as const },
 };
 
-const timeFmt = (tz: string) =>
-  new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: tz });
+/* dates and times: English keeps en-GB ("Monday 24 November", 14:00);
+   other languages use their own tag. Weekday and month names come from Intl. */
+const intlTagOf = (lang: Locale) => (lang === "en" ? "en-GB" : localeInfo[lang].tag);
+
+const timeFmt = (tag: string, tz: string) =>
+  new Intl.DateTimeFormat(tag, { hour: "2-digit", minute: "2-digit", timeZone: tz });
 
 const dayKeyDate = (key: string) => {
   const [y, m, d] = key.split("-").map(Number);
@@ -114,6 +126,9 @@ const localDayKey = (at: Date, tz: string) =>
   }).format(at);
 
 export function DemoBookingForm() {
+  const t = useT("demo").form;
+  const lang = useLang();
+  const lp = useLocalePath();
   const [step, setStep] = useState<Step>("challenges");
   const [challenges, setChallenges] = useState<string[]>([]);
   const [spendIndex, setSpendIndex] = useState(spendStops.indexOf(10_000));
@@ -144,6 +159,7 @@ export function DemoBookingForm() {
     setSlotsState(await fetchSlots());
   };
 
+  const schema = useMemo(() => contactSchema(t.errors), [t.errors]);
   const {
     register,
     trigger,
@@ -151,7 +167,7 @@ export function DemoBookingForm() {
     setValue,
     setFocus,
     formState: { errors },
-  } = useForm<Contact>({ resolver: zodResolver(contactSchema), mode: "onSubmit", reValidateMode: "onChange" });
+  } = useForm<Contact>({ resolver: zodResolver(schema), mode: "onSubmit", reValidateMode: "onChange" });
 
   const qIndex = questions.indexOf(step as Question);
   const inQuestions = qIndex >= 0;
@@ -246,6 +262,7 @@ export function DemoBookingForm() {
     aiTeam,
     goals,
     timeZone: tz,
+    language: lang,
     attribution,
     pageUrl: window.location.href,
     referrer: document.referrer,
@@ -327,20 +344,20 @@ export function DemoBookingForm() {
         const { email, firstName, website } = getValues();
         saveDemoBooking({ email, firstName, website, slot, timeZone: tz, eventId });
         /* a full page load, so analytics records the confirmation page */
-        window.location.assign("/demo-confirmation");
+        window.location.assign(lp("/demo-confirmation"));
         return; // keep "Booking…" showing until the page changes
       } else if (res.status === 409) {
         setSlot(null);
-        setServerError("That time was just taken. Please pick another one.");
+        setServerError(t.booking.taken);
         await loadSlots();
       } else if (res.status === 429) {
-        setServerError("Too many attempts. Please try again in a few minutes.");
+        setServerError(t.booking.tooMany);
       } else {
-        setServerError("We couldn't book that slot. Please try again.");
+        setServerError(t.booking.failed);
       }
       setBusy(false);
     } catch {
-      setServerError("We couldn't book that slot. Please try again.");
+      setServerError(t.booking.failed);
       setBusy(false);
     }
   };
@@ -357,20 +374,18 @@ export function DemoBookingForm() {
       <div className="px-5 pb-2 pt-5 sm:px-7 sm:pt-6">
         <div className="flex items-center justify-between gap-3">
           <p className="text-label min-w-0 text-accent">
-            Step {phase} of 2 · {phase === 1 ? "Tailor your demo" : "Pick a time"}
+            {fmt(t.stepOf, { n: phase, total: 2, name: phase === 1 ? t.phases.questions : t.phases.time })}
           </p>
           <p className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-sm text-muted">
             <DemoIcon name="clock" size={15} />
-            {phase === 1 ? "60 sec" : `${DEMO_MINUTES} min`}
+            {phase === 1 ? t.phaseLength.questions : fmt(t.phaseLength.time, { n: DEMO_MINUTES })}
           </p>
         </div>
         {/* phones and tablets: the founders note leads the form (the left
             column, where it sits on desktop, is below the form there) */}
         {phase === 1 && <FoundersNote className="mt-4 lg:hidden" />}
         <p className={`mt-3 text-sm leading-relaxed text-muted ${phase === 1 ? "hidden lg:block" : ""}`}>
-          {phase === 1
-            ? "Your answers set up your onboarding: we prepare your competitor scan, website review and AI strategy before the call."
-            : "Choose a slot that suits you. The invite and video link follow by email."}
+          {phase === 1 ? t.intro.questions : t.intro.time}
         </p>
         <div className="mt-4 flex gap-1.5" aria-hidden>
           {questions.map((q, i) => (
@@ -395,15 +410,15 @@ export function DemoBookingForm() {
           <motion.div key={step} {...slide}>
             {step === "challenges" && (
               <div>
-                <QuestionHead title="What do you want to fix first?" />
+                <QuestionHead title={t.challenges.title} />
                 <div className="mt-5 space-y-5">
                   {challengeGroups.map((group) => (
-                    <div key={group.label}>
+                    <div key={group.id}>
                       <p className="mb-2.5 flex items-center gap-2 text-sm font-medium">
                         <span className="rounded-sm bg-tint px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-brand-strong">
-                          {group.tag}
+                          {t.challenges.groups[group.id].tag}
                         </span>
-                        {group.label}
+                        {t.challenges.groups[group.id].label}
                       </p>
                       <div className={`grid grid-cols-2 gap-2 ${styles.cardGrid}`}>
                         {group.items.map((item) => {
@@ -420,7 +435,7 @@ export function DemoBookingForm() {
                                 name={item.icon}
                                 className={`shrink-0 ${on ? "text-accent" : "text-muted"}`}
                               />
-                              <span className="min-w-0 text-left">{item.label}</span>
+                              <span className="min-w-0 text-left">{t.challenges.labels[item.id]}</span>
                               <span className={styles.tick} aria-hidden>
                                 <DemoIcon name="check" size={12} />
                               </span>
@@ -437,16 +452,16 @@ export function DemoBookingForm() {
                     aria-live="polite"
                   >
                     {challengeHint
-                      ? `Up to ${MAX_CHALLENGES}: deselect one to swap.`
-                      : `${challenges.length} of ${MAX_CHALLENGES} selected`}
+                      ? fmt(t.challenges.limitReached, { max: MAX_CHALLENGES })
+                      : fmt(t.challenges.selected, { n: challenges.length, max: MAX_CHALLENGES })}
                   </p>
                   <button
                     type="button"
-                    className={primaryBtn}
+                    className={primaryBtn} data-qa="form-next"
                     disabled={!challenges.length}
                     onClick={() => go("spend")}
                   >
-                    Continue <DemoIcon name="arrowRight" size={16} />
+                    {t.continue} <DemoIcon name="arrowRight" size={16} />
                   </button>
                 </Footer>
               </div>
@@ -454,7 +469,7 @@ export function DemoBookingForm() {
 
             {step === "spend" && (
               <div>
-                <QuestionHead title="How much do you spend on ads each month?" />
+                <QuestionHead title={t.spend.title} />
                 <div
                   className={`mt-6 rounded-card bg-raised p-5 ring-1 ring-line transition-opacity duration-200 ${
                     noAds ? "opacity-45" : ""
@@ -463,15 +478,15 @@ export function DemoBookingForm() {
                   <div className="flex items-end justify-between gap-3">
                     <p className="tabular-nums" aria-live="polite">
                       <span className="block text-sm text-muted">
-                        {spendIndex === 0 || spendIndex === spendStops.length - 1 ? "Monthly ad spend" : "Around"}
+                        {spendIndex === 0 || spendIndex === spendStops.length - 1 ? t.spend.monthly : t.spend.around}
                       </span>
                       <span className="text-h2">{formatSpend(spendStops[spendIndex])}</span>
-                      <span className="ml-1.5 text-base text-muted">/ month</span>
+                      <span className="ml-1.5 text-base text-muted">{t.spend.perMonth}</span>
                     </p>
                     <div className="flex gap-1.5">
                       <button
                         type="button"
-                        aria-label="Less"
+                        aria-label={t.spend.less}
                         disabled={spendIndex === 0}
                         onClick={() => {
                           setNoAds(false);
@@ -483,7 +498,7 @@ export function DemoBookingForm() {
                       </button>
                       <button
                         type="button"
-                        aria-label="More"
+                        aria-label={t.spend.more}
                         disabled={spendIndex === spendStops.length - 1}
                         onClick={() => {
                           setNoAds(false);
@@ -496,7 +511,7 @@ export function DemoBookingForm() {
                     </div>
                   </div>
                   <label htmlFor="demo-spend" className="sr-only">
-                    Monthly ad spend
+                    {t.spend.monthly}
                   </label>
                   <input
                     id="demo-spend"
@@ -505,7 +520,7 @@ export function DemoBookingForm() {
                     max={spendStops.length - 1}
                     step={1}
                     value={spendIndex}
-                    aria-valuetext={`${describeSpend(spendStops[spendIndex])} per month`}
+                    aria-valuetext={fmt(t.spend.valueText, { amount: describeSpend(spendStops[spendIndex]) })}
                     onChange={(e) => {
                       setNoAds(false);
                       setSpendIndex(Number(e.target.value));
@@ -538,14 +553,14 @@ export function DemoBookingForm() {
                   className={`${styles.option} ${styles.optionWide} ${noAds ? styles.optionOn : ""} mt-3 w-full`}
                 >
                   <DemoIcon name="close" className={noAds ? "text-accent" : "text-muted"} />
-                  <span className="text-left">No active ads yet</span>
+                  <span className="text-left">{t.spend.noAds}</span>
                   <span className={styles.tick} aria-hidden>
                     <DemoIcon name="check" size={12} />
                   </span>
                 </button>
                 <Footer onBack={back}>
-                  <button type="button" className={primaryBtn} onClick={() => go("team")}>
-                    Continue <DemoIcon name="arrowRight" size={16} />
+                  <button type="button" className={primaryBtn} data-qa="form-next" onClick={() => go("team")}>
+                    {t.continue} <DemoIcon name="arrowRight" size={16} />
                   </button>
                 </Footer>
               </div>
@@ -553,7 +568,7 @@ export function DemoBookingForm() {
 
             {step === "team" && (
               <div>
-                <QuestionHead title="How many people use AI in your company?" />
+                <QuestionHead title={t.team.title} />
                 <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3" role="radiogroup">
                   {aiTeamOptions.map((o) => {
                     const on = aiTeam === o.id;
@@ -569,7 +584,7 @@ export function DemoBookingForm() {
                         }}
                         className={`${styles.option} ${styles.optionCentred} ${on ? styles.optionOn : ""}`}
                       >
-                        <span>{o.label}</span>
+                        <span>{t.team.options[o.id]}</span>
                         <span className={styles.tick} aria-hidden>
                           <DemoIcon name="check" size={12} />
                         </span>
@@ -580,11 +595,11 @@ export function DemoBookingForm() {
                 <Footer onBack={back}>
                   <button
                     type="button"
-                    className={primaryBtn}
+                    className={primaryBtn} data-qa="form-next"
                     disabled={!aiTeam}
                     onClick={() => go("goals")}
                   >
-                    Continue <DemoIcon name="arrowRight" size={16} />
+                    {t.continue} <DemoIcon name="arrowRight" size={16} />
                   </button>
                 </Footer>
               </div>
@@ -592,7 +607,7 @@ export function DemoBookingForm() {
 
             {step === "goals" && (
               <div>
-                <QuestionHead title="What are your goals for this year?" />
+                <QuestionHead title={t.goals.title} />
                 <form
                   className="mt-5 flex gap-2"
                   onSubmit={(e) => {
@@ -602,7 +617,7 @@ export function DemoBookingForm() {
                   }}
                 >
                   <label htmlFor="demo-goal" className="sr-only">
-                    Add a goal
+                    {t.goals.inputLabel}
                   </label>
                   <input
                     id="demo-goal"
@@ -611,13 +626,13 @@ export function DemoBookingForm() {
                     maxLength={80}
                     disabled={goals.length >= MAX_GOALS}
                     placeholder={
-                      goals.length >= MAX_GOALS ? "Five goals added" : "e.g. Open the German market"
+                      goals.length >= MAX_GOALS ? t.goals.placeholderFull : t.goals.placeholder
                     }
                     className={styles.input}
                   />
                   <button
                     type="submit"
-                    aria-label="Add goal"
+                    aria-label={t.goals.add}
                     disabled={!goalDraft.trim() || goals.length >= MAX_GOALS}
                     className="flex size-12 shrink-0 items-center justify-center rounded-full bg-raised text-foreground ring-1 ring-control-line transition-colors duration-200 hover:bg-brand-strong hover:ring-brand-strong disabled:opacity-40 disabled:hover:bg-raised disabled:hover:ring-control-line"
                   >
@@ -626,7 +641,7 @@ export function DemoBookingForm() {
                 </form>
 
                 {goals.length > 0 && (
-                  <ul className="mt-4 flex flex-wrap gap-2" aria-label="Your goals">
+                  <ul className="mt-4 flex flex-wrap gap-2" aria-label={t.goals.listLabel}>
                     <AnimatePresence initial={false}>
                       {goals.map((g) => (
                         <motion.li
@@ -641,7 +656,7 @@ export function DemoBookingForm() {
                           {g}
                           <button
                             type="button"
-                            aria-label={`Remove ${g}`}
+                            aria-label={fmt(t.goals.remove, { goal: g })}
                             onClick={() => setGoals(goals.filter((x) => x !== g))}
                             className="flex size-6 items-center justify-center rounded-full hover:bg-white/15"
                           >
@@ -655,13 +670,14 @@ export function DemoBookingForm() {
 
                 {goals.length < MAX_GOALS && (
                   <div className="mt-5">
-                    <p className="text-label text-muted">Suggested for you</p>
+                    <p className="text-label text-muted">{t.goals.suggested}</p>
                     <div className="mt-2.5 flex flex-wrap gap-2">
-                      {suggestGoals(challenges, goals).map((g) => (
+                      {suggestGoals(challenges, goals, t.goals.suggestions).map((g) => (
                         <button
                           key={g}
                           type="button"
                           onClick={() => addGoal(g)}
+                          data-qa="goal-suggestion"
                           className="inline-flex min-h-10 items-center gap-1.5 rounded-full px-3.5 text-sm text-foreground ring-1 ring-line transition-colors duration-200 hover:bg-raised hover:ring-control-line"
                         >
                           <DemoIcon name="plus" size={14} className="text-accent" />
@@ -672,8 +688,8 @@ export function DemoBookingForm() {
                   </div>
                 )}
                 <Footer onBack={back}>
-                  <button type="button" className={primaryBtn} onClick={() => go("contact")}>
-                    {goals.length ? "Continue" : "Skip for now"}{" "}
+                  <button type="button" className={primaryBtn} data-qa="form-next" onClick={() => go("contact")}>
+                    {goals.length ? t.continue : t.goals.skip}{" "}
                     <DemoIcon name="arrowRight" size={16} />
                   </button>
                 </Footer>
@@ -688,14 +704,14 @@ export function DemoBookingForm() {
                   submitContact();
                 }}
               >
-                <QuestionHead title="Where should we send your invite?" />
+                <QuestionHead title={t.contact.title} />
                 <div className="mt-5 grid grid-cols-2 gap-3">
-                  <Field label="Work email" error={errors.email?.message}>
+                  <Field label={t.contact.email} error={errors.email?.message}>
                     <input
                       type="email"
                       inputMode="email"
                       autoComplete="email"
-                      placeholder="you@company.com"
+                      placeholder={t.contact.emailPlaceholder}
                       aria-invalid={!!errors.email}
                       className={styles.input}
                       required
@@ -703,12 +719,12 @@ export function DemoBookingForm() {
                       {...register("email", { onChange: (e) => syncWebsite(e.target.value) })}
                     />
                   </Field>
-                  <Field label="Phone number" error={errors.phone?.message}>
+                  <Field label={t.contact.phone} error={errors.phone?.message}>
                     <input
                       type="tel"
                       inputMode="tel"
                       autoComplete="tel"
-                      placeholder="+385 91 234 5678"
+                      placeholder={t.contact.phonePlaceholder}
                       aria-invalid={!!errors.phone}
                       className={styles.input}
                       required
@@ -716,7 +732,7 @@ export function DemoBookingForm() {
                       {...register("phone")}
                     />
                   </Field>
-                  <Field label="First name" error={errors.firstName?.message}>
+                  <Field label={t.contact.firstName} error={errors.firstName?.message}>
                     <input
                       autoComplete="given-name"
                       aria-invalid={!!errors.firstName}
@@ -726,7 +742,7 @@ export function DemoBookingForm() {
                       {...register("firstName")}
                     />
                   </Field>
-                  <Field label="Last name" error={errors.lastName?.message}>
+                  <Field label={t.contact.lastName} error={errors.lastName?.message}>
                     <input
                       autoComplete="family-name"
                       aria-invalid={!!errors.lastName}
@@ -736,7 +752,7 @@ export function DemoBookingForm() {
                       {...register("lastName")}
                     />
                   </Field>
-                  <Field label="Company website" error={errors.website?.message} wide>
+                  <Field label={t.contact.website} error={errors.website?.message} wide>
                     <div className="relative">
                       <DemoIcon
                         name="globe"
@@ -746,7 +762,7 @@ export function DemoBookingForm() {
                       <input
                         inputMode="url"
                         autoComplete="url"
-                        placeholder="company.com"
+                        placeholder={t.contact.websitePlaceholder}
                         aria-invalid={!!errors.website}
                         className={`${styles.input} ${styles.inputIcon}`}
                         required
@@ -761,20 +777,20 @@ export function DemoBookingForm() {
                   <input key={k} type="hidden" name={k} value={attribution.last?.[k] ?? ""} readOnly />
                 ))}
                 <p className="mt-4 text-xs leading-relaxed text-muted">
-                  By submitting this form, you agree to be contacted by the Checkgrow team and accept our{" "}
+                  {t.contact.consent.before}{" "}
                   <a
                     href="https://ai.checkgrow.com/privacy-policy"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-foreground underline underline-offset-2 hover:text-accent"
                   >
-                    Privacy Policy
+                    {t.contact.consent.link}
                   </a>
-                  .
+                  {t.contact.consent.after}
                 </p>
                 <Footer onBack={back}>
-                  <button type="submit" className={primaryBtn} disabled={busy}>
-                    {busy ? "Sending…" : "Request demo"} <DemoIcon name="arrowRight" size={16} />
+                  <button type="submit" className={primaryBtn} data-qa="form-next" disabled={busy}>
+                    {busy ? t.contact.sending : t.contact.submit} <DemoIcon name="arrowRight" size={16} />
                   </button>
                 </Footer>
               </form>
@@ -783,7 +799,7 @@ export function DemoBookingForm() {
             {step === "time" && slotsState.status !== "ready" && (
               <div>
                 {slotsState.status === "loading" ? (
-                  <div className="space-y-3" role="status" aria-label="Loading available times">
+                  <div className="space-y-3" role="status" aria-label={t.time.loading}>
                     <div className="h-5 w-40 animate-pulse rounded bg-raised" />
                     <div className="grid grid-cols-7 gap-1">
                       {Array.from({ length: 35 }, (_, i) => (
@@ -793,16 +809,16 @@ export function DemoBookingForm() {
                   </div>
                 ) : (
                   <div role="alert" className="rounded-card bg-raised p-5 ring-1 ring-line">
-                    <p className="font-medium">We couldn&apos;t load the calendar.</p>
-                    <p className="mt-1 text-sm text-muted">Your answers are saved here. Try again in a moment.</p>
+                    <p className="font-medium">{t.time.loadError}</p>
+                    <p className="mt-1 text-sm text-muted">{t.time.loadErrorHint}</p>
                     <button type="button" onClick={loadSlots} className="mt-4 text-sm font-medium text-accent underline-offset-4 hover:underline">
-                      Try again
+                      {t.time.retry}
                     </button>
                   </div>
                 )}
                 <Footer onBack={back}>
-                  <button type="button" className={primaryBtn} disabled>
-                    Confirm demo
+                  <button type="button" className={primaryBtn} data-qa="form-next" disabled>
+                    {t.time.confirm}
                   </button>
                 </Footer>
               </div>
@@ -822,20 +838,22 @@ export function DemoBookingForm() {
                 slot={slot}
                 onSlot={setSlot}
                 tz={tz}
+                intlTag={intlTagOf(lang)}
+                t={t.time}
                 summary={[
-                  ...challenges.map(challengeLabel),
-                  noAds ? "No active ads" : `${describeSpend(spendStops[spendIndex])} / month`,
+                  ...challenges.map((id) => challengeLabel(id, t.challenges.labels)),
+                  noAds ? t.time.noAds : fmt(t.time.spendPerMonth, { amount: describeSpend(spendStops[spendIndex]) }),
                 ]}
                 onEdit={() => go("challenges")}
                 footer={
                   <Footer onBack={back}>
                     <button
                       type="button"
-                      className={primaryBtn}
+                      className={primaryBtn} data-qa="confirm-demo"
                       disabled={!slot || busy}
                       onClick={confirm}
                     >
-                      {busy ? "Booking…" : "Confirm demo"}
+                      {busy ? t.time.confirming : t.time.confirm}
                     </button>
                   </Footer>
                 }
@@ -857,6 +875,7 @@ function QuestionHead({ title }: { title: string }) {
 }
 
 function Footer({ children, onBack }: { children: React.ReactNode; onBack?: () => void }) {
+  const back = useT("demo").form.back;
   return (
     <div className="mt-7 flex flex-wrap items-center justify-between gap-3">
       {onBack ? (
@@ -865,7 +884,7 @@ function Footer({ children, onBack }: { children: React.ReactNode; onBack?: () =
           onClick={onBack}
           className="inline-flex min-h-11 items-center gap-1.5 rounded-full pr-3 text-sm text-muted transition-colors duration-200 hover:text-foreground"
         >
-          <DemoIcon name="arrowLeft" size={16} /> Back
+          <DemoIcon name="arrowLeft" size={16} /> {back}
         </button>
       ) : null}
       {children}
@@ -912,6 +931,8 @@ function TimePicker({
   slot,
   onSlot,
   tz,
+  intlTag,
+  t,
   summary,
   onEdit,
   footer,
@@ -926,6 +947,8 @@ function TimePicker({
   slot: string | null;
   onSlot: (s: string) => void;
   tz: string;
+  intlTag: string;
+  t: FormCopy["time"];
   summary: string[];
   onEdit: () => void;
   footer: React.ReactNode;
@@ -937,7 +960,7 @@ function TimePicker({
   const canNext =
     view.getUTCFullYear() * 12 + view.getUTCMonth() <
     last.getUTCFullYear() * 12 + last.getUTCMonth();
-  const monthLabel = new Intl.DateTimeFormat("en-GB", {
+  const monthLabel = new Intl.DateTimeFormat(intlTag, {
     month: "long",
     year: "numeric",
     timeZone: "UTC",
@@ -954,24 +977,27 @@ function TimePicker({
     }),
   ];
 
-  const fmt = timeFmt(tz);
+  const hm = timeFmt(intlTag, tz);
+  const dayFmt = new Intl.DateTimeFormat(intlTag, { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" });
+  /* Monday-first initials (1 January 2024 was a Monday) */
+  const weekdays = Array.from({ length: 7 }, (_, i) =>
+    new Intl.DateTimeFormat(intlTag, { weekday: "narrow", timeZone: "UTC" }).format(new Date(Date.UTC(2024, 0, 1 + i, 12))),
+  );
   const slots = activeDay ? (slotsByLocalDay.get(activeDay) ?? []) : [];
-  const dayLabel = activeDay
-    ? new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }).format(dayKeyDate(activeDay))
-    : "";
+  const dayLabel = activeDay ? dayFmt.format(dayKeyDate(activeDay)) : "";
   const tzLabel = tz.replace(/_/g, " ");
 
   return (
     <div>
       <div className="flex flex-wrap items-center gap-1.5">
-        <span className="text-sm text-muted">Tailored for</span>
+        <span className="text-sm text-muted">{t.tailoredFor}</span>
         {summary.map((s) => (
           <span key={s} className="rounded-full bg-raised px-2.5 py-1 text-xs text-foreground ring-1 ring-line">
             {s}
           </span>
         ))}
         <button type="button" onClick={onEdit} className="ml-0.5 text-xs text-accent underline-offset-4 hover:underline">
-          Edit
+          {t.edit}
         </button>
       </div>
 
@@ -982,7 +1008,7 @@ function TimePicker({
             <div className="flex gap-1">
               <button
                 type="button"
-                aria-label="Previous month"
+                aria-label={t.previousMonth}
                 disabled={monthOffset === 0}
                 onClick={() => onMonth(monthOffset - 1)}
                 className={styles.navBtn}
@@ -991,7 +1017,7 @@ function TimePicker({
               </button>
               <button
                 type="button"
-                aria-label="Next month"
+                aria-label={t.nextMonth}
                 disabled={!canNext}
                 onClick={() => onMonth(monthOffset + 1)}
                 className={styles.navBtn}
@@ -1001,7 +1027,7 @@ function TimePicker({
             </div>
           </div>
           <div className="mt-3 grid grid-cols-7 gap-1 text-center text-xs text-muted" aria-hidden>
-            {["M", "T", "W", "T", "F", "S", "S"].map((d, i) => (
+            {weekdays.map((d, i) => (
               <span key={i} className="py-1">
                 {d}
               </span>
@@ -1019,7 +1045,7 @@ function TimePicker({
                   type="button"
                   disabled={!open}
                   aria-pressed={on}
-                  aria-label={new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }).format(dayKeyDate(key)) + (open ? "" : ", unavailable")}
+                  aria-label={open ? dayFmt.format(dayKeyDate(key)) : fmt(t.dayUnavailable, { day: dayFmt.format(dayKeyDate(key)) })}
                   onClick={() => onDay(key)}
                   className={`${styles.day} ${open ? styles.dayOpen : ""} ${on ? styles.dayOn : ""}`}
                 >
@@ -1029,13 +1055,13 @@ function TimePicker({
             })}
           </div>
           <p className="mt-3 flex items-center gap-1.5 text-xs text-muted">
-            <DemoIcon name="globe" size={14} /> Times in your zone: {tzLabel}
+            <DemoIcon name="globe" size={14} /> {fmt(t.zone, { zone: tzLabel })}
           </p>
         </div>
 
         <div className="min-w-0">
           <p className="text-sm font-medium">{dayLabel}</p>
-          <div className={`mt-3 ${styles.slots}`} role="radiogroup" aria-label={`Times on ${dayLabel}`}>
+          <div className={`mt-3 ${styles.slots}`} role="radiogroup" aria-label={fmt(t.timesOn, { day: dayLabel })}>
             {slots.map((at) => {
               const iso = at.toISOString();
               const on = slot === iso;
@@ -1048,7 +1074,7 @@ function TimePicker({
                   onClick={() => onSlot(iso)}
                   className={`${styles.slot} ${on ? styles.slotOn : ""}`}
                 >
-                  {fmt.format(at)}
+                  {hm.format(at)}
                 </button>
               );
             })}

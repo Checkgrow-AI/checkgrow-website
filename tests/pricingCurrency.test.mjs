@@ -2,7 +2,9 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { currencies, displayPrice, isCurrency, isExchangeRateSnapshot, rateDateLabel, RATE_REFRESH_MS } from '../src/lib/pricingCurrency.ts';
 import { createExchangeRateLoader, exchangeRateResponse, EXCHANGE_RATE_URL, parseEcbRates } from '../src/lib/pricingExchangeRates.ts';
-import { plans, planPrice } from '../src/lib/pricing.ts';
+import { buildPlans, planPrice } from '../src/lib/pricing.ts';
+import { pricing } from '../src/i18n/dictionaries/en/pricing.ts';
+const plans = buildPlans(pricing);
 
 const now = Date.parse('2026-11-05T12:00:00Z');
 const rows = [

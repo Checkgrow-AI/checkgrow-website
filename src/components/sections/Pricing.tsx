@@ -1,9 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Reveal } from "@/components/Reveal";
-import { ANNUAL_DISCOUNT, comparisonRows, growthTeam, planPrice, plans, type Billing } from "@/lib/pricing";
+import { LocalLink as Link, useLang, useT } from "@/i18n/client";
+import { fmt, plural } from "@/i18n/format";
+import { ANNUAL_DISCOUNT, buildPlans, comparisonRowsOf, comparisonTotal, lowestMonthly, planPrice, type Billing } from "@/lib/pricing";
 import { displayPrice, rateDateLabel, type Currency } from "@/lib/pricingCurrency";
 import { usePricingCurrency } from "@/lib/usePricingCurrency";
 import { CurrencySelect } from "@/components/pricing/CurrencySelect";
@@ -31,6 +32,9 @@ function Check() {
 
 function ComparisonModal({ open, onClose, currency, rate }: { open: boolean; onClose: () => void; currency: Currency; rate: number }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const lang = useLang();
+  const t = useT("pricing").comparison;
+  const price = (euros: number) => displayPrice(euros, currency, rate, lang);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -67,19 +71,19 @@ function ComparisonModal({ open, onClose, currency, rate }: { open: boolean; onC
         <header className="flex shrink-0 items-start justify-between gap-6 border-b border-line bg-surface px-5 py-5 sm:px-8 sm:py-6">
           <div>
             <p className="text-label flex items-center gap-2.5 text-muted">
-              Full comparison
+              {t.eyebrow}
             </p>
             <h2 id="pricing-comparison-title" className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-              One platform against the typical growth stack.
+              {t.title}
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-              Beyond price: one company brain built for growth instead of scattered files and prompts, a team that learns marketing as it works, and the option to self-host for data sovereignty.
+              {t.intro}
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close pricing comparison"
+            aria-label={t.close}
             className="flex size-11 shrink-0 items-center justify-center rounded-full border border-line bg-raised text-foreground transition-colors duration-200 hover:border-foreground/20 hover:bg-surface"
           >
             <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
@@ -96,40 +100,40 @@ function ComparisonModal({ open, onClose, currency, rate }: { open: boolean; onC
 
         <div className="overflow-y-auto overscroll-contain px-5 pb-6 pt-5 sm:px-8 sm:pb-8">
           <p className="mb-3 text-xs text-muted md:hidden">
-            Swipe horizontally to compare every column.
+            {t.swipe}
           </p>
           <div className="overflow-x-auto rounded-card bg-raised ring-1 ring-line">
             <table className="w-full min-w-[820px] border-collapse text-left">
               <thead>
                 <tr className="border-b border-line">
                   <th scope="col" className="w-[170px] px-6 py-4 text-label font-normal text-muted">
-                    Function
+                    {t.function}
                   </th>
                   <th scope="col" className="px-6 py-4">
-                    <span className="block text-sm font-semibold text-muted">Typical stack</span>
-                    <span className="mt-0.5 block text-xs font-normal text-muted">11 tools · 11 logins</span>
+                    <span className="block text-sm font-semibold text-muted">{t.stack}</span>
+                    <span className="mt-0.5 block text-xs font-normal text-muted">{t.stackNote}</span>
                   </th>
                   <th scope="col" className="bg-brand/15 px-6 py-4 text-foreground">
-                    <span className="block text-sm font-semibold">Checkgrow</span>
-                    <span className="mt-0.5 block text-xs font-normal text-muted">1 platform · 1 context</span>
+                    <span className="block text-sm font-semibold">{t.checkgrow}</span>
+                    <span className="mt-0.5 block text-xs font-normal text-muted">{t.checkgrowNote}</span>
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {comparisonRows.map((row) => (
-                  <tr key={row.cat} className="border-b border-line last:border-b-0">
+                {comparisonRowsOf(t.rows).map((row) => (
+                  <tr key={row.id} className="border-b border-line last:border-b-0">
                     <th scope="row" className="px-6 py-4 text-xs font-medium uppercase tracking-[0.08em] text-muted">
                       {row.cat}
                     </th>
                     <td className="px-6 py-4 align-top">
                       <p className="text-sm font-semibold">{row.tools}</p>
                       <p className="mt-0.5 text-xs leading-relaxed text-muted">{row.toolNote}</p>
-                      <p className="mt-1 text-xs font-semibold text-muted">{displayPrice(row.monthly, currency, rate)}/mo</p>
+                      <p className="mt-1 text-xs font-semibold text-muted">{fmt(t.perMonth, { price: price(row.monthly) })}</p>
                     </td>
                     <td className="bg-brand/10 px-6 py-4 align-top">
                       <p className="text-sm font-semibold">{row.cg}</p>
                       <p className="mt-0.5 text-xs leading-relaxed text-muted">{row.cgNote}</p>
-                      <p className="mt-1 text-xs font-semibold text-success">included</p>
+                      <p className="mt-1 text-xs font-semibold text-success">{t.included}</p>
                     </td>
                   </tr>
                 ))}
@@ -139,32 +143,32 @@ function ComparisonModal({ open, onClose, currency, rate }: { open: boolean; onC
 
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             <div className="rounded-card bg-raised p-6 ring-1 ring-line">
-              <p className="text-label text-muted">Typical full stack</p>
+              <p className="text-label text-muted">{t.fullStack}</p>
               <p className="mt-2 text-3xl font-semibold tracking-tight text-muted line-through decoration-muted/85 decoration-[4px]">
-                {displayPrice(1199, currency, rate)}/mo
+                {fmt(t.perMonth, { price: price(comparisonTotal) })}
               </p>
               <p className="mt-2 text-sm leading-relaxed text-muted">
-                Before seats, overages and the time spent stitching every tool together.
+                {t.fullStackNote}
               </p>
             </div>
             <div className="rounded-card bg-brand-strong p-6 text-white shadow-raised">
-              <p className="text-label text-white">Checkgrow</p>
-              <p className="mt-2 text-3xl font-semibold tracking-tight">From {displayPrice(Math.min(...plans.flatMap((plan) => plan.monthly === null ? [] : [plan.monthly])), currency, rate)}/mo</p>
+              <p className="text-label text-white">{t.checkgrow}</p>
+              <p className="mt-2 text-3xl font-semibold tracking-tight">{fmt(t.from, { price: price(lowestMonthly) })}</p>
               <p className="mt-2 text-sm leading-relaxed text-white">
-                One operating system, one source of truth and one bill.
+                {t.checkgrowBody}
               </p>
               <Link
                 href="/book-a-demo"
                 onClick={onClose}
                 className="mt-5 inline-flex min-h-11 items-center rounded-full bg-foreground px-6 text-sm font-semibold text-canvas transition-colors duration-200 hover:bg-accent"
               >
-                Book a demo
+                {t.bookDemo}
               </Link>
             </div>
           </div>
 
           <p className="mt-5 text-xs leading-relaxed text-muted">
-            Third-party tools are category examples. Prices are typical monthly list prices for comparable plans. Whole-number estimates in {currency}; Checkgrow billing remains in EUR.
+            {fmt(t.footnote, { currency })}
           </p>
         </div>
       </div>
@@ -176,6 +180,10 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
   const [billing, setBilling] = useState<Billing>("monthly");
   const [comparisonOpen, setComparisonOpen] = useState(false);
   const { currency, rate, snapshot, status, selectCurrency, retry } = usePricingCurrency();
+  const lang = useLang();
+  const t = useT("pricing");
+  const plans = buildPlans(t);
+  const price = (euros: number) => displayPrice(euros, currency, rate, lang);
   const Heading = standalone ? "h1" : "h2";
   const PlanHeading = standalone ? "h2" : "h3";
 
@@ -185,24 +193,24 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
         <div className="grid items-end gap-8 xl:grid-cols-[minmax(0,1fr)_auto]">
           <Reveal className="max-w-2xl" immediate={standalone}>
             <p className="text-label flex items-center gap-2.5 text-muted">
-              Pricing
+              {t.section.eyebrow}
             </p>
-            <Heading className="text-h1 mt-6 text-balance">The platform, the brands, or the whole team.</Heading>
+            <Heading className="text-h1 mt-6 text-balance">{t.section.title}</Heading>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
-              Every plan runs on the same company brain. Choose one brand, every brand, or our specialists running growth with you.
+              {t.section.intro}
             </p>
             {standalone && (
-              <Link href="/book-a-demo" className="mt-6 inline-flex min-h-11 items-center rounded-full bg-foreground px-6 text-sm font-medium text-canvas transition-colors hover:bg-accent sm:hidden">Book a demo</Link>
+              <Link href="/book-a-demo" className="mt-6 inline-flex min-h-11 items-center rounded-full bg-foreground px-6 text-sm font-medium text-canvas transition-colors hover:bg-accent sm:hidden">{t.section.bookDemo}</Link>
             )}
           </Reveal>
 
           <Reveal delay={0.06} immediate={standalone} className="relative z-20">
-            <div className="flex flex-wrap items-center gap-2" aria-label="Pricing options">
+            <div className="flex flex-wrap items-center gap-2" aria-label={t.section.optionsLabel}>
               <CurrencySelect value={currency} ratesReady={status === "ready"} onChange={selectCurrency} />
               <div
                 className="inline-flex rounded-full bg-raised p-1.5 shadow-soft ring-1 ring-line"
                 role="group"
-                aria-label="Billing frequency"
+                aria-label={t.section.billingLabel}
               >
                 <button
                   type="button"
@@ -214,7 +222,7 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
                       : "text-muted hover:text-foreground"
                   }`}
                 >
-                  Monthly
+                  {t.section.monthly}
                 </button>
                 <button
                   type="button"
@@ -226,9 +234,9 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
                       : "text-muted hover:text-foreground"
                   }`}
                 >
-                  Yearly
+                  {t.section.yearly}
                   <span className={`shrink-0 whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] ${billing === "annual" ? "bg-canvas/10 text-canvas" : "bg-brand/10 text-accent"}`}>
-                    Save {ANNUAL_DISCOUNT * 100}%
+                    {fmt(t.section.save, { percent: ANNUAL_DISCOUNT * 100 })}
                   </span>
                 </button>
               </div>
@@ -241,7 +249,7 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
             service and inclusions line up across the row. */}
         <div className="mt-12 grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-[repeat(8,auto)] xl:gap-x-4 xl:gap-y-0">
           {plans.map((plan) => {
-            const price = planPrice(plan, billing);
+            const amount = planPrice(plan, billing);
             const featured = Boolean(plan.featured);
             return (
               <Reveal key={plan.id} className="h-full xl:row-span-8 xl:grid xl:grid-rows-subgrid" immediate={standalone}>
@@ -255,7 +263,8 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
                 >
                   {/* 1 · audience band */}
                   <div className={`flex min-h-14 min-w-0 items-center justify-between gap-3 border-b px-6 ${featured ? "border-brand bg-brand-strong text-white" : "border-line text-muted"}`}>
-                    <p className={`truncate text-sm leading-5 ${featured ? "font-semibold" : "font-medium"}`}>{plan.audience}</p>
+                    {/* up to two lines (the band holds them, the subgrid keeps all four aligned): longer languages, and English "multi-brand teams", are never cut off */}
+                    <p className={`line-clamp-2 text-balance text-sm leading-5 ${featured ? "font-semibold" : "font-medium"}`}>{plan.audience}</p>
                   </div>
 
                   {/* 2 · name and promise */}
@@ -269,22 +278,22 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
 
                   {/* 3 · price */}
                   <div className="px-6 pt-5" aria-live="polite">
-                    {price === null ? (
+                    {amount === null ? (
                       <div className="flex items-end gap-1.5">
-                        <span className="text-4xl font-semibold tracking-[-0.045em]">Custom</span>
+                        <span className="text-4xl font-semibold tracking-[-0.045em]">{t.card.custom}</span>
                       </div>
                     ) : (
                       <div className="flex flex-wrap items-end gap-x-1.5 gap-y-1">
-                        <span className={`${currency === "EUR" ? "text-4xl" : "text-3xl"} whitespace-nowrap font-semibold tabular-nums tracking-[-0.045em]`} data-plan-price>{displayPrice(price, currency, rate)}</span>
-                        <span className="pb-1 text-sm text-muted">/month</span>
+                        <span className={`${currency === "EUR" ? "text-4xl" : "text-3xl"} whitespace-nowrap font-semibold tabular-nums tracking-[-0.045em]`} data-plan-price>{price(amount)}</span>
+                        <span className="pb-1 text-sm text-muted">{t.card.perMonth}</span>
                       </div>
                     )}
                     <p className="mt-2 text-xs text-muted">
-                      {price === null
-                        ? "Tailored agreement"
+                      {amount === null
+                        ? t.card.tailored
                         : billing === "monthly"
-                          ? currency === "EUR" ? "Billed monthly, excl. VAT" : "Monthly estimate · billed in EUR"
-                          : `${displayPrice(price * 12, currency, rate)} per year${currency === "EUR" ? ", excl. VAT" : " · billed in EUR"}`}
+                          ? currency === "EUR" ? t.card.billedMonthly : t.card.monthlyEstimate
+                          : fmt(currency === "EUR" ? t.card.perYearVat : t.card.perYearEstimate, { price: price(amount * 12) })}
                     </p>
                   </div>
 
@@ -320,9 +329,9 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
                       <p className="text-sm font-semibold">{plan.service.title}</p>
                       {plan.service.team ? (
                         <>
-                          <p className="mt-1 text-xs text-muted">{growthTeam.length} specialist roles on your accounts</p>
+                          <p className="mt-1 text-xs text-muted">{plural(lang, t.growthTeam.length, t.card.specialistRoles)}</p>
                           <ul role="list" className="mt-3 grid gap-2">
-                            {growthTeam.map((m) => (
+                            {t.growthTeam.map((m) => (
                               <li key={m.role} className="flex items-center gap-2.5 text-xs">
                                 <span aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-full bg-brand-strong text-[10px] font-semibold tracking-wide text-white">
                                   {m.initials}
@@ -357,17 +366,17 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
         </div>
 
         <p className="mt-5 text-center text-xs text-muted">
-          Need more Growth Credits? Top up anytime on any plan.
+          {t.topUp}
         </p>
 
         <div id="pricing-currency-note" className="mt-3 min-h-10 text-center text-xs leading-relaxed text-muted" role="status" aria-live="polite" aria-atomic="true">
-          <p>Whole-number estimates, decimals omitted. Billing in EUR. Prices exclude VAT.</p>
+          <p>{t.notes.estimates}</p>
           {status === "loading" ? (
-            <p>Loading exchange rates. EUR prices are ready.</p>
+            <p>{t.notes.loading}</p>
           ) : status === "error" ? (
-            <p>Currency conversion is temporarily unavailable. Showing EUR. <button type="button" onClick={retry} className="inline-flex min-h-11 items-center text-accent underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-accent">Retry rates</button></p>
+            <p>{t.notes.error} <button type="button" onClick={retry} className="inline-flex min-h-11 items-center text-accent underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-accent">{t.notes.retry}</button></p>
           ) : snapshot && (
-            <p><a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-foreground">ECB reference rates</a> via Frankfurter · {rateDateLabel(snapshot.date)} · Updated each working day.</p>
+            <p><a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-foreground">{t.notes.ratesLink}</a> {fmt(t.notes.ratesAfter, { date: rateDateLabel(snapshot.date, lang) })}</p>
           )}
         </div>
 
@@ -375,13 +384,13 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
           <div className="mt-10 flex flex-col gap-6 px-6 py-2 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-3xl">
               <p className="text-label text-muted">
-                Compare the full stack
+                {t.compare.eyebrow}
               </p>
               <PlanHeading className="mt-3 text-xl font-semibold tracking-tight sm:text-2xl">
-                See everything Checkgrow replaces.
+                {t.compare.title}
               </PlanHeading>
               <p className="mt-2 text-sm leading-relaxed text-muted sm:text-base">
-                Compare Checkgrow with the 11 subscriptions, logins and disconnected workflows a typical growth team manages today.
+                {t.compare.body}
               </p>
             </div>
             <button
@@ -389,7 +398,7 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
               onClick={() => setComparisonOpen(true)}
               className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 self-start rounded-full border border-control-line px-7 text-sm font-semibold text-foreground transition-colors duration-200 hover:border-muted hover:bg-raised lg:self-auto"
             >
-              Compare our pricing
+              {t.compare.button}
               <svg width="13" height="13" viewBox="0 0 13 13" aria-hidden>
                 <path d="M2 6.5h8M7 3l3.5 3.5L7 10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>

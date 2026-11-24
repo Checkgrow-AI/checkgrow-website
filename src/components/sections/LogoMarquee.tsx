@@ -1,4 +1,6 @@
 import { Reveal } from "@/components/Reveal";
+import { fmt } from "@/i18n/format";
+import { getT } from "@/i18n/server";
 
 /* Client-logo marquee: early social proof right under the hero, before
    the credibility strip and the film. Two copies of the row slide by one
@@ -8,71 +10,64 @@ const CLIENT_LOGOS = [
   {
     src: "/client-logos-strip/witrina.svg",
     name: "Witrina",
-    alt: "Witrina logo, a Checkgrow growth marketing customer",
     cls: "h-10 sm:h-11",
   },
   {
     src: "/client-logos-strip/qubinets.svg",
     name: "Qubinets",
-    alt: "Qubinets logo, a Checkgrow growth marketing customer",
     cls: "h-10 sm:h-11",
   },
   {
     src: "/client-logos-strip/wespa.svg",
     name: "WESPA",
-    alt: "WESPA logo, a Checkgrow growth marketing customer",
     cls: "h-10 sm:h-11",
   },
   {
     src: "/client-logos-strip/minka.svg",
     name: "Minka",
-    alt: "Minka logo, a Checkgrow growth marketing customer",
     cls: "h-10 sm:h-11",
   },
   {
     src: "/client-logos-strip/woodoz.svg",
     name: "Woodoz",
-    alt: "Woodoz logo, a Checkgrow growth marketing customer",
     cls: "h-5 sm:h-[22px]",
   },
   {
     src: "/client-logos-strip/barner.svg",
     name: "Barner",
-    alt: "Barner logo, a Checkgrow growth marketing customer",
     cls: "h-10 sm:h-11",
   },
   {
     src: "/client-logos-strip/drooms.svg",
     name: "Drooms",
-    alt: "Drooms logo, a Checkgrow growth marketing customer",
     cls: "h-10 sm:h-11",
   },
   {
     src: "/client-logos-strip/engasco.svg",
     name: "Engasco",
-    alt: "Engasco logo, a Checkgrow growth marketing customer",
     cls: "h-10 sm:h-11",
   },
   {
     src: "/client-logos-strip/optika-anda.svg",
+    // i18n-allow: brand name
     name: "Optika Anda",
-    alt: "Optika Anda logo, a Checkgrow growth marketing customer",
     cls: "h-10 sm:h-11",
   },
 ];
 
 export function LogoMarquee() {
+  const t = getT("home").logos;
   return (
     <section className="py-14 md:py-16">
       <div className="wrap">
         <Reveal>
           <p className="text-label text-center text-muted">
-            Companies growing their marketing with Checkgrow
+            {t.title}
           </p>
           <div
             className="logo-marquee mt-8"
             role="img"
-            aria-label="Logos of companies using Checkgrow: Witrina, Qubinets, WESPA, Minka, Woodoz, Barner, Drooms, Engasco and Optika Anda"
+            aria-label={t.label}
           >
             <div className="logo-marquee-track">
               {[0, 1].map((copy) => (
@@ -82,7 +77,7 @@ export function LogoMarquee() {
                     <img
                       key={`${copy}-${l.name}`}
                       src={l.src}
-                      alt={l.alt}
+                      alt={fmt(t.logoAlt, { name: l.name })}
                       className={`mx-7 w-auto object-contain ${l.cls}`}
                       style={{ filter: "brightness(0) invert(1)", opacity: 0.72 }}
                       loading="lazy"

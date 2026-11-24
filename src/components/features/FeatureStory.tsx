@@ -1,6 +1,10 @@
-import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
 import { FeatureStage } from "@/components/features/FeatureStage";
+import { LocalLink as Link } from "@/i18n/client";
+import { fmt } from "@/i18n/format";
+import { getLang, getT } from "@/i18n/server";
+import { translateMockup } from "@/i18n/mockups";
+import { getMockupTable } from "@/i18n/dictionaries/mockupTables";
 import { featureScreens } from "@/lib/featureScreens";
 import { featurePath, type Feature } from "@/lib/features";
 import styles from "./Features.module.css";
@@ -20,8 +24,11 @@ export function FeatureStory({
   learnMore?: boolean;
 }) {
   const Heading = heading;
+  const t = getT("features");
+  /* mockup text in the page's language (src/i18n/mockups.ts), on the server */
+  const table = getMockupTable(getLang(), "features");
   const screens = feature.screens.map((key) => (
-    <div key={key} dangerouslySetInnerHTML={{ __html: featureScreens[key] }} />
+    <div key={key} dangerouslySetInnerHTML={{ __html: translateMockup(featureScreens[key], table) }} />
   ));
 
   return (
@@ -34,6 +41,7 @@ export function FeatureStory({
           backgroundColor={feature.backgroundColor}
           steps={feature.steps}
           screens={screens}
+          labels={t.stage}
         />
       </Reveal>
       <Reveal delay={0.08} className={styles.copy}>
@@ -51,7 +59,7 @@ export function FeatureStory({
         </ul>
         {learnMore && (
           <Link href={featurePath(feature.slug)} className={styles.more}>
-            More on {feature.name} <span aria-hidden>→</span>
+            {fmt(t.story.more, { name: feature.name })} <span aria-hidden>→</span>
           </Link>
         )}
       </Reveal>

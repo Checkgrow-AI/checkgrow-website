@@ -2,26 +2,51 @@
    Every page is also served as markdown at its own URL plus ".md"
    (/features.md, /use-cases/marketing-operations.md, /index.md for the
    homepage), and to any request that sends Accept: text/markdown (see the
-   rewrites in next.config.ts). /llms.txt is the short map of these pages and
+   proxy in src/proxy.ts). /llms.txt is the short map of these pages and
    /llms-full.txt is all of them in one file.
 
    Everything is built from the same data the pages render, so the markdown
    cannot drift from the site. */
 
-import { features } from "./features";
-import { useCases, pathToUseCase } from "./useCases";
-import { successStories, type StoryBlock } from "./successStories";
-import { tutorials, videoDuration } from "./tutorials";
-import { newsPosts, newsPath, securityRelease, securitySections, categoryLabel } from "./news";
-import { ANNUAL_DISCOUNT, comparisonRows, growthTeam, plans, pricingDescription, pricingFaqItems } from "./pricing";
-import { differentiators } from "./differentiators";
-import { testimonials } from "./testimonials";
-import { problemTools } from "./problemCards";
-import { shiftBenefits } from "./shiftStory";
-import { faqItems, SITE_URL } from "./seo";
-import { faqCategories } from "./faq";
-import { salesCompany, salesControls, salesFaq, salesHero, salesModules, salesPillars } from "./sales";
+import { featuresOf } from "./features";
+import { localizeUseCases, pathToUseCase } from "./useCases";
+import { publishedStories, type StoryBlock } from "./successStories";
+import { videoDuration } from "./tutorials";
+import { buildNewsPosts, findNewsPost, newsPath, SECURITY_SLUG, type NewsFilter, type SecuritySection } from "./news";
+import type { Testimonial } from "./testimonials";
+import { ANNUAL_DISCOUNT, buildPlans, comparisonRowsOf } from "./pricing";
+import { differentiators as differentiatorsOf } from "./differentiators";
+import { problemTools as problemToolsOf } from "./problemCards";
+import { shiftBenefits as shiftBenefitsOf } from "./shiftStory";
+import { SITE_URL } from "./seo";
+import { homeFaqItems, pricingQuestions } from "./faq";
+import { salesTeamImage } from "./sales";
 import { integrations } from "@/components/sections/Integrations";
+import { en } from "@/i18n/dictionaries/en";
+
+/* the markdown surface is English: every dataset is built from the English
+   dictionary with the same builders the pages use */
+const features = featuresOf(en.features);
+const useCases = localizeUseCases(en.useCases.items);
+const successStories = publishedStories(en.stories.items);
+const tutorials = en.tutorials.items;
+const newsPosts = buildNewsPosts({ news: en.news, stories: en.stories, tutorials: en.tutorials });
+const securityRelease = findNewsPost(newsPosts, SECURITY_SLUG)!;
+const securitySections: readonly SecuritySection[] = en.news.security.sections;
+const categoryLabel = (id: NewsFilter) => en.news.categoryLabels[id];
+const plans = buildPlans(en.pricing);
+const growthTeam = en.pricing.growthTeam;
+const comparisonRows = comparisonRowsOf(en.pricing.comparison.rows);
+const pricingDescription: string = en.pricing.meta.description;
+const pricingFaqItems = pricingQuestions(en.faq);
+const differentiators = differentiatorsOf(en.home.difference.items);
+const testimonials: readonly Testimonial[] = en.testimonials.items;
+const problemTools = problemToolsOf(en.home.problem.tools);
+const shiftBenefits = shiftBenefitsOf(en.home.shift.benefits);
+const faqItems = homeFaqItems(en.faq);
+const faqCategories = en.faq.categories;
+const { hero: salesHero, modules: salesModules, pillars: salesPillars, controls: salesControls, faq: salesFaq } = en.sales;
+const salesCompany = { ...en.sales.team, image: { ...salesTeamImage, alt: en.sales.team.imageAlt } };
 
 export type MarkdownPage = {
   /* the HTML page this mirrors, e.g. "/features" ("/" for the homepage) */
@@ -111,7 +136,7 @@ function homeBody() {
     "## Use cases",
     useCases.map((u) => `- ${mdLink(u.title, pathToUseCase(u.slug))}: ${u.description}`).join("\n"),
     "## Integrations",
-    list(integrations.map((i) => `${i.name}: ${i.role}`)),
+    list(integrations.map((i) => `${i.name}: ${en.home.integrations.roles[i.id]}`)),
     "## Who it's for",
     list([
       "Founders and CMOs: set direction once. Define the brand, the offer and the target buyer a single time; everything produced downstream stays on message.",

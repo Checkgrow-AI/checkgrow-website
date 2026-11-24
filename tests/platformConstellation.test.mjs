@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { createPlatformConstellation, PLATFORM_WORDS, PLATFORM_DETAILS } from '../src/lib/platformConstellation.ts';
+import { createPlatformConstellation } from '../src/lib/platformConstellation.ts';
+import { home } from '../src/i18n/dictionaries/en/home.ts';
+
+const { words: PLATFORM_WORDS, details: PLATFORM_DETAILS } = home.hero.platform;
 
 const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
 // Geist dimensions measured in the local browser; round up conservatively.

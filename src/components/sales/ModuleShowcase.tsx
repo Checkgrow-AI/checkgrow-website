@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { SalesModule } from "@/lib/sales";
+import { useT } from "@/i18n/client";
+import { fmt } from "@/i18n/format";
 import { SalesMockup } from "./SalesMockup";
 import { salesMockups } from "./salesMockups.generated";
 
@@ -13,6 +15,7 @@ import { salesMockups } from "./salesMockups.generated";
    auto-advance. Every function's copy and screen is in the HTML; inactive
    screens are hidden, so a shown screen starts from its first frame. */
 export function ModuleShowcase({ module }: { module: SalesModule }) {
+  const { functionsLabel } = useT("sales");
   const [active, setActive] = useState(0);
   const [auto, setAuto] = useState(true);
   const [inView, setInView] = useState(false);
@@ -52,7 +55,7 @@ export function ModuleShowcase({ module }: { module: SalesModule }) {
           <p className="mt-5 max-w-lg leading-relaxed text-muted xl:text-lg">{module.intro}</p>
         </div>
 
-        <div role="tablist" aria-label={`${module.name} functions`} aria-orientation="vertical" className="flex flex-col gap-2">
+        <div role="tablist" aria-label={fmt(functionsLabel, { module: module.name })} aria-orientation="vertical" className="flex flex-col gap-2">
           {module.functions.map((fn, i) => {
             const selected = active === i;
             return (

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 
 /* Scroll reveal in the brand motion language: enter easing
    cubic-bezier(0,0,0.2,1), slow duration 360ms, once only.
@@ -82,5 +82,44 @@ export function RevealItem({
     >
       {children}
     </motion.div>
+  );
+}
+
+/* A box that gains `arrivedClass` the first time it is a quarter in view,
+   for CSS-staggered entrances (the final call to action's .cta-arrive).
+   Client-side so the section around it can stay a server component. */
+export function ArriveOnView({
+  children,
+  className,
+  arrivedClass,
+  threshold = 0.25,
+}: {
+  children: ReactNode;
+  className?: string;
+  arrivedClass: string;
+  threshold?: number;
+}) {
+  const boxRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = boxRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          el.classList.add(arrivedClass);
+          io.disconnect();
+        }
+      },
+      { threshold },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [arrivedClass, threshold]);
+
+  return (
+    <div ref={boxRef} className={className}>
+      {children}
+    </div>
   );
 }

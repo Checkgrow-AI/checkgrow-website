@@ -4,22 +4,33 @@
    right), auto-advancing with a progress line and an avatar rail
    underneath (reference: influencer-slider layout). Below it, the demo
    video behind a click-to-play purple card so no video bytes load until
-   asked for. The client-logo marquee lives up top in LogoMarquee.tsx. */
+   asked for. The client-logo marquee lives up top in LogoMarquee.tsx.
+   The page passes the copy (`home` dictionary: caseStudies) and the
+   testimonials (`testimonials` dictionary: items) as props, so a page
+   ships only these two to the client. */
 
-import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { Reveal } from "@/components/Reveal";
 import { newsCategoryHref } from "@/lib/newsCategories";
-import { testimonials as studies } from "@/lib/testimonials";
+import type { Testimonial } from "@/lib/testimonials";
+import { LocalLink as Link } from "@/i18n/client";
+import type { Dictionary } from "@/i18n/dictionaries";
+import { fmt } from "@/i18n/format";
+
+type CaseStudiesCopy = Dictionary["home"]["caseStudies"];
 
 /* the client set shares a padded 153×60 canvas; woodoz is cropped tight
    (263×47), so it gets its own height to sit optically level */
 
 const HOLD_MS = 6500;
 
-function Slider() {
+function Slider({ copy, studies }: { copy: CaseStudiesCopy; studies: readonly Testimonial[] }) {
+  const count = studies.length;
+  /* portrait alt: the attribution line, or "role at company" */
+  const portraitAlt = (st: Testimonial) =>
+    `${st.person}, ${st.attribution ?? fmt(copy.roleAt, { role: st.role, company: st.company })}`;
   const [index, setIndex] = useState(0);
   const [reduced, setReduced] = useState(false);
   const pausedRef = useRef(false);
@@ -39,8 +50,8 @@ function Slider() {
   }, []);
 
   const go = useCallback((i: number) => {
-    setIndex((i + studies.length) % studies.length);
-  }, []);
+    setIndex((i + count) % count);
+  }, [count]);
 
   /* auto-advance with a rAF-driven progress line (pauses on hover;
      restartKey resets the line after a manual selection) */
@@ -59,7 +70,7 @@ function Slider() {
       const t = (now - startRef.current) / HOLD_MS;
       progressRef.current = Math.min(t, 1);
       if (barRef.current)
-        barRef.current.style.transform = `scaleX(${Math.min(t, 1)})`;
+        barRef.current.style.transform = "scaleX(" + Math.min(t, 1) + ")";
       /* reading effect: the words turn purple in pace with the hold,
          finishing at ~82% so the quote reads complete before the switch */
       const spans = quoteRef.current?.querySelectorAll<HTMLElement>("[data-w]");
@@ -76,12 +87,12 @@ function Slider() {
         progressRef.current = 0;
         startRef.current = now;
         readWordsRef.current = -1;
-        setIndex((v) => (v + 1) % studies.length);
+        setIndex((v) => (v + 1) % count);
       }
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [reduced, restartKey]);
+  }, [reduced, restartKey, count]);
 
   /* manual selection restarts the line */
   const select = (i: number) => {
@@ -131,7 +142,7 @@ function Slider() {
               >
                 <Image
                   src={s.photo}
-                  alt={`${s.person}, ${s.attribution ?? `${s.role} at ${s.company}`}`}
+                  alt={portraitAlt(s)}
                   fill
                   sizes="(max-width: 768px) 100vw, 400px"
                   className={`object-cover ${s.focus ?? "object-top"}`}
@@ -147,7 +158,7 @@ function Slider() {
                 aria-hidden
                 className="block font-serif text-5xl leading-none text-accent"
               >
-                &ldquo;
+                {"“"}
               </span>
               <AnimatePresence mode="wait" initial={false}>
                 <motion.blockquote
@@ -225,7 +236,7 @@ function Slider() {
               key={st.id}
               type="button"
               onClick={() => select(i)}
-              aria-label={`Show ${st.person}'s story`}
+              aria-label={fmt(copy.showStory, { person: st.person })}
               aria-current={active}
               className="group flex w-24 flex-col items-center text-center"
             >
@@ -236,7 +247,7 @@ function Slider() {
               >
                 <Image
                   src={st.photo}
-                  alt={`${st.person}, ${st.attribution ?? `${st.role} at ${st.company}`}`}
+                  alt={portraitAlt(st)}
                   fill
                   sizes="64px"
                   className={`object-cover ${st.focus ?? "object-top"}`}
@@ -258,7 +269,7 @@ function Slider() {
   );
 }
 
-function DemoCard({ showBookCta = true }: { showBookCta?: boolean }) {
+function DemoCard({ copy, showBookCta = true }: { copy: CaseStudiesCopy["demo"]; showBookCta?: boolean }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -273,10 +284,9 @@ function DemoCard({ showBookCta = true }: { showBookCta?: boolean }) {
       />
       <div className="relative">
         <div className="mx-auto max-w-2xl text-center">
-          <h3 className="text-h2 text-balance">Demos don&apos;t lie.</h3>
+          <h3 className="text-h2 text-balance">{copy.title}</h3>
           <p className="mx-auto mt-4 max-w-xl leading-relaxed text-white/85">
-            Watch Checkgrow run a real go-to-market end to end: 2 minutes 41
-            seconds, one take, no cuts.
+            {copy.body}
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <button
@@ -292,14 +302,14 @@ function DemoCard({ showBookCta = true }: { showBookCta?: boolean }) {
                   <path d="M3.5 2 12 7l-8.5 5V2z" fill="currentColor" />
                 )}
               </svg>
-              {open ? "Hide the demo" : "Watch our demo review"}
+              {open ? copy.hide : copy.watch}
             </button>
             {showBookCta && (
             <Link
               href="/book-a-demo"
               className="inline-flex min-h-12 items-center rounded-full border border-accent/50 bg-transparent px-7 text-sm font-semibold text-accent transition-colors duration-200 hover:bg-brand-strong hover:text-white"
             >
-              Book a demo
+              {copy.bookDemo}
             </Link>
             )}
           </div>
@@ -328,7 +338,7 @@ function DemoCard({ showBookCta = true }: { showBookCta?: boolean }) {
                   className="aspect-video w-full object-cover"
                 />
                 <span className="pointer-events-none absolute left-4 top-4 rounded-full bg-canvas/70 px-3 py-1.5 text-xs font-medium text-foreground">
-                  2:41 · real demo, no cuts
+                  {copy.badge}
                 </span>
               </div>
             </motion.div>
@@ -337,7 +347,7 @@ function DemoCard({ showBookCta = true }: { showBookCta?: boolean }) {
 
         {showBookCta && (
           <p className="relative mt-7 text-center text-sm text-white/80">
-            Struggling with your marketing and still questioning?
+            {copy.question}
           </p>
         )}
       </div>
@@ -347,36 +357,39 @@ function DemoCard({ showBookCta = true }: { showBookCta?: boolean }) {
 
 /* `afterBooking`: the demo confirmation page mirrors this section without
    its top rule and without the "Book a demo" button (already booked). */
-export function CaseStudies({ afterBooking = false }: { afterBooking?: boolean }) {
+export function CaseStudies({ afterBooking = false, copy, items }: {
+  afterBooking?: boolean;
+  copy: CaseStudiesCopy;
+  items: readonly Testimonial[];
+}) {
   return (
     <section className={`${afterBooking ? "" : "border-t border-line "}py-24 md:py-32`} id="stories">
       <div className="wrap">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="text-label flex items-center justify-center gap-2.5 text-muted">
-            Real stories
+            {copy.label}
           </p>
           <h2 className="text-h1 mt-6 text-balance">
-            100+ marketing experts already grow with Checkgrow.
+            {copy.title}
           </h2>
           <p className="mt-5 text-lg leading-relaxed text-muted">
-            Founders, CMOs and operators who ran their growth through
-            Checkgrow, in their own words.
+            {copy.body}
           </p>
         </Reveal>
 
         <Reveal delay={0.08}>
           <div className="mt-14">
-            <Slider />
+            <Slider copy={copy} studies={items} />
           </div>
           <div className="mt-12 flex justify-center">
             <Link
               href={newsCategoryHref("success-stories")}
               className="inline-flex min-h-12 items-center gap-2 rounded-full border border-line px-7 text-sm font-semibold text-foreground transition-colors duration-200 hover:border-accent hover:text-accent"
             >
-              Read the success stories <span aria-hidden>→</span>
+              {copy.readStories} <span aria-hidden>→</span>
             </Link>
           </div>
-          <DemoCard showBookCta={!afterBooking} />
+          <DemoCard copy={copy.demo} showBookCta={!afterBooking} />
         </Reveal>
       </div>
     </section>

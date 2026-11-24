@@ -7,7 +7,7 @@ declare global {
 }
 
 /* Reopens the Usercentrics consent preferences (second layer). */
-export function PrivacySettingsLink({ className }: { className?: string }) {
+export function PrivacySettingsLink({ label, className }: { label: string; className?: string }) {
   return (
     <a
       href="#"
@@ -17,7 +17,7 @@ export function PrivacySettingsLink({ className }: { className?: string }) {
         window.__ucCmp?.showSecondLayer();
       }}
     >
-      Privacy Settings
+      {label}
     </a>
   );
 }

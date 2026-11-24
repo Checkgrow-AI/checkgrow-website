@@ -1,12 +1,12 @@
 /* News categories and their URL, kept apart from the article data so
    light links (homepage CTA, footer) do not pull every article into the
-   client bundle. */
+   client bundle. Their names are in the dictionary (news.categoryLabels). */
 
 export const newsCategories = [
-  { id: "all", label: "All news" },
-  { id: "success-stories", label: "Success Stories" },
-  { id: "tutorials", label: "Tutorials" },
-  { id: "security-releases", label: "Security Releases" },
+  { id: "all" },
+  { id: "success-stories" },
+  { id: "tutorials" },
+  { id: "security-releases" },
 ] as const;
 
 export type NewsFilter = typeof newsCategories[number]["id"];

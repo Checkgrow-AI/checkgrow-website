@@ -1,6 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { problemTools, problemCardState } from "../src/lib/problemCards.ts";
+import { problemTools as buildProblemTools, problemCardState } from "../src/lib/problemCards.ts";
+import { home } from "../src/i18n/dictionaries/en/home.ts";
+
+const problemTools = buildProblemTools(home.problem.tools);
 
 test("the five tools form the reference staircase without occupied-slot collisions", () => {
   assert.equal(problemTools.length, 5);

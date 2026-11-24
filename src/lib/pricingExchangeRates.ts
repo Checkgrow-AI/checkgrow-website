@@ -1,4 +1,4 @@
-import { isExchangeRateSnapshot, RATE_REFRESH_MS, type ExchangeRateSnapshot } from "./pricingCurrency";
+import { isExchangeRateSnapshot, RATE_REFRESH_MS, type ExchangeRateSnapshot } from "./pricingCurrency.ts";
 
 export const EXCHANGE_RATE_URL = "https://api.frankfurter.dev/v2/rates?base=EUR&quotes=CHF,USD,BRL&providers=ecb";
 

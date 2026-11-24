@@ -2,12 +2,15 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { shiftBenefits, shiftStepFromProgress } from "@/lib/shiftStory";
+import { SHIFT_BENEFIT_IDS, shiftBenefits, shiftStepFromProgress } from "@/lib/shiftStory";
+import { useT } from "@/i18n/client";
 import styles from "./Shift.module.css";
 
-const COUNT = shiftBenefits.length;
+const COUNT = SHIFT_BENEFIT_IDS.length;
 
 export function Shift() {
+  const t = useT("home").shift;
+  const benefits = shiftBenefits(t.benefits);
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const [enhanced, setEnhanced] = useState(false);
@@ -71,10 +74,10 @@ export function Shift() {
       <div className="wrap">
         <div className={styles.intro}>
           <p className="text-label flex items-center gap-2.5 text-muted">
-            The shift
+            {t.label}
           </p>
           <h2 id="shift-title" className="text-h1 mt-6 text-balance">
-            One connected system.<br />More room to grow.
+            {t.title.first}<br />{t.title.second}
           </h2>
         </div>
 
@@ -90,7 +93,7 @@ export function Shift() {
               <figure className={styles.artwork}>
                 <Image
                   src="/editorial/ai-assistant-converging-answer.webp"
-                  alt="A person facing connected landscapes that converge into one answer, illustrating shared marketing intelligence."
+                  alt={t.imageAlt}
                   fill
                   sizes="(min-width: 1200px) 512px, (min-width: 768px) 45vw, (min-width: 560px) 512px, calc(100vw - 48px)"
                   className={styles.image}
@@ -107,7 +110,7 @@ export function Shift() {
                     className={styles.symbol}
                   />
                   <div className={styles.captionStack}>
-                    {shiftBenefits.map((benefit, index) => (
+                    {benefits.map((benefit, index) => (
                       <div key={benefit.id} className={styles.captionPanel} data-state={index === active ? "active" : index < active ? "past" : "next"}>
                         <p className={styles.captionTitle}>{benefit.title}</p>
                         <p className={styles.captionBody}>{benefit.description}</p>
@@ -120,7 +123,7 @@ export function Shift() {
 
             <div className={styles.stage}>
               <div className={styles.chapters}>
-                {shiftBenefits.map((benefit, index) => (
+                {benefits.map((benefit, index) => (
                   <article
                     key={benefit.id}
                     className={styles.chapter}

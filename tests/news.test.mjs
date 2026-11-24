@@ -1,9 +1,19 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync, statSync } from 'node:fs';
-import { newsPosts, newsCategories, getNewsPost, newsPath, filterNews, categoryLabel, securityRelease, securitySections } from '../src/lib/news.ts';
-import { tutorials } from '../src/lib/tutorials.ts';
-import { successStories } from '../src/lib/successStories.ts';
+import { buildNewsPosts, findNewsPost, newsCategories, newsPath, filterNews, SECURITY_SLUG } from '../src/lib/news.ts';
+import { publishedStories } from '../src/lib/successStories.ts';
+import { news } from '../src/i18n/dictionaries/en/news.ts';
+import { stories } from '../src/i18n/dictionaries/en/stories.ts';
+import { tutorials as enTutorials } from '../src/i18n/dictionaries/en/tutorials.ts';
+/* the English site, built the way the pages build it */
+const tutorials = enTutorials.items;
+const successStories = publishedStories(stories.items);
+const newsPosts = buildNewsPosts({ news, stories, tutorials: enTutorials });
+const getNewsPost = (slug) => findNewsPost(newsPosts, slug);
+const categoryLabel = (id) => news.categoryLabels[id];
+const securityRelease = getNewsPost(SECURITY_SLUG);
+const securitySections = news.security.sections;
 
 test('News records have unique routes, newest first, and every tutorial is retained', () => {
   assert.equal(new Set(newsPosts.map(post => post.slug)).size, newsPosts.length);
@@ -26,7 +36,7 @@ test('News records have unique routes, newest first, and every tutorial is retai
 });
 
 test('categories filter immediately without changing the source collection', () => {
-  assert.deepEqual(newsCategories.map(category => category.label), ['All news', 'Success Stories', 'Tutorials', 'Security Releases']);
+  assert.deepEqual(newsCategories.map(category => categoryLabel(category.id)), ['All news', 'Success Stories', 'Tutorials', 'Security Releases']);
   const before = JSON.stringify(newsPosts);
   assert.deepEqual(filterNews(newsPosts, 'all'), newsPosts);
   assert.equal(filterNews(newsPosts, 'tutorials').length, tutorials.length);
@@ -38,7 +48,7 @@ test('categories filter immediately without changing the source collection', () 
 
 test('security copy has stable anchors and bounded, non-certification language', () => {
   const content = readFileSync(new URL('../src/components/news/SecurityArticle.tsx', import.meta.url), 'utf8');
-  const copy = `${JSON.stringify(securitySections)} ${content}`;
+  const copy = `${JSON.stringify(news.security)} ${content}`;
   assert.equal(new Set(securitySections.map(section => section.id)).size, securitySections.length);
   for (const section of securitySections) {
     assert.match(section.id, /^[a-z-]+$/);

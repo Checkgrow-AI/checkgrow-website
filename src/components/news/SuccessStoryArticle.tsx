@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { storySectionId, type StoryBlock, type StoryStat, type SuccessStory } from "@/lib/successStories";
+import { getT } from "@/i18n/server";
+import { fmt } from "@/i18n/format";
 import editorial from "@/components/tutorials/Tutorials.module.css";
 import styles from "./SuccessStory.module.css";
 
@@ -8,7 +10,7 @@ import styles from "./SuccessStory.module.css";
    results), the closing statement and the FAQ. The hero image and headline
    stats sit above the article layout (SuccessStoryHero). */
 
-function Stats({ items, className = "" }: { items: StoryStat[]; className?: string }) {
+function Stats({ items, className = "" }: { items: readonly StoryStat[]; className?: string }) {
   return (
     <dl className={`${styles.stats} ${className}`}>
       {items.map(stat => (
@@ -84,19 +86,20 @@ export function SuccessStoryHero({ story }: { story: SuccessStory }) {
 }
 
 export function SuccessStoryArticle({ story }: { story: SuccessStory }) {
+  const t = getT("news").story;
   return (
     <>
       <p className={editorial.intro}>{story.lead}</p>
 
       {story.takeaways?.length ? (
         <section className={styles.takeaways} aria-labelledby="key-takeaways">
-          <h2 id="key-takeaways">Key takeaways</h2>
+          <h2 id="key-takeaways">{t.takeaways}</h2>
           <ul>{story.takeaways.map(item => <li key={item}>{item}</li>)}</ul>
         </section>
       ) : null}
 
       <section className={styles.about} aria-labelledby="about-client">
-        <h2 id="about-client">About {story.company}</h2>
+        <h2 id="about-client">{fmt(t.about, { name: story.company })}</h2>
         <p>{story.about.summary}</p>
         <dl>
           {story.about.facts.map(fact => (
@@ -107,7 +110,7 @@ export function SuccessStoryArticle({ story }: { story: SuccessStory }) {
           ))}
         </dl>
         <div className={styles.features}>
-          <h3>Checkgrow features used</h3>
+          <h3>{t.featuresUsed}</h3>
           <ul>{story.features.map(feature => <li key={feature}>{feature}</li>)}</ul>
         </div>
       </section>
@@ -117,7 +120,7 @@ export function SuccessStoryArticle({ story }: { story: SuccessStory }) {
         return (
           <section key={id} id={id} className={styles.section} aria-labelledby={`${id}-title`}>
             <h2 id={`${id}-title`}>
-              <span className={styles.label}>{section.label}<span className="sr-only">: </span></span>
+              <span className={styles.label}>{section.label}<span className="sr-only">{t.labelSeparator}</span></span>
               {section.title}
             </h2>
             {section.blocks.map((block, index) => <Block key={index} block={block} />)}
@@ -133,7 +136,7 @@ export function SuccessStoryArticle({ story }: { story: SuccessStory }) {
       )}
 
       <section id="faq" className={styles.faq} aria-labelledby="faq-title">
-        <h2 id="faq-title">Frequently asked questions</h2>
+        <h2 id="faq-title">{t.faq}</h2>
         {story.faq.map(item => (
           <details key={item.q}>
             <summary>{item.q}</summary>

@@ -1,7 +1,14 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
-import { ANNUAL_DISCOUNT, formatPrice, planPrice, plans, pricingDescription, pricingFaqItems } from '../src/lib/pricing.ts';
+import { ANNUAL_DISCOUNT, buildPlans, formatPrice, planPrice } from '../src/lib/pricing.ts';
+import { pricingQuestions } from '../src/lib/faq.ts';
+import { pricing } from '../src/i18n/dictionaries/en/pricing.ts';
+import { faq } from '../src/i18n/dictionaries/en/faq.ts';
+/* the English site, built the way the pages build it */
+const plans = buildPlans(pricing);
+const pricingDescription = pricing.meta.description;
+const pricingFaqItems = pricingQuestions(faq);
 
 test('the dedicated page preserves the approved homepage plans', () => {
   assert.deepEqual(plans.map(({ id, monthly }) => [id, monthly]), [
@@ -42,30 +49,35 @@ test('every plan uses the same internal demo booking destination', () => {
 });
 
 test('mobile booking shortcut and machine-readable contact use the demo flow', () => {
+  /* the rail's last stop opens the demo flow, in the visitor's language */
   const rail = readFileSync(new URL('../src/components/MobileScrollRail.tsx', import.meta.url), 'utf8');
-  assert.match(rail, /label: "Book a demo", href: "\/book-a-demo"/);
-  assert.match(rail, /router\.push\(s\.href\)/);
+  assert.match(rail, /id: "waitlist", href: "\/book-a-demo"/);
+  assert.match(rail, /router\.push\(lp\(s\.href\)\)/);
+  const home = readFileSync(new URL('../src/i18n/dictionaries/en/home.ts', import.meta.url), 'utf8');
+  assert.match(home, /waitlist: "Book a demo"/);
   const markdown = readFileSync(new URL('../src/lib/markdown.ts', import.meta.url), 'utf8');
   assert.match(markdown, /Book a demo or talk to our team \(all plans\): \$\{BOOK_DEMO\}/);
   assert.doesNotMatch(markdown, /SALES_CALENDAR|calendar\.app\.google/);
   const security = readFileSync(new URL('../src/components/news/SecurityArticle.tsx', import.meta.url), 'utf8');
-  assert.match(security, /<Link href="\/book-a-demo">Discuss your security requirements/);
+  assert.match(security, /<Link href="\/book-a-demo">\{t\.contact\.link\}/);
+  const newsCopy = readFileSync(new URL('../src/i18n/dictionaries/en/news.ts', import.meta.url), 'utf8');
+  assert.match(newsCopy, /link: "Discuss your security requirements"/);
 });
 
 test('the standalone route reuses pricing and the shared FAQ rather than copying plans', () => {
-  const page = readFileSync(new URL('../src/app/pricing/page.tsx', import.meta.url), 'utf8');
-  const home = readFileSync(new URL('../src/app/page.tsx', import.meta.url), 'utf8');
+  const page = readFileSync(new URL('../src/app/[lang]/pricing/page.tsx', import.meta.url), 'utf8');
+  const home = readFileSync(new URL('../src/app/[lang]/page.tsx', import.meta.url), 'utf8');
   assert.match(page, /<Pricing standalone\s*\/>/);
   assert.match(home, /<Pricing\s*\/>/);
   assert.match(page, /items=\{pricingFaqItems\}/);
-  assert.match(page, /canonical: "\/pricing"/);
+  assert.match(page, /path: "\/pricing"/);
   assert.doesNotMatch(page, /499|997|4997/);
 });
 
 test('the branded currency menu precedes billing in the shared pricing component', () => {
   const component = readFileSync(new URL('../src/components/sections/Pricing.tsx', import.meta.url), 'utf8');
   const currency = component.indexOf('<CurrencySelect ');
-  assert.ok(currency > 0 && currency < component.indexOf('aria-label="Billing frequency"'));
+  assert.ok(currency > 0 && currency < component.indexOf('aria-label={t.section.billingLabel}'));
   assert.doesNotMatch(component, /<select/);
   const menu = readFileSync(new URL('../src/components/pricing/CurrencySelect.tsx', import.meta.url), 'utf8');
   assert.match(menu, /role="combobox"/);
@@ -78,7 +90,7 @@ test('the branded currency menu precedes billing in the shared pricing component
 test('pricing keeps the table prominent and puts currency disclosures below the plans', () => {
   const component = readFileSync(new URL('../src/components/sections/Pricing.tsx', import.meta.url), 'utf8');
   assert.doesNotMatch(component, /href="#customer-results"|href="#pricing-questions"/);
-  const plansEnd = component.indexOf('Need more Growth Credits?');
+  const plansEnd = component.indexOf('{t.topUp}');
   assert.ok(plansEnd > 0 && component.indexOf('id="pricing-currency-note"') > plansEnd);
   assert.match(component, /id="pricing-currency-note"[^>]*role="status"/);
 });

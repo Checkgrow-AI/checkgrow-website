@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { Trustpilot } from "@/components/Trustpilot";
+import { useT } from "@/i18n/client";
 import { RotatingWord } from "@/components/RotatingWord";
 
 export function HeroV1() {
@@ -64,7 +65,7 @@ export function HeroV1() {
             </motion.p>
 
             <motion.div {...enter(0.16)} className="mt-8">
-              <Trustpilot />
+              <Trustpilot copy={useT("home").trustpilot} />
             </motion.div>
 
             <motion.div {...enter(0.2)} className="mt-4">

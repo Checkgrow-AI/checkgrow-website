@@ -1,9 +1,11 @@
 import { FeatureStage } from "@/components/features/FeatureStage";
 import type { MockupKey } from "@/lib/useCases";
+import { getT } from "@/i18n/server";
 import { UseCaseMockup } from "./mockups/UseCaseMockups";
 
 /* Product mockups in the framed brand-background stage. Several mockups play
-   as steps with tabs (hero); one mockup animates in when scrolled into view. */
+   as steps with tabs (hero); one mockup animates in when scrolled into view.
+   The stage's own accessible text comes from the features namespace. */
 export function UseCaseStage({
   id,
   name,
@@ -14,8 +16,8 @@ export function UseCaseStage({
 }: {
   id: string;
   name: string;
-  mockups: MockupKey[];
-  steps: { label: string; caption: string }[];
+  mockups: readonly MockupKey[];
+  steps: readonly { label: string; caption: string }[];
   background: string;
   backgroundColor: string;
 }) {
@@ -27,6 +29,7 @@ export function UseCaseStage({
       backgroundColor={backgroundColor}
       steps={steps}
       screens={mockups.map((key) => <UseCaseMockup key={key} id={key} />)}
+      labels={getT("features").stage}
     />
   );
 }

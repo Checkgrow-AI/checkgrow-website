@@ -3,8 +3,8 @@ import test from 'node:test';
 import { readFileSync } from 'node:fs';
 
 test('scroll reset is installed once at the demo layout, not on every website page', () => {
-  const layout = readFileSync(new URL('../src/app/book-a-demo/layout.tsx', import.meta.url), 'utf8');
-  const root = readFileSync(new URL('../src/app/layout.tsx', import.meta.url), 'utf8');
+  const layout = readFileSync(new URL('../src/app/[lang]/book-a-demo/layout.tsx', import.meta.url), 'utf8');
+  const root = readFileSync(new URL('../src/app/[lang]/layout.tsx', import.meta.url), 'utf8');
   assert.equal(layout.match(/<DemoScrollReset\s*\/>/g).length, 1);
   assert.doesNotMatch(root, /DemoScrollReset/);
 });

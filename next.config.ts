@@ -21,26 +21,23 @@ const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
 
+  /* the root layout sits under app/[lang], so the 404 is
+     app/global-not-found.tsx (docs: file-conventions/not-found) */
+  experimental: { globalNotFound: true },
+
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
 
   /* Markdown for AI assistants (src/lib/markdown.ts): every key page at
-     its URL plus ".md" (/index.md for the homepage), and the same markdown
-     for requests that ask for it with Accept: text/markdown. Runs before
-     the pages so content negotiation can take over a page URL. */
+     its URL plus ".md" (/index.md for the homepage). Requests that ask for
+     markdown with Accept: text/markdown are routed in src/proxy.ts, which
+     runs before these rewrites and owns the page URLs (language routing). */
   async rewrites() {
-    const wantsMarkdown = [{ type: "header" as const, key: "accept", value: "(.*)text/markdown(.*)" }];
     return {
       beforeFiles: [
         { source: "/index.md", destination: "/markdown" },
         { source: "/:path(.+)\\.md", destination: "/markdown/:path" },
-        { source: "/", has: wantsMarkdown, destination: "/markdown" },
-        ...["/pricing", "/sales", "/faq", "/features", "/use-cases", "/use-cases/:slug", "/news", "/news/:slug"].map((source) => ({
-          source,
-          has: wantsMarkdown,
-          destination: `/markdown${source}`,
-        })),
       ],
       afterFiles: [],
       fallback: [],

@@ -1,28 +1,32 @@
 "use client";
 
 import { motion } from "motion/react";
+import { useT } from "@/i18n/client";
 
 /* One glowing light travels behind the whole strip; each chip's dot
    blinks purple the moment the light passes underneath it. Orb sweep
    and dot blinks share one 5.6s linear timeline, so the sync holds
-   without any JS. Delays are tuned to the chips' horizontal centres. */
+   without any JS. Delays are tuned to the chips' horizontal centres.
+   The step labels are copy (`home` dictionary: flow.steps, keyed by id). */
 
-const DESKTOP: Array<{ label: string; delay: number }> = [
-  { label: "Your business", delay: 0.1 },
-  { label: "Create", delay: 1.35 },
-  { label: "Reach", delay: 2.3 },
-  { label: "Measure", delay: 3.3 },
-  { label: "Improve", delay: 4.3 },
+type StepId = "business" | "create" | "reach" | "measure" | "improve";
+
+const DESKTOP: Array<{ id: StepId; delay: number }> = [
+  { id: "business", delay: 0.1 },
+  { id: "create", delay: 1.35 },
+  { id: "reach", delay: 2.3 },
+  { id: "measure", delay: 3.3 },
+  { id: "improve", delay: 4.3 },
 ];
 
-const MOBILE_ROW_1: Array<{ label: string; delay: number }> = [
-  { label: "Your business", delay: 0.32 },
-  { label: "Create", delay: 1.42 },
+const MOBILE_ROW_1: Array<{ id: StepId; delay: number }> = [
+  { id: "business", delay: 0.32 },
+  { id: "create", delay: 1.42 },
 ];
-const MOBILE_ROW_2: Array<{ label: string; delay: number }> = [
-  { label: "Reach", delay: 2.92 },
-  { label: "Measure", delay: 3.74 },
-  { label: "Improve", delay: 4.56 },
+const MOBILE_ROW_2: Array<{ id: StepId; delay: number }> = [
+  { id: "reach", delay: 2.92 },
+  { id: "measure", delay: 3.74 },
+  { id: "improve", delay: 4.56 },
 ];
 
 type Tone = "light" | "ink";
@@ -69,6 +73,7 @@ const stepIn = (order: number) => ({
 });
 
 export function FlowStrip({ tone = "light" }: { tone?: Tone }) {
+  const t = useT("home").flow;
   const note = "text-muted";
   return (
     <>
@@ -77,14 +82,14 @@ export function FlowStrip({ tone = "light" }: { tone?: Tone }) {
         <div className="relative flex items-center">
           <span className="flow-orb orb-x" aria-hidden />
           {DESKTOP.map((step, i) => (
-            <motion.div key={step.label} className="flex items-center" {...stepIn(i)}>
-              <Chip label={step.label} lead={i === 0} delay={step.delay} tone={tone} />
+            <motion.div key={step.id} className="flex items-center" {...stepIn(i)}>
+              <Chip label={t.steps[step.id]} lead={i === 0} delay={step.delay} tone={tone} />
               {i < DESKTOP.length - 1 && <Track tone={tone} />}
             </motion.div>
           ))}
         </div>
         <motion.p className={`ml-5 hidden shrink-0 text-sm xl:block ${note}`} {...stepIn(5)}>
-          ↻ what works gets remembered
+          ↻ {t.remembered}
         </motion.p>
       </div>
 
@@ -94,8 +99,8 @@ export function FlowStrip({ tone = "light" }: { tone?: Tone }) {
         <div className="relative flex items-center">
           <span className="flow-orb orb-m1" aria-hidden />
           {MOBILE_ROW_1.map((step, i) => (
-            <motion.div key={step.label} className="flex items-center" {...stepIn(i)}>
-              <Chip label={step.label} lead={i === 0} delay={step.delay} tone={tone} />
+            <motion.div key={step.id} className="flex items-center" {...stepIn(i)}>
+              <Chip label={t.steps[step.id]} lead={i === 0} delay={step.delay} tone={tone} />
               {i < MOBILE_ROW_1.length - 1 && <Track tone={tone} />}
             </motion.div>
           ))}
@@ -103,14 +108,14 @@ export function FlowStrip({ tone = "light" }: { tone?: Tone }) {
         <div className="relative flex items-center">
           <span className="flow-orb orb-m2" aria-hidden />
           {MOBILE_ROW_2.map((step, i) => (
-            <motion.div key={step.label} className="flex items-center" {...stepIn(i + 2)}>
-              <Chip label={step.label} lead={false} delay={step.delay} tone={tone} />
+            <motion.div key={step.id} className="flex items-center" {...stepIn(i + 2)}>
+              <Chip label={t.steps[step.id]} lead={false} delay={step.delay} tone={tone} />
               {i < MOBILE_ROW_2.length - 1 && <Track tone={tone} />}
             </motion.div>
           ))}
         </div>
         <motion.p className={`mt-1.5 text-sm ${note}`} {...stepIn(5)}>
-          ↻ what works gets remembered
+          ↻ {t.remembered}
         </motion.p>
       </div>
     </>

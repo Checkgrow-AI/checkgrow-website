@@ -13,7 +13,7 @@ Bruno asked to replace the five static SVG mockups in the homepage "In practice"
 
 | Piece | Role |
 | --- | --- |
-| `src/lib/features.ts` | Single source: copy, three steps (label + caption), screen keys, background, `onHome` flag, `featurePath()` |
+| `src/lib/features.ts` + `src/i18n/dictionaries/<lang>/features.ts` | Structure (screen keys, background, `onHome` flag, `featurePath()`) in lib; copy and the three steps in the dictionaries, all four languages |
 | `src/lib/featureScreens.ts` | Generated, static, inline-styled HTML for the 27 screens (1200×900). Do not hand-edit; regenerate from the canvas or kit |
 | `src/components/features/FeatureStory.tsx` | Server component: renders the screens on the server (not in the client bundle) plus the story copy |
 | `src/components/features/FeatureStage.tsx` | Client component: scales the artboard to the frame, cycles the steps, provides tabs, captions and pause |
@@ -34,7 +34,7 @@ Stage behaviour:
 
 1. Design or update the three screens on the canvas or with the feature-mockups kit (`data-layer` names drive animation).
 2. Regenerate `src/lib/featureScreens.ts` and copy any new assets into `public/features/` (WebP for raster).
-3. Add or edit the record in `src/lib/features.ts`; set `onHome` for the homepage.
+3. Add or edit the record in `src/lib/features.ts` (set `onHome` for the homepage) and its copy in `src/i18n/dictionaries/<lang>/features.ts` for every language. After regenerating screens, run `pnpm i18n:mockups` and translate new mockup texts.
 4. Run `node --test tests/*.test.mjs`, typecheck, lint and build, then review desktop and phone.
 
 The five retired SVGs (`knowledge-center`, `campaigns`, `ai-tasks`, `insights`, `website-reporting`) were deleted from `public/mockups/`; `dashboard.svg` stays for `HeroV1`.

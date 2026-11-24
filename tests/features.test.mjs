@@ -1,7 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { existsSync } from 'node:fs';
-import { features, homeFeatures, featurePath } from '../src/lib/features.ts';
+import { featuresOf, homeFeaturesOf, featurePath } from '../src/lib/features.ts';
+import { features as enFeatures } from '../src/i18n/dictionaries/en/features.ts';
+/* the English site, built the way the pages build it */
+const features = featuresOf(enFeatures);
+const homeFeatures = homeFeaturesOf(features);
 import { featureScreens } from '../src/lib/featureScreens.ts';
 
 const asset = path => new URL(`../public${path}`, import.meta.url);

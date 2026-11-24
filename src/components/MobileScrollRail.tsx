@@ -10,18 +10,24 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useStableVh } from "@/lib/useStableVh";
+import { useLocalePath, useT } from "@/i18n/client";
+import { fmt } from "@/i18n/format";
 
-const SECTIONS: Array<{ id: string; label: string; href?: string }> = [
-  { id: "platform", label: "Platform" },
-  { id: "solution", label: "Solution" },
-  { id: "stories", label: "Real Stories" },
-  { id: "use-cases", label: "Features" },
-  { id: "pricing", label: "Pricing" },
-  { id: "faq", label: "FAQ" },
-  { id: "waitlist", label: "Book a demo", href: "/book-a-demo" },
+/* the homepage sections, in order; their labels are copy (`home`
+   dictionary: scrollRail.labels, keyed by section id) */
+const SECTIONS: Array<{ id: "platform" | "solution" | "stories" | "use-cases" | "pricing" | "faq" | "waitlist"; href?: string }> = [
+  { id: "platform" },
+  { id: "solution" },
+  { id: "stories" },
+  { id: "use-cases" },
+  { id: "pricing" },
+  { id: "faq" },
+  { id: "waitlist", href: "/book-a-demo" },
 ];
 
 export function MobileScrollRail() {
+  const t = useT("home").scrollRail;
+  const lp = useLocalePath();
   const router = useRouter();
   const railRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(0);
@@ -123,13 +129,13 @@ export function MobileScrollRail() {
         <button
           key={s.id}
           type="button"
-          aria-label={`Go to ${s.label}`}
+          aria-label={fmt(t.goTo, { label: t.labels[s.id] })}
           className="relative flex items-center py-0.5"
           onClick={(e) => {
             /* a drag that ends on a line must not double as a jump */
             if (moved.current && e.detail !== 0) return;
             if (s.href) {
-              router.push(s.href);
+              router.push(lp(s.href));
               return;
             }
             document.getElementById(s.id)?.scrollIntoView();
@@ -140,7 +146,7 @@ export function MobileScrollRail() {
               active ? "translate-x-0 opacity-100" : "-translate-x-1.5 opacity-0"
             } ${current === i ? "text-accent" : "text-muted"}`}
           >
-            {s.label}
+            {t.labels[s.id]}
           </span>
           <span
             aria-hidden

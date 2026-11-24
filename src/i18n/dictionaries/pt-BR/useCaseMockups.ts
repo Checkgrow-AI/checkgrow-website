@@ -1,0 +1,301 @@
+import type { Localized } from "../../types";
+import type { useCaseMockups as source } from "../en/useCaseMockups";
+
+/* Telas de produto fictícias das páginas de casos de uso. Os números são
+   ilustrativos e mantêm o valor do inglês; só o formato muda. As listas
+   seguem uma a uma os dados do mockup (cores, ícones, larguras). */
+export const useCaseMockups: Localized<typeof source> = {
+  percent: "{n}%",
+
+  moCampaigns: {
+    eyebrow: "Campanhas",
+    title: "Briefings de campanha com IA",
+    create: "+ Criar campanha",
+    filters: ["Todas · 6", "Ativas · 4", "Pausadas · 2", "Este trimestre"],
+    columns: ["Campanha", "Canais", "Criativos", "Orçamento", "Status"],
+    rows: [
+      { name: "Lançamento Enterprise Q4", period: "1 out – 31 dez", budget: "€ 24.000" },
+      { name: "Webinar Growth Brain", period: "6 out – 30 out", budget: "€ 6.500" },
+      { name: "Programa de agências parceiras", period: "15 set – 15 nov", budget: "€ 8.000" },
+      { name: "Retargeting · usuários em teste", period: "Pausada em 2 out", budget: "€ 3.000" },
+    ],
+    spent: "{n}% gasto",
+    active: "Ativa",
+    paused: "Pausada",
+    live: "NO AR · Lançamento Enterprise Q4",
+    stats: [
+      { label: "Gasto", value: "€ 9,8 mil" },
+      { label: "Leads", value: "212" },
+      { label: "CPA", value: "€ 46" },
+    ],
+    underTarget: "€ 12 abaixo da meta",
+  },
+
+  moCreatives: {
+    eyebrow: "Campanha · Criativos",
+    title: "Lançamento Enterprise Q4",
+    language: "Português",
+    generate: "Gerar visuais",
+    newCreative: "Novo criativo",
+    channels: "Canais",
+    channelNames: ["Google Ads", "Meta", "LinkedIn"],
+    count: "24 criativos",
+    stage: "Reconhecimento",
+    stageHint: "Alcance novos compradores",
+    tiles: [
+      { title: "Seu cérebro de growth, em um só lugar", status: "Aprovado" },
+      { title: "Planeje, lance e reporte. Juntos.", status: "Aprovado" },
+      { title: "Cinco ferramentas viraram uma", status: "Conteúdo" },
+      { title: "Onboarding grátis este mês", status: "Design" },
+    ],
+    format: "Feed · 4:5",
+    copies: "3 textos",
+    next: "Ação",
+    nextHint: "6 criativos · Agendar uma demo",
+    open: "Abrir etapa →",
+  },
+
+  moCalendar: {
+    eyebrow: "Calendário",
+    title: "Outubro de 2026",
+    region: "Croácia",
+    views: ["Mês", "Semana", "Lista"],
+    legend: ["Campanhas 3", "Objetivos 1", "Influenciadores 0", "Redes sociais 6", "Tarefas 3", "Datas 1"],
+    days: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+    bars: ["Lançamento Enterprise Q4", "Webinar Growth Brain", "Programa de agências parceiras"],
+    items: ["Reel teaser", "Revisar criativos", "Carrossel · 4 ofertas", "Convite do webinar", "Atualizar ICPs", "Caso de cliente", "Relatório ao conselho", "Post de lançamento"],
+  },
+
+  moIntegrations: {
+    eyebrow: "Integrações",
+    title: "Conecte suas ferramentas",
+    connectedCount: "5 conectadas",
+    intro: "Conecte as ferramentas que você já usa. Seus anúncios continuam rodando onde estão; a Checkgrow lê os resultados deles.",
+    tiles: [
+      { name: "Google Analytics", detail: "GA4 · checkgrow.com" },
+      { name: "Meta Ads", detail: "2 contas de anúncios" },
+      { name: "Google Ads", detail: "1 conta · 6 campanhas" },
+      { name: "Instagram", detail: "@checkgrow · 12,4 mil" },
+      { name: "LinkedIn", detail: "Prospecção, posts e páginas" },
+      { name: "Notion", detail: "Espaço de trabalho e bancos de dados" },
+    ],
+    connected: "✓ Conectado",
+    connect: "Conectar",
+    also: "TAMBÉM",
+    alsoItems: ["n8n", "Webhooks", "Checkgrow MCP"],
+    soon: "EM BREVE",
+    soonItems: ["Slack", "TikTok", "Supabase"],
+  },
+
+  moHome: {
+    brand: "Checkgrow",
+    groups: [
+      { label: "Operações", items: ["Grow", "Tarefas", "Calendário"] },
+      { label: "Marketing", items: ["Campanhas", "Creative Studio", "Redes sociais", "Conteúdo", "Site"] },
+      { label: "Vendas", items: ["Público-alvo", "Prospecção", "Leads"] },
+      { label: "Pesquisa e relatórios", items: ["Concorrentes", "Insights"] },
+    ],
+    eyebrow: "Assistente de IA · Grow",
+    hello: "Olá, Ana.",
+    intro: { before: "Para fazer a ", name: "Checkgrow", after: " crescer, comece a conversar ou use os recursos abaixo:" },
+    placeholder: "Pergunte ao Grow qualquer coisa sobre sua empresa…",
+    language: "Português (Brasil)",
+    model: "GPT-5.6 Luna",
+    actions: ["Crie e gerencie campanhas", "Insights a partir dos seus dados", "Estude seus concorrentes", "Atualize seu conhecimento", "Explore seu Grafo de conhecimento"],
+    knowledge: "Conhecimento",
+    knowledgeValue: "77%",
+    funnel: "Funil · últimos 30 dias",
+    funnelStats: [
+      { value: "21,9 mil", label: "TOFU" },
+      { value: "971", label: "MOFU" },
+      { value: "178", label: "BOFU" },
+    ],
+    activeCampaigns: "Campanhas ativas",
+    activeValue: "4",
+  },
+
+  kcCompleteness: {
+    eyebrow: "Centro de conhecimento",
+    title: "O conhecimento da sua empresa",
+    summary: "77% · Nível especialista. Tudo o que a Checkgrow escreve parte daqui.",
+    upload: "Enviar conhecimento",
+    sections: ["Perfil da empresa", "Marca", "Produtos", "Personas", "Perfis de cliente ideal", "Casos de uso"],
+    hint: "Adicione 2 casos de uso",
+    drafting: "Redigindo a partir dos seus arquivos",
+    ready: "3 seções prontas para sua revisão",
+  },
+
+  kcBrand: {
+    eyebrow: "Centro de conhecimento · Marca",
+    title: "Tom de voz",
+    edit: "Editar com o Grow",
+    tones: ["Claro", "Confiante", "Caloroso, nunca informal", "Evidência acima do hype"],
+    say: "DIZEMOS",
+    sayItems: ["“Um só lugar para o seu marketing”", "“Seus dados, conectados”", "“Aprove e depois publique”"],
+    avoid: "EVITAMOS",
+    avoidItems: ["“Revolucionário”, “divisor de águas”", "Promessas que não conseguimos medir", "Jargão sem motivo"],
+    messageLabel: "MENSAGEM DA MARCA",
+    message: "O cérebro de growth para scale-ups e grandes empresas: conhecimento, campanhas, conteúdo e vendas em um só ciclo.",
+    used: "Usado em todo rascunho",
+    usedIn: "Campanhas · Conteúdo · Criativos",
+  },
+
+  kcPersona: {
+    eyebrow: "Persona",
+    name: "Maya, líder de marketing orientada por dados",
+    role: "Head de Growth · SaaS B2B, 50–200 pessoas · Berlim",
+    primary: "Principal",
+    blocks: [
+      { title: "OBJETIVOS", items: ["Provar o retorno do marketing", "Lançar campanhas sem agência"] },
+      { title: "DORES", items: ["Cinco ferramentas, cinco versões da verdade", "Relatórios semanais feitos de exportações"] },
+      { title: "OBJEÇÕES", items: ["Mais uma ferramenta para aprender", "A IA vai soar como a gente?"] },
+      { title: "ONDE PESQUISA", items: ["LinkedIn, comunidades de pares", "Webinars e estudos de caso"] },
+    ],
+    usedBy: "USADA EM",
+    usage: ["3 campanhas", "12 posts", "Sales Brain"],
+  },
+
+  kcGraph: {
+    title: "Grafo de conhecimento",
+  },
+
+  kcDraft: {
+    status: "Rascunho · aguardando aprovação",
+    channel: "Post no LinkedIn",
+    author: "Checkgrow",
+    meta: "Promovido · 1º rascunho",
+    post: [
+      "Cinco ferramentas, cinco versões da verdade. Soa familiar?",
+      "A maioria das equipes refaz o mesmo relatório semanal a partir de exportações. Criamos a Checkgrow para que o plano e os resultados finalmente fiquem em um só lugar: campanhas, criativos, calendário e dados ao vivo do GA4, da Meta e do Google Ads.",
+      "Onboarding grátis este mês. 👇",
+    ],
+    edit: "Editar com o Grow",
+    request: "Deixe mais curto e mencione o onboarding grátis na primeira linha.",
+    reply: "Pronto. 38 palavras a menos, oferta na primeira linha, mesmo tom de voz da sua Marca.",
+    changes: ["+ oferta primeiro", "− 38 palavras"],
+    note: "A versão salva só muda depois que você aprova.",
+    discard: "Descartar",
+    approve: "Aprovar alterações",
+  },
+
+  inFunnel: {
+    eyebrow: "Insights",
+    title: "Relatório de funil",
+    range: "Últimos 30 dias",
+    setup: "Configurar funil",
+    rates: ["4,6% →", "21,4% →"],
+    events: "eventos",
+    topEvents: "PRINCIPAIS EVENTOS",
+    topSources: "PRINCIPAIS ORIGENS",
+    stages: [
+      {
+        name: "TOFU",
+        label: "Alcance",
+        total: "48.210",
+        events: [
+          { name: "Visualização de página", value: "24.880" },
+          { name: "Início de sessão", value: "14.302" },
+          { name: "Primeira visita", value: "9.028" },
+        ],
+        sources: [
+          { name: "Pago · Google", value: "16.940" },
+          { name: "Orgânico · Google", value: "11.210" },
+        ],
+      },
+      {
+        name: "MOFU",
+        label: "Engajamento",
+        total: "2.214",
+        events: [
+          { name: "Visita à página de demo", value: "1.120" },
+          { name: "Visita a preços", value: "702" },
+          { name: "Início de formulário", value: "392" },
+        ],
+        sources: [
+          { name: "Pago · LinkedIn", value: "804" },
+          { name: "Orgânico · Google", value: "611" },
+        ],
+      },
+      {
+        name: "BOFU",
+        label: "Conversão",
+        total: "474",
+        events: [
+          { name: "Demo agendada", value: "262" },
+          { name: "Envio de formulário", value: "212" },
+        ],
+        sources: [
+          { name: "Pago · Google", value: "188" },
+          { name: "Direto", value: "97" },
+        ],
+      },
+    ],
+  },
+
+  inAdReport: {
+    eyebrow: "Insights · Anúncios",
+    title: "Smart Report",
+    channelNames: ["Meta", "Google Ads"],
+    range: "Últimos 30 dias",
+    kpis: [
+      { label: "Gasto", value: "€ 18.240", change: "+6% vs. anterior" },
+      { label: "CTR", value: "1,42%", change: "+0,31 p.p." },
+      { label: "Custo por clique", value: "€ 0,61", change: "−14%" },
+      { label: "Custo por resultado", value: "€ 38,40", change: "−18%" },
+    ],
+    results: "Resultados",
+    spend: "Gasto",
+    daily: "Diário",
+    summaryLead: "O que mudou: ",
+    summary: "o custo por resultado caiu 18% com a migração do orçamento para o remarketing na Meta, que agora traz 41% dos resultados com 29% do gasto. A busca no Google está estável; o conjunto de prospecção ampla é o que precisa de revisão.",
+  },
+
+  inWinning: {
+    eyebrow: "Insights · Anúncios",
+    title: "🏆 Anúncios vencedores",
+    refresh: "Atualizar análise",
+    intro: "Mais conversões atribuídas no período, explicadas em relação a todos os outros anúncios que entregaram resultado.",
+    winners: [
+      { name: "Cinco ferramentas viraram uma", campaign: "Lançamento Enterprise Q4 · Meta · Remarketing", spend: "€ 2.140", conversions: "58", costPerResult: "€ 36,90", ctr: "1,86%" },
+      { name: "Seu cérebro de growth", campaign: "Lançamento Enterprise Q4 · Google · Pesquisa", spend: "€ 1.980", conversions: "31", costPerResult: "€ 63,87", ctr: "4,10%" },
+    ],
+    rank: "🏆 Vencedor nº {rank}",
+    cells: { spend: "Gasto", conversions: "Conversões", costPerResult: "Custo por resultado", ctr: "CTR" },
+    share: "{share}% das conversões",
+    measured: "Resultado medido",
+    measuredDetail: " · nº {rank} em conversões atribuídas: {conversions} resultados a {costPerResult} por resultado. Ranking por volume, não um veredito de rentabilidade.",
+    open: "Abrir criativo",
+    generate: "Gerar outro parecido",
+    shareOfSpend: "Parcela do gasto",
+    shareOfResults: "Parcela dos resultados",
+  },
+
+  inUtm: {
+    eyebrow: "Insights",
+    title: "Relatório de UTM",
+    range: "15 set – 14 out",
+    compare: "Comparar",
+    total: "14.000",
+    change: "+23% sessões",
+    columns: ["Origem", "Mídia", "Campanha", "Sessões"],
+    sessions: ["6.912", "3.204", "2.766", "1.118"],
+  },
+
+  inLive: {
+    eyebrow: "Insights · Anúncios",
+    title: "Relatório Q4 ao conselho",
+    range: "Últimos 30 dias",
+    live: "🌐 Relatório ao vivo",
+    kpis: [
+      { label: "Gasto", value: "€ 18.240" },
+      { label: "Resultados", value: "475" },
+      { label: "Custo por resultado", value: "€ 38,40" },
+      { label: "ROAS", value: "3,4×" },
+    ],
+    publicLink: "Link público",
+    copy: "Copiar",
+    note: "Relatório ao vivo: abre no seu período atual. Quem visualiza pode alterar o período.",
+    badges: ["Sempre atualizado", "Sem login"],
+    disable: "Desativar link público",
+  },
+};

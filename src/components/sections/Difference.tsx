@@ -1,24 +1,25 @@
-import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
 import { differentiators } from "@/lib/differentiators";
+import { LocalLink as Link } from "@/i18n/client";
+import { getT } from "@/i18n/server";
 
 export function Difference() {
+  const t = getT("home").difference;
   return (
     <section id="why-checkgrow" aria-labelledby="why-checkgrow-title" className="border-t border-line py-24 md:py-32">
       <div className="wrap">
         <Reveal className="max-w-2xl">
-          <p className="text-label text-muted">Why Checkgrow</p>
+          <p className="text-label text-muted">{t.label}</p>
           <h2 id="why-checkgrow-title" className="text-h1 mt-6 text-balance">
-            Not another AI tool. A growth brain your team learns with.
+            {t.title}
           </h2>
           <p className="mt-6 text-lg leading-relaxed text-muted">
-            Generic AI and single-purpose tools start from zero and stay outside
-            your business. Checkgrow is different in three ways that matter.
+            {t.body}
           </p>
         </Reveal>
 
         <div className="mt-14 grid gap-4 md:grid-cols-3">
-          {differentiators.map((d, i) => (
+          {differentiators(t.items).map((d, i) => (
             <Reveal key={d.id} delay={0.06 * i} className="h-full">
               <article className="flex h-full flex-col rounded-card bg-surface p-7 ring-1 ring-line">
                 <p className="text-label text-accent">{d.label}</p>
@@ -34,10 +35,10 @@ export function Difference() {
             href="/book-a-demo"
             className="inline-flex min-h-12 items-center rounded-full bg-foreground px-7 text-sm font-medium text-canvas transition-colors duration-200 hover:bg-accent"
           >
-            Book a demo
+            {t.bookDemo}
           </Link>
           <a href="#pricing" className="text-sm text-muted transition-colors duration-200 hover:text-foreground">
-            Compare Checkgrow with the typical growth stack <span aria-hidden>→</span>
+            {t.compare} <span aria-hidden>→</span>
           </a>
         </Reveal>
       </div>

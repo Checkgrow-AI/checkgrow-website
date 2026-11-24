@@ -1,9 +1,13 @@
 /* Display estimates only. The commercial plan amounts remain in EUR. */
+import { localeInfo, type Locale } from "../i18n/config.ts";
+
+/* Names live in the pricing dictionary (currencyMenu.names), reviewed per
+   language, so server and browser always render the same text. */
 export const currencies = [
-  { code: "EUR", name: "Euro", flag: "🇪🇺", symbol: "€" },
-  { code: "CHF", name: "Swiss franc", flag: "🇨🇭", symbol: "CHF " },
-  { code: "USD", name: "US dollar", flag: "🇺🇸", symbol: "US$" },
-  { code: "BRL", name: "Brazilian real", flag: "🇧🇷", symbol: "R$ " },
+  { code: "EUR", flag: "🇪🇺", symbol: "€" },
+  { code: "CHF", flag: "🇨🇭", symbol: "CHF " },
+  { code: "USD", flag: "🇺🇸", symbol: "US$" },
+  { code: "BRL", flag: "🇧🇷", symbol: "R$ " },
 ] as const;
 
 export type Currency = (typeof currencies)[number]["code"];
@@ -34,18 +38,28 @@ export function isExchangeRateSnapshot(value: unknown, now = Date.now()): value 
   ));
 }
 
-export function displayPrice(euros: number, currency: Currency, rate = 1): string {
+/* English keeps en-GB formatting; other languages use their own tag */
+const intlTag = (lang: Locale) => (lang === "en" ? "en-GB" : localeInfo[lang].tag);
+
+/* the currency's name in the visitor's language, from the dictionary */
+export const currencyName = (code: Currency, names: Readonly<Record<Currency, string>>) => names[code];
+
+export function displayPrice(euros: number, currency: Currency, rate = 1, lang: Locale = "en"): string {
   if (!Number.isFinite(euros) || euros < 0 || !Number.isFinite(rate) || rate <= 0) {
     throw new Error("Invalid display price or exchange rate");
   }
   // Remove floating-point noise before truncation; never round a fraction up.
   const raw = euros * rate;
   const converted = raw + Number.EPSILON * Math.abs(raw);
-  const amount = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(Math.floor(converted));
+  const whole = Math.floor(converted);
+  if (lang !== "en") {
+    return new Intl.NumberFormat(intlTag(lang), { style: "currency", currency, minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(whole);
+  }
+  const amount = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(whole);
   return `${currencies.find(({ code }) => code === currency)!.symbol}${amount}`;
 }
 
-export function rateDateLabel(date: string): string {
-  return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" })
+export function rateDateLabel(date: string, lang: Locale = "en"): string {
+  return new Intl.DateTimeFormat(intlTag(lang), { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" })
     .format(new Date(`${date}T00:00:00Z`));
 }

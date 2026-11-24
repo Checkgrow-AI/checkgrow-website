@@ -4,7 +4,7 @@ Archive plus one page per use case, in the News/Tutorials identity with product 
 
 | Piece | Role |
 |---|---|
-| `src/lib/useCases.ts` | Content: hero steps, problem and quote, four steps, "See it work", outcomes, testimonial, success-story proof, FAQ (incl. what Checkgrow doesn't do), related, keywords, share image |
+| `src/lib/useCases.ts` + `src/i18n/dictionaries/<lang>/useCases.ts` | Structure (slugs, mockups, dates, related) in lib; content in the dictionaries, all four languages: hero steps, problem and quote, four steps, "See it work", outcomes, testimonial, success-story proof, FAQ (incl. what Checkgrow doesn't do), related, keywords, share image |
 | `src/components/use-cases/mockups/` | 15 mockups (`UseCaseMockups.tsx`, kit, CSS): 1200×900 light-UI artboards in the Feature Illustrations style, modelled on the real platform (labels, tabs, statuses). Figures are illustrative demo data, never client data |
 | `src/components/use-cases/UseCaseStage.tsx` | Plays mockups through `FeatureStage` (hero: 3 tabs; steps: one animated screen) |
 | `src/app/use-cases/` | Archive and `[slug]` pages; Article + HowTo + FAQPage + BreadcrumbList JSON-LD |

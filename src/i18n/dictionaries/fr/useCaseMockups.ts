@@ -1,0 +1,301 @@
+import type { Localized } from "../../types";
+import type { useCaseMockups as source } from "../en/useCaseMockups";
+
+/* Maquettes produit des pages Cas d'usage : faux écrans Checkgrow. Chaque
+   chiffre garde sa valeur ; seul le format change. Les listes suivent les
+   données de la maquette une à une. */
+export const useCaseMockups: Localized<typeof source> = {
+  percent: "{n} %",
+
+  moCampaigns: {
+    eyebrow: "Campagnes",
+    title: "Briefs de campagne assistés par IA",
+    create: "+ Créer une campagne",
+    filters: ["Toutes · 6", "Actives · 4", "En pause · 2", "Ce trimestre"],
+    columns: ["Campagne", "Canaux", "Créations", "Budget", "Statut"],
+    rows: [
+      { name: "Lancement Enterprise T4", period: "1er oct. – 31 déc.", budget: "24 000 €" },
+      { name: "Webinaire Growth Brain", period: "6 oct. – 30 oct.", budget: "6 500 €" },
+      { name: "Programme partenaires agences", period: "15 sept. – 15 nov.", budget: "8 000 €" },
+      { name: "Retargeting · utilisateurs en essai", period: "En pause le 2 oct.", budget: "3 000 €" },
+    ],
+    spent: "{n} % dépensés",
+    active: "Active",
+    paused: "En pause",
+    live: "EN COURS · Lancement Enterprise T4",
+    stats: [
+      { label: "Dépenses", value: "9,8 k€" },
+      { label: "Leads", value: "212" },
+      { label: "CPA", value: "46 €" },
+    ],
+    underTarget: "12 € sous l’objectif",
+  },
+
+  moCreatives: {
+    eyebrow: "Campagne · Créations",
+    title: "Lancement Enterprise T4",
+    language: "Français",
+    generate: "Générer des visuels",
+    newCreative: "Nouvelle création",
+    channels: "Canaux",
+    channelNames: ["Google Ads", "Meta", "LinkedIn"],
+    count: "24 créations",
+    stage: "Notoriété",
+    stageHint: "Toucher de nouveaux acheteurs",
+    tiles: [
+      { title: "Votre cerveau de croissance, au même endroit", status: "Validée" },
+      { title: "Planifier, lancer, mesurer. Ensemble.", status: "Validée" },
+      { title: "Cinq outils devenus un seul", status: "Rédaction" },
+      { title: "Onboarding offert ce mois-ci", status: "Design" },
+    ],
+    format: "Fil · 4:5",
+    copies: "3 textes",
+    next: "Action",
+    nextHint: "6 créations · Réserver une démo",
+    open: "Ouvrir l’étape →",
+  },
+
+  moCalendar: {
+    eyebrow: "Calendrier",
+    title: "Octobre 2026",
+    region: "France",
+    views: ["Mois", "Semaine", "Liste"],
+    legend: ["Campagnes 3", "Objectifs 1", "Influenceurs 0", "Réseaux sociaux 6", "Tâches 3", "Temps forts 1"],
+    days: ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
+    bars: ["Lancement Enterprise T4", "Webinaire Growth Brain", "Programme partenaires agences"],
+    items: ["Reel teaser", "Revoir les créations", "Carrousel · 4 offres", "Invitation webinaire", "Mettre à jour les ICP", "Témoignage client", "Rapport au conseil", "Post de lancement"],
+  },
+
+  moIntegrations: {
+    eyebrow: "Intégrations",
+    title: "Connectez vos outils",
+    connectedCount: "5 connectés",
+    intro: "Connectez les outils que vous utilisez déjà. Vos publicités continuent de tourner là où elles sont ; Checkgrow lit leurs résultats.",
+    tiles: [
+      { name: "Google Analytics", detail: "GA4 · checkgrow.com" },
+      { name: "Meta Ads", detail: "2 comptes publicitaires" },
+      { name: "Google Ads", detail: "1 compte · 6 campagnes" },
+      { name: "Instagram", detail: "@checkgrow · 12,4 k" },
+      { name: "LinkedIn", detail: "Prospection, publications et pages" },
+      { name: "Notion", detail: "Espace de travail et bases de données" },
+    ],
+    connected: "✓ Connecté",
+    connect: "Connecter",
+    also: "AUSSI",
+    alsoItems: ["n8n", "Webhooks", "Checkgrow MCP"],
+    soon: "BIENTÔT",
+    soonItems: ["Slack", "TikTok", "Supabase"],
+  },
+
+  moHome: {
+    brand: "Checkgrow",
+    groups: [
+      { label: "Opérations", items: ["Grow", "Tâches", "Calendrier"] },
+      { label: "Marketing", items: ["Campagnes", "Creative Studio", "Réseaux sociaux", "Contenus", "Site web"] },
+      { label: "Ventes", items: ["Ciblage", "Prospection", "Leads"] },
+      { label: "Recherche et rapports", items: ["Concurrents", "Insights"] },
+    ],
+    eyebrow: "Assistant IA · Grow",
+    hello: "Bonjour, Ana.",
+    intro: { before: "Pour faire grandir ", name: "Checkgrow", after: ", commencez à discuter ou utilisez nos fonctionnalités ci-dessous :" },
+    placeholder: "Demandez à Grow tout ce que vous voulez sur votre entreprise…",
+    language: "Français",
+    model: "GPT-5.6 Luna",
+    actions: ["Créer et gérer des campagnes", "Insights sur vos données", "Étudier vos concurrents", "Mettre à jour vos connaissances", "Explorer votre Graphe de connaissances"],
+    knowledge: "Connaissances",
+    knowledgeValue: "77 %",
+    funnel: "Tunnel · 30 derniers jours",
+    funnelStats: [
+      { value: "21,9 k", label: "TOFU" },
+      { value: "971", label: "MOFU" },
+      { value: "178", label: "BOFU" },
+    ],
+    activeCampaigns: "Campagnes actives",
+    activeValue: "4",
+  },
+
+  kcCompleteness: {
+    eyebrow: "Centre de connaissances",
+    title: "Les connaissances de votre entreprise",
+    summary: "77 % · Connaissance experte. Tout ce que Checkgrow rédige part d’ici.",
+    upload: "Importer des connaissances",
+    sections: ["Profil de l’entreprise", "Marque", "Produits", "Personas", "Profils clients idéaux", "Cas d’usage"],
+    hint: "Ajoutez 2 cas d’usage",
+    drafting: "Rédaction à partir de vos fichiers",
+    ready: "3 sections prêtes pour votre relecture",
+  },
+
+  kcBrand: {
+    eyebrow: "Centre de connaissances · Marque",
+    title: "Ton de la marque",
+    edit: "Modifier avec Grow",
+    tones: ["Clair", "Assuré", "Chaleureux, jamais familier", "Des preuves, pas du battage"],
+    say: "NOUS DISONS",
+    sayItems: ["« Un seul endroit pour votre marketing »", "« Vos données, connectées »", "« Valider, puis publier »"],
+    avoid: "NOUS ÉVITONS",
+    avoidItems: ["« Révolutionnaire », « qui change la donne »", "Des promesses impossibles à mesurer", "Du jargon sans raison"],
+    messageLabel: "MESSAGE DE MARQUE",
+    message: "Le cerveau de croissance des scale-ups et des grandes entreprises : connaissances, campagnes, contenus et ventes dans une même boucle.",
+    used: "Utilisé dans chaque brouillon",
+    usedIn: "Campagnes · Contenus · Créations",
+  },
+
+  kcPersona: {
+    eyebrow: "Persona",
+    name: "Maya, responsable marketing pilotée par la donnée",
+    role: "Responsable growth · SaaS B2B, 50 à 200 personnes · Berlin",
+    primary: "Principale",
+    blocks: [
+      { title: "OBJECTIFS", items: ["Prouver ce que rapporte le marketing", "Lancer des campagnes sans agence"] },
+      { title: "DIFFICULTÉS", items: ["Cinq outils, cinq versions de la vérité", "Des rapports hebdo construits à partir d’exports"] },
+      { title: "OBJECTIONS", items: ["Encore un outil à apprendre", "L’IA parlera-t-elle comme nous ?"] },
+      { title: "OÙ ELLE S’INFORME", items: ["LinkedIn, communautés de pairs", "Webinaires et études de cas"] },
+    ],
+    usedBy: "UTILISÉE PAR",
+    usage: ["3 campagnes", "12 publications", "Sales Brain"],
+  },
+
+  kcGraph: {
+    title: "Graphe de connaissances",
+  },
+
+  kcDraft: {
+    status: "Brouillon · en attente de validation",
+    channel: "Post LinkedIn",
+    author: "Checkgrow",
+    meta: "Sponsorisé · 1er jet",
+    post: [
+      "Cinq outils, cinq versions de la vérité. Ça vous parle ?",
+      "La plupart des équipes reconstruisent chaque semaine le même rapport à partir d’exports. Nous avons créé Checkgrow pour que le plan et les résultats soient enfin au même endroit : campagnes, créations, calendrier et données en direct de GA4, Meta et Google Ads.",
+      "Onboarding offert ce mois-ci. 👇",
+    ],
+    edit: "Modifier avec Grow",
+    request: "Raccourcis-le et mentionne l’onboarding offert dès la première ligne.",
+    reply: "C’est fait. 38 mots de moins, l’offre dès la première ligne, et le même ton que celui défini dans votre Marque.",
+    changes: ["+ offre en tête", "− 38 mots"],
+    note: "La version enregistrée ne change qu’après votre validation.",
+    discard: "Ignorer",
+    approve: "Valider les modifications",
+  },
+
+  inFunnel: {
+    eyebrow: "Insights",
+    title: "Reporting de tunnel",
+    range: "30 derniers jours",
+    setup: "Configurer le tunnel",
+    rates: ["4,6 % →", "21,4 % →"],
+    events: "événements",
+    topEvents: "PRINCIPAUX ÉVÉNEMENTS",
+    topSources: "PRINCIPALES SOURCES",
+    stages: [
+      {
+        name: "TOFU",
+        label: "Visibilité",
+        total: "48 210",
+        events: [
+          { name: "Page vue", value: "24 880" },
+          { name: "Début de session", value: "14 302" },
+          { name: "Première visite", value: "9 028" },
+        ],
+        sources: [
+          { name: "Payant · Google", value: "16 940" },
+          { name: "Organique · Google", value: "11 210" },
+        ],
+      },
+      {
+        name: "MOFU",
+        label: "Engagement",
+        total: "2 214",
+        events: [
+          { name: "Vue page démo", value: "1 120" },
+          { name: "Vue tarifs", value: "702" },
+          { name: "Formulaire commencé", value: "392" },
+        ],
+        sources: [
+          { name: "Payant · LinkedIn", value: "804" },
+          { name: "Organique · Google", value: "611" },
+        ],
+      },
+      {
+        name: "BOFU",
+        label: "Conversion",
+        total: "474",
+        events: [
+          { name: "Démo réservée", value: "262" },
+          { name: "Formulaire envoyé", value: "212" },
+        ],
+        sources: [
+          { name: "Payant · Google", value: "188" },
+          { name: "Direct", value: "97" },
+        ],
+      },
+    ],
+  },
+
+  inAdReport: {
+    eyebrow: "Insights · Publicité",
+    title: "Smart Report",
+    channelNames: ["Meta", "Google Ads"],
+    range: "30 derniers jours",
+    kpis: [
+      { label: "Dépenses", value: "18 240 €", change: "+6 % vs période préc." },
+      { label: "CTR", value: "1,42 %", change: "+0,31 pt" },
+      { label: "Coût par clic", value: "0,61 €", change: "−14 %" },
+      { label: "Coût par résultat", value: "38,40 €", change: "−18 %" },
+    ],
+    results: "Résultats",
+    spend: "Dépenses",
+    daily: "Par jour",
+    summaryLead: "Ce qui a changé : ",
+    summary: "le coût par résultat a baissé de 18 % avec le transfert du budget vers le remarketing Meta, qui apporte désormais 41 % des résultats pour 29 % des dépenses. La recherche Google est stable ; c’est l’ensemble de prospection large qu’il faut revoir.",
+  },
+
+  inWinning: {
+    eyebrow: "Insights · Publicité",
+    title: "🏆 Annonces gagnantes",
+    refresh: "Actualiser l’analyse",
+    intro: "Le plus de conversions attribuées sur la période, expliquées par rapport à toutes les autres publicités qui ont généré des résultats.",
+    winners: [
+      { name: "Cinq outils devenus un seul", campaign: "Lancement Enterprise T4 · Meta · Remarketing", spend: "2 140 €", conversions: "58", costPerResult: "36,90 €", ctr: "1,86 %" },
+      { name: "Votre cerveau de croissance", campaign: "Lancement Enterprise T4 · Google · Recherche", spend: "1 980 €", conversions: "31", costPerResult: "63,87 €", ctr: "4,10 %" },
+    ],
+    rank: "🏆 Gagnante n° {rank}",
+    cells: { spend: "Dépenses", conversions: "Conversions", costPerResult: "Coût par résultat", ctr: "CTR" },
+    share: "{share} % des conversions",
+    measured: "Résultat mesuré",
+    measuredDetail: " · n° {rank} en conversions attribuées : {conversions} résultats à {costPerResult} par résultat. Classement en volume, pas un verdict de rentabilité.",
+    open: "Ouvrir le visuel",
+    generate: "Générer une annonce similaire",
+    shareOfSpend: "Part des dépenses",
+    shareOfResults: "Part des résultats",
+  },
+
+  inUtm: {
+    eyebrow: "Insights",
+    title: "Reporting UTM",
+    range: "15 sept. – 14 oct.",
+    compare: "Comparer",
+    total: "14 000",
+    change: "+23 % de sessions",
+    columns: ["Source", "Support", "Campagne", "Sessions"],
+    sessions: ["6 912", "3 204", "2 766", "1 118"],
+  },
+
+  inLive: {
+    eyebrow: "Insights · Publicité",
+    title: "Rapport T4 au conseil",
+    range: "30 derniers jours",
+    live: "🌐 Rapport en ligne",
+    kpis: [
+      { label: "Dépenses", value: "18 240 €" },
+      { label: "Résultats", value: "475" },
+      { label: "Coût par résultat", value: "38,40 €" },
+      { label: "ROAS", value: "3,4×" },
+    ],
+    publicLink: "Lien public",
+    copy: "Copier",
+    note: "Rapport en direct : il s’ouvre sur votre période actuelle. Les lecteurs peuvent modifier la période affichée.",
+    badges: ["Toujours à jour", "Sans connexion"],
+    disable: "Désactiver le lien public",
+  },
+};

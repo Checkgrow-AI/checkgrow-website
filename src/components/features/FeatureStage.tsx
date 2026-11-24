@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { useReducedMotion } from "motion/react";
+import { fmt } from "@/i18n/format";
 import type { FeatureStep } from "@/lib/features";
 import styles from "./Features.module.css";
 
@@ -16,16 +17,28 @@ const VISIBLE_W = 1040;
 const COMPACT_FRAME = 560;
 const COMPACT_W = 980;
 
+/* the stage's own accessible text, from the features namespace
+   (getT("features").stage), passed by the server component that renders it */
+export type FeatureStageLabels = {
+  readonly status: string;
+  readonly single: string;
+  readonly roleDescription: string;
+  readonly play: string;
+  readonly pause: string;
+  readonly tabs: string;
+};
+
 type Props = {
   id: string;
   name: string;
   background: string;
   backgroundColor: string;
-  steps: FeatureStep[];
+  steps: readonly FeatureStep[];
   screens: ReactNode[];
+  labels: FeatureStageLabels;
 };
 
-export function FeatureStage({ id, name, background, backgroundColor, steps, screens }: Props) {
+export function FeatureStage({ id, name, background, backgroundColor, steps, screens, labels }: Props) {
   const frameRef = useRef<HTMLDivElement>(null);
   const artboardRef = useRef<HTMLDivElement>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -118,8 +131,8 @@ export function FeatureStage({ id, name, background, backgroundColor, steps, scr
         onPointerLeave={() => setHovering(false)}
       >
         <Image src={background} alt="" fill sizes="(max-width: 767px) 100vw, 640px" className={styles.background} />
-        <div id={`${id}-stage`} role={single ? "img" : "tabpanel"} aria-labelledby={single ? undefined : `${id}-tab-${active}`} aria-label={single ? `${name}: ${steps[0].caption}` : undefined} aria-roledescription={single ? undefined : "animated product preview"}>
-          {!single && <p className="sr-only">{`${name}, step ${active + 1} of ${steps.length}: ${steps[active].caption}`}</p>}
+        <div id={`${id}-stage`} role={single ? "img" : "tabpanel"} aria-labelledby={single ? undefined : `${id}-tab-${active}`} aria-label={single ? fmt(labels.single, { name, caption: steps[0].caption }) : undefined} aria-roledescription={single ? undefined : labels.roleDescription}>
+          {!single && <p className="sr-only">{fmt(labels.status, { name, step: active + 1, total: steps.length, caption: steps[active].caption })}</p>}
           <div
             ref={artboardRef}
             className={styles.artboard}
@@ -141,7 +154,7 @@ export function FeatureStage({ id, name, background, backgroundColor, steps, scr
             type="button"
             className={styles.pause}
             aria-pressed={paused}
-            aria-label={paused ? `Play ${name} preview` : `Pause ${name} preview`}
+            aria-label={fmt(paused ? labels.play : labels.pause, { name })}
             onClick={() => setPaused((value) => !value)}
           >
             {paused ? (
@@ -154,7 +167,7 @@ export function FeatureStage({ id, name, background, backgroundColor, steps, scr
       </div>
 
       {!single && <>
-      <div className={styles.tabs} role="tablist" aria-label={`${name} in ${steps.length} steps`}>
+      <div className={styles.tabs} role="tablist" aria-label={fmt(labels.tabs, { name, total: steps.length })}>
         {steps.map((step, index) => (
           <button
             key={step.label}

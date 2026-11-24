@@ -1,0 +1,15 @@
+#!/bin/sh
+# Pre-push guard (docs/i18n.md): a push to main deploys to production, so
+# nothing goes out with a missing translation, a type error or lint errors.
+# Installed by `pnpm install` (prepare: git config core.hooksPath .githooks).
+# The same i18n check also runs inside `pnpm build`, so Easy Panel's Docker
+# build fails even if this hook is skipped.
+set -e
+echo "pre-push: i18n check"
+node scripts/i18n/check.mjs
+echo "pre-push: typecheck"
+pnpm exec tsc --noEmit --incremental false
+echo "pre-push: lint"
+pnpm lint
+echo "pre-push: mockup texts"
+node scripts/i18n/mockups.mjs --check

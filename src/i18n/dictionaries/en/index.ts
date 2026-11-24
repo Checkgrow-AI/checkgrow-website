@@ -1,0 +1,33 @@
+/* The English dictionary: one namespace per file. Every other language has
+   the same files, typed against these (src/i18n/types.ts). */
+import { common } from "./common";
+import { seo } from "./seo";
+import { home } from "./home";
+import { pricing } from "./pricing";
+import { faq } from "./faq";
+import { features } from "./features";
+import { sales } from "./sales";
+import { useCases } from "./useCases";
+import { useCaseMockups } from "./useCaseMockups";
+import { demo } from "./demo";
+import { testimonials } from "./testimonials";
+import { stories } from "./stories";
+import { tutorials } from "./tutorials";
+import { news } from "./news";
+
+export const en = {
+  common,
+  seo,
+  home,
+  pricing,
+  faq,
+  features,
+  sales,
+  useCases,
+  useCaseMockups,
+  demo,
+  testimonials,
+  stories,
+  tutorials,
+  news,
+} as const;

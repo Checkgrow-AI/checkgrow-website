@@ -1,10 +1,15 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
 import { newsCategoryHref } from "@/lib/newsCategories";
 import { PrivacySettingsLink } from "@/components/PrivacySettingsLink";
+import { LanguageSelector } from "@/components/LanguageSelector";
+import { LocalLink as Link, useLocalePath, useT } from "@/i18n/client";
 
 export function Footer({ homePage = true }: { homePage?: boolean }) {
-  const homeAnchor = (id: string) => `${homePage ? "" : "/"}#${id}`;
+  const t = useT("common").footer;
+  const lp = useLocalePath();
+  const homeAnchor = (id: string) => (homePage ? `#${id}` : lp(`/#${id}`));
   return (
     <footer className="-mt-px bg-surface pb-10 pt-4 text-foreground">
       <div className="wrap">
@@ -16,44 +21,41 @@ export function Footer({ homePage = true }: { homePage?: boolean }) {
               width={152}
               height={27}
             />
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">
-              AI Native Growth Marketing. One system where knowledge,
-              research, execution and measurement connect and compound.
-            </p>
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">{t.tagline}</p>
           </div>
           <nav className="flex flex-wrap gap-x-8 gap-y-3 text-sm text-muted">
             <a href={homeAnchor("platform")} className="transition-colors duration-200 hover:text-foreground">
-              Platform
+              {t.links.platform}
             </a>
             <a href={homeAnchor("solution")} className="transition-colors duration-200 hover:text-foreground">
-              Solution
+              {t.links.solution}
             </a>
             <a href={homeAnchor("stories")} className="transition-colors duration-200 hover:text-foreground">
-              Real stories
+              {t.links.stories}
             </a>
             <Link href="/features" className="transition-colors duration-200 hover:text-foreground">
-              Features
+              {t.links.features}
             </Link>
             <Link href="/sales" className="transition-colors duration-200 hover:text-foreground">
-              Sales
+              {t.links.sales}
             </Link>
             <Link href="/pricing" className="transition-colors duration-200 hover:text-foreground">
-              Pricing
+              {t.links.pricing}
             </Link>
             <Link href="/faq" className="transition-colors duration-200 hover:text-foreground">
-              FAQ
+              {t.links.faq}
             </Link>
             <Link href="/use-cases" className="transition-colors duration-200 hover:text-foreground">
-              Use cases
+              {t.links.useCases}
             </Link>
             <Link href={newsCategoryHref("success-stories")} className="transition-colors duration-200 hover:text-foreground">
-              Success stories
+              {t.links.successStories}
             </Link>
             <Link href="/news" className="transition-colors duration-200 hover:text-foreground">
-              News
+              {t.links.news}
             </Link>
             <Link href="/book-a-demo" className="transition-colors duration-200 hover:text-foreground">
-              Book a demo
+              {t.links.bookDemo}
             </Link>
             <a
               href="https://doc.checkgrow.com/"
@@ -61,7 +63,7 @@ export function Footer({ homePage = true }: { homePage?: boolean }) {
               rel="noopener noreferrer"
               className="transition-colors duration-200 hover:text-foreground"
             >
-              Documentation
+              {t.links.documentation}
             </a>
             <a
               href="https://doc.checkgrow.com/changelog"
@@ -69,20 +71,24 @@ export function Footer({ homePage = true }: { homePage?: boolean }) {
               rel="noopener noreferrer"
               className="transition-colors duration-200 hover:text-foreground"
             >
-              Changelog
+              {t.links.changelog}
             </a>
           </nav>
         </div>
         <div className="mt-10 flex flex-col justify-between gap-6 text-xs text-muted sm:flex-row sm:items-end">
-          <p>© Copyright Checkgrow · checkgrow.com</p>
+          <div className="flex flex-col gap-4">
+            <LanguageSelector variant="inline" />
+            <p>{t.copyright}</p>
+          </div>
           <div className="flex flex-col items-start gap-4 sm:items-end">
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
               <span className="w-full text-[10px] font-semibold uppercase tracking-[0.14em] text-muted sm:w-auto">
-                Backed by
+                {t.backedBy}
               </span>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/backers/aymo-ventures.png"
+                // i18n-allow: the backer's brand name, the same in every language
                 alt="AYMO Ventures"
                 width={120}
                 height={42}
@@ -93,7 +99,7 @@ export function Footer({ homePage = true }: { homePage?: boolean }) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/backers/eu.png"
-                alt="Co-funded by the European Union"
+                alt={t.euAlt}
                 width={120}
                 height={27}
                 loading="lazy"
@@ -107,7 +113,7 @@ export function Footer({ homePage = true }: { homePage?: boolean }) {
               rel="noopener noreferrer"
               className="transition-colors duration-200 hover:text-foreground"
             >
-              Privacy Policy
+              {t.privacyPolicy}
             </a>
             <a
               href="https://ai.checkgrow.com/terms"
@@ -115,26 +121,13 @@ export function Footer({ homePage = true }: { homePage?: boolean }) {
               rel="noopener noreferrer"
               className="transition-colors duration-200 hover:text-foreground"
             >
-              Terms of Service
+              {t.terms}
             </a>
-            <PrivacySettingsLink className="transition-colors duration-200 hover:text-foreground" />
+            <PrivacySettingsLink label={t.privacySettings} className="transition-colors duration-200 hover:text-foreground" />
             </div>
           </div>
         </div>
-        <p className="mt-8 text-[11px] leading-relaxed text-muted">
-          Checkgrow d.o.o., registered in Zagreb, Croatia, VAT ID:
-          HR16006061302, operates in accordance with applicable Croatian and
-          European Union regulations. We do not collect, process, or store any
-          personal or business data without explicit user consent or a lawful
-          basis as defined under the General Data Protection Regulation
-          (GDPR). All integrations and authentications are handled securely
-          through authorised providers, and we do not store passwords or
-          access third-party accounts without proper permission. All rights,
-          obligations, data usage terms, payment conditions, and compliance
-          details are fully outlined in our Terms and Conditions and Privacy
-          Policy. By using the Checkgrow platform, you acknowledge and agree
-          to these policies.
-        </p>
+        <p className="mt-8 text-[11px] leading-relaxed text-muted">{t.legal}</p>
       </div>
     </footer>
   );

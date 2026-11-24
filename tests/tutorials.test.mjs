@@ -1,7 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync, statSync } from 'node:fs';
-import { tutorials, getTutorial, tutorialPath, videoDuration, tutorialDate } from '../src/lib/tutorials.ts';
+import { findTutorial, tutorialPath, videoDuration, tutorialDate } from '../src/lib/tutorials.ts';
+import { tutorials as enTutorials } from '../src/i18n/dictionaries/en/tutorials.ts';
+/* the English site, built the way the pages build it */
+const tutorials = enTutorials.items;
+const getTutorial = (slug) => findTutorial(tutorials, slug);
 
 const asset = path => new URL(`../public${path}`, import.meta.url);
 const seconds = timestamp => timestamp.split(':').reduce((total, part) => total * 60 + Number(part), 0);

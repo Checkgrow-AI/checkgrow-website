@@ -4,9 +4,17 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import type { TutorialVideo as Video } from "@/lib/tutorials";
 import { videoDuration } from "@/lib/tutorials";
+import { useLang, useT } from "@/i18n/client";
+import { localeInfo } from "@/i18n/config";
+import { fmt } from "@/i18n/format";
 import styles from "./Tutorials.module.css";
 
+/* The page provides the "news" namespace. */
 export function TutorialVideo({ video }: { video: Video }) {
+  const t = useT("news").video;
+  const lang = useLang();
+  /* the title mid-sentence ("Play the short walkthrough") */
+  const inSentence = video.title.charAt(0).toLocaleLowerCase(localeInfo[lang].tag) + video.title.slice(1);
   const player = useRef<HTMLVideoElement>(null);
   const [started, setStarted] = useState(false);
   const [error, setError] = useState(false);
@@ -52,21 +60,21 @@ export function TutorialVideo({ video }: { video: Video }) {
           }}
           data-tutorial-video
         >
-          {video.captions && <track kind="captions" src={video.captions} srcLang="en" label="English (auto-generated)" />}
-          Your browser does not support embedded video. Use the video link below.
+          {video.captions && <track kind="captions" src={video.captions} srcLang="en" label={t.captionsLabel} />}
+          {t.unsupported}
         </video>
         {!started && (
-          <button type="button" className={styles.play} onClick={start} aria-label={`Play ${video.title.toLowerCase()}`}>
+          <button type="button" className={styles.play} onClick={start} aria-label={fmt(t.play, { title: inSentence })}>
             <Image src={video.poster} alt="" fill sizes="(min-width: 1200px) 900px, 100vw" className={styles.poster} />
             <span className={styles.playCircle} aria-hidden>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="m9 5 11 7-11 7V5Z" /></svg>
             </span>
-            <span className={styles.playLabel}>Play video <span>{videoDuration(video.durationSeconds)}</span></span>
+            <span className={styles.playLabel}>{t.playVideo} <span>{videoDuration(video.durationSeconds)}</span></span>
           </button>
         )}
       </div>
-      {error && <p className={styles.videoError} role="status">Playback could not start. Try the player controls, or <a href={video.src}>open the video directly</a>.</p>}
-      <noscript><p><a href={video.src}>Watch {video.title.toLowerCase()}</a></p></noscript>
+      {error && <p className={styles.videoError} role="status">{t.error.before}<a href={video.src}>{t.error.link}</a>{t.error.after}</p>}
+      <noscript><p><a href={video.src}>{fmt(t.watch, { title: inSentence })}</a></p></noscript>
     </figure>
   );
 }

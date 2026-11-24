@@ -1,22 +1,23 @@
 import { Reveal } from "@/components/Reveal";
-import { faqItems } from "@/lib/seo";
+import { getT } from "@/i18n/server";
 import type { ReactNode } from "react";
 
 /* Native <details> accordion: every answer is in the HTML (readable by
    search engines, AI crawlers and browsers without JavaScript), and the
    shared name keeps one question open at a time. */
-export function Faq({ items = faqItems, title = "Before you join", id = "faq", children }: {
-  items?: readonly { q: string; a: string }[];
-  title?: string;
+export function Faq({ items, title, id = "faq", children }: {
+  items: readonly { q: string; a: string }[];
+  title: string;
   id?: string;
   children?: ReactNode;
 }) {
+  const t = getT("faq");
   return (
     <section className="py-24 md:py-32" id={id}>
       <div className="wrap grid gap-12 md:grid-cols-[1fr_1.4fr]">
         <Reveal>
           <p className="text-label flex items-center gap-2.5 text-muted">
-            Questions
+            {t.eyebrow}
           </p>
           <h2 className="text-h2 mt-6">{title}</h2>
           {children}

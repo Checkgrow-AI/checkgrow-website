@@ -1,37 +1,17 @@
-export const shiftBenefits = [
-  {
-    id: "capacity",
-    title: "Automated research. Clearer decisions.",
-    description: "Research, briefs and reports, grounded in your brand. Less searching. More informed action.",
-    stat: "8–25 hrs",
-    label: "Recover capacity",
-    body: "of team time per month designed to come back from searching, briefing and reporting.",
-  },
-  {
-    id: "spend",
-    title: "Smarter campaigns. Connected channels.",
-    description: "Bring audience signals, budgets and tracking together across your tools and MCP integrations.",
-    stat: "3–10%",
-    label: "Protect spend",
-    body: "of addressable media budget designed to be protected from weak targeting and broken tracking.",
-  },
-  {
-    id: "throughput",
-    title: "Centralised marketing intelligence.",
-    description: "One source for your brand, audiences and approved knowledge. A stronger start for every campaign.",
-    stat: "40–70%",
-    label: "Increase throughput",
-    body: "faster first drafts across multi-channel campaigns, with human approval retained.",
-  },
-  {
-    id: "memory",
-    title: "Memory that speaks your data.",
-    description: "Turn approved work and performance into shared knowledge. Let your next move build on what worked.",
-    stat: "Every result",
-    label: "Compound intelligence",
-    body: "feeds the next decision. Approved strategies, assets and learnings keep improving the context.",
-  },
-] as const;
+/* The shift: four benefits told as a pinned scroll story. This module
+   keeps the ids, the order and the scroll logic; the copy (title,
+   description, stat, label, body) comes from the `home` dictionary
+   (shift.benefits, keyed by id). */
+
+export const SHIFT_BENEFIT_IDS = ["capacity", "spend", "throughput", "memory"] as const;
+export type ShiftBenefitId = (typeof SHIFT_BENEFIT_IDS)[number];
+
+export type ShiftBenefitCopy = { title: string; description: string; stat: string; label: string; body: string };
+
+/* the benefits in story order, with their copy */
+export function shiftBenefits(copy: Record<ShiftBenefitId, ShiftBenefitCopy>) {
+  return SHIFT_BENEFIT_IDS.map((id) => ({ id, ...copy[id] }));
+}
 
 /** The chapter for a pinned story's scroll progress (0–1): equal slices, last one held to the end. */
 export function shiftStepFromProgress(progress: number, count: number): number {

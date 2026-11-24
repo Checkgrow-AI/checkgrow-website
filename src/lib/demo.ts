@@ -29,39 +29,39 @@ export type ChallengeIcon =
   | "spark"
   | "shield";
 
+export type ChallengeGroupId = "growth" | "ai";
+
+/* ids and icons only: labels come from the demo dictionary (demo.form.challenges) */
 export const challengeGroups: {
-  label: string;
-  tag: string;
-  items: { id: ChallengeId; label: string; icon: ChallengeIcon }[];
+  id: ChallengeGroupId;
+  items: { id: ChallengeId; icon: ChallengeIcon }[];
 }[] = [
   {
-    label: "Growth",
-    tag: "Pipeline",
+    id: "growth",
     items: [
-      { id: "leads", label: "Get more leads", icon: "magnet" },
-      { id: "conversion", label: "A website that converts", icon: "funnel" },
-      { id: "cac", label: "Reduce my CAC", icon: "coins" },
-      { id: "ads", label: "Better Google, Meta or LinkedIn campaigns", icon: "meta" },
-      { id: "outreach", label: "Improve my sales outreach", icon: "send" },
-      { id: "creatives", label: "More and better creatives", icon: "image" },
-      { id: "content", label: "Generate more content", icon: "pen" },
-      { id: "geo", label: "Improve my GEO or SEO ranking", icon: "geo" },
+      { id: "leads", icon: "magnet" },
+      { id: "conversion", icon: "funnel" },
+      { id: "cac", icon: "coins" },
+      { id: "ads", icon: "meta" },
+      { id: "outreach", icon: "send" },
+      { id: "creatives", icon: "image" },
+      { id: "content", icon: "pen" },
+      { id: "geo", icon: "geo" },
     ],
   },
   {
-    label: "AI operations",
-    tag: "Team",
+    id: "ai",
     items: [
-      { id: "agents", label: "AI agentic force for my team", icon: "spark" },
-      { id: "compliance", label: "Better compliance with AI", icon: "shield" },
+      { id: "agents", icon: "spark" },
+      { id: "compliance", icon: "shield" },
     ],
   },
 ];
 
 export const MAX_CHALLENGES = 3;
 
-export const challengeLabel = (id: string) =>
-  challengeGroups.flatMap((g) => g.items).find((i) => i.id === id)?.label ?? id;
+export const challengeLabel = (id: string, labels: Readonly<Record<ChallengeId, string>>) =>
+  labels[id as ChallengeId] ?? id;
 
 /* Monthly ad spend on a stepped scale: fine steps where budgets are
    small, wider ones as they grow, so every budget has a close stop
@@ -82,47 +82,36 @@ export const formatSpend = (value: number) =>
 export const describeSpend = (value: number) =>
   value === 0 || value >= 1_000_000 ? formatSpend(value) : `~${formatSpend(value)}`;
 
+/* ids only: labels come from the demo dictionary (demo.form.team.options) */
 export const aiTeamOptions = [
-  { id: "1", label: "Just me" },
-  { id: "2-5", label: "2–5 people" },
-  { id: "6-20", label: "6–20 people" },
-  { id: "21-50", label: "21–50 people" },
-  { id: "51-100", label: "51–100 people" },
-  { id: "100+", label: "100+ people" },
-];
+  { id: "1" },
+  { id: "2-5" },
+  { id: "6-20" },
+  { id: "21-50" },
+  { id: "51-100" },
+  { id: "100+" },
+] as const;
+export type AiTeamId = (typeof aiTeamOptions)[number]["id"];
 
 /* Goal suggestions follow the first answer: the visitor taps rather
    than types. Order matters; the first suggestions shown are the ones
-   tied to the challenges picked, then the general ones. */
-const goalsByChallenge: Record<ChallengeId, string[]> = {
-  leads: ["Double qualified leads", "Build a predictable pipeline"],
-  conversion: ["Lift website conversion rate", "Fix drop-offs in the funnel"],
-  cac: ["Cut CAC by 30%", "Scale ads profitably"],
-  ads: ["Scale ads profitably", "Reach decision-makers on LinkedIn"],
-  outreach: ["Book more sales meetings", "Personalise outreach at scale"],
-  content: ["Publish content every week", "Grow organic reach"],
-  creatives: ["Ship fresh creatives every week", "Find winning ad creatives"],
-  geo: ["Get cited in AI answers", "Rank on page one of Google"],
-  agents: ["Run marketing with AI agents", "Automate weekly reporting"],
-  compliance: ["AI governance and compliance", "Roll AI out to the whole team"],
+   tied to the challenges picked, then the general ones. The goal texts
+   are copy (demo.form.goals.suggestions); a picked goal is sent as the
+   text the visitor saw. */
+export type GoalSuggestions = {
+  byChallenge: Readonly<Record<ChallengeId, readonly string[]>>;
+  general: readonly string[];
 };
-
-const generalGoals = [
-  "Launch in a new market",
-  "Grow revenue this year",
-  "Outpace our competitors",
-  "Launch a new product",
-];
 
 export const MAX_GOALS = 5;
 
-export function suggestGoals(challenges: string[], picked: string[]) {
+export function suggestGoals(challenges: string[], picked: string[], copy: GoalSuggestions) {
   const out: string[] = [];
   for (const id of challenges) {
-    for (const goal of goalsByChallenge[id as ChallengeId] ?? []) {
+    for (const goal of copy.byChallenge[id as ChallengeId] ?? []) {
       if (!out.includes(goal)) out.push(goal);
     }
   }
-  for (const goal of generalGoals) if (!out.includes(goal)) out.push(goal);
+  for (const goal of copy.general) if (!out.includes(goal)) out.push(goal);
   return out.filter((g) => !picked.includes(g)).slice(0, 6);
 }

@@ -10,8 +10,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { SALES_FILM } from "@/lib/salesFilm";
+import { useT } from "@/i18n/client";
 
 export function SalesFilm() {
+  const t = useT("sales").film;
   const videoRef = useRef<HTMLVideoElement>(null);
   const [watching, setWatching] = useState(false);
   const watchingRef = useRef(false);
@@ -63,14 +65,14 @@ export function SalesFilm() {
         width={1920}
         height={1080}
         className="block aspect-video h-auto w-full bg-raised"
-        aria-label="Checkgrow Sales walkthrough"
+        aria-label={t.label}
       />
       {!watching && (
         <button
           type="button"
           onClick={watchWithSound}
           className="group absolute inset-0 flex items-end justify-center p-4 sm:items-center"
-          aria-label="Watch the Checkgrow Sales walkthrough with sound"
+          aria-label={t.watchLabel}
         >
           <span className="inline-flex min-h-12 items-center gap-3 whitespace-nowrap rounded-full bg-canvas/85 py-2 pl-2 pr-5 text-sm font-medium text-foreground shadow-raised ring-1 ring-white/10 backdrop-blur-sm transition-colors duration-200 group-hover:bg-foreground group-hover:text-canvas sm:text-base">
             <span className="flex size-9 items-center justify-center rounded-full bg-foreground text-canvas transition-colors duration-200 group-hover:bg-canvas group-hover:text-foreground" aria-hidden>
@@ -78,8 +80,8 @@ export function SalesFilm() {
                 <path d="M7 4.5v15l12.5-7.5L7 4.5z" />
               </svg>
             </span>
-            Watch with sound
-            <span className="text-muted transition-colors duration-200 group-hover:text-canvas/70">3 min</span>
+            {t.watch}
+            <span className="text-muted transition-colors duration-200 group-hover:text-canvas/70">{t.length}</span>
           </span>
         </button>
       )}

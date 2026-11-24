@@ -17,32 +17,25 @@
    Everything scroll-linked is scrubbed in the engine's own rAF (motion
    scroll-timelines mis-compile these bindings), idle life comes from
    pulsation/twinkle/breathing, and the cursor bends nearby particles.
-   Reduced motion gets a single static scene. */
+   Reduced motion gets a single static scene.
+   Every visible word comes from the `home` dictionary (hero.*); the
+   layouts below follow the order of its lists. */
 
-import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import { HERO_SCROLL_SCREENS, heroStoryProgress, platformLocalProgress, platformWordFrame, platformDetailFrame, platformIconOpacity } from "@/lib/heroTimeline";
-import { PLATFORM_WORDS, PLATFORM_DETAILS, createPlatformConstellation } from "@/lib/platformConstellation";
+import { createPlatformConstellation } from "@/lib/platformConstellation";
 import { useStableVh } from "@/lib/useStableVh";
 import { createTeamOrbit, teamOrbitPoint, teamPortraitScale } from "@/lib/teamOrbit";
 import { Trustpilot } from "@/components/Trustpilot";
 import { RotatingWord } from "@/components/RotatingWord";
 import { CheckLoader } from "@/components/CheckLoader";
-
-const NODES = [
-  "Brand",
-  "ICP",
-  "Use Cases",
-  "Products",
-  "Competitors",
-  "Social Media",
-  "Tracking",
-  "Campaigns",
-];
+import { LocalLink as Link, useT } from "@/i18n/client";
+import { fmt } from "@/i18n/format";
 
 /* organic cluster layout for the knowledge bullets (units of S, sizes
-   mixed like a tag constellation; k = cursor-parallax depth) */
+   mixed like a tag constellation; k = cursor-parallax depth), in the order
+   of the dictionary's hero.knowledge.nodes */
 const LABEL_LAYOUT: Array<{ x: number; y: number; s: "sm" | "md" | "lg" | "xl"; k: number }> = [
   { x: -0.56, y: -0.2, s: "lg", k: 0.05 },   // Brand
   { x: -0.15, y: -0.18, s: "sm", k: 0.028 }, // ICP
@@ -74,46 +67,10 @@ const LABEL_SIZE: Record<string, string> = {
   xl: "px-5 py-2.5 text-base sm:text-lg",
 };
 
-/* the biggest value of each knowledge bullet, typed into its tooltip
-   (same order as NODES); `marks` phrases render bold in #6373FF */
-const TIPS: Array<{ text: string; marks: string[] }> = [
-  {
-    text: "Get instant access to your brand design system and keep full context for your AI generations.",
-    marks: ["full context"],
-  },
-  {
-    text: "Know exactly who buys and why. Your ideal customer profiles feed every campaign and message.",
-    marks: ["ideal customer profiles"],
-  },
-  {
-    text: "Map every use case your product solves so the AI sells the right one to the right buyer.",
-    marks: ["right buyer"],
-  },
-  {
-    text: "Store your products once and keep every AI output accurate about what you sell.",
-    marks: ["AI output accurate"],
-  },
-  {
-    text: "Track your competitors' ads and positioning with live AI gap analysis.",
-    marks: ["competitors' ads"],
-  },
-  {
-    text: "Find the conversations that matter and publish on-brand content across every channel.",
-    marks: ["Find the conversations"],
-  },
-  {
-    text: "Have all your funnel events tracked and AI reporting within a click.",
-    marks: ["funnel events"],
-  },
-  {
-    text: "Generate Meta, Google and LinkedIn campaign strategies and link them with your paid channels.",
-    marks: ["Meta", "Google", "LinkedIn"],
-  },
-];
-
 /* split a tip into plain/marked segments so the typewriter can style the
-   highlighted phrases while it types through them */
-function tipSegments(tip: { text: string; marks: string[] }) {
+   highlighted phrases (`marks`, bold in #6373FF) while it types through
+   them */
+function tipSegments(tip: { text: string; marks: readonly string[] }) {
   const ranges = tip.marks
     .map((m) => {
       const start = tip.text.indexOf(m);
@@ -149,28 +106,18 @@ const CHANNELS: Array<{ src: string; alt: string }> = [
   { src: "/brand-icons/tiktok.svg", alt: "TikTok" },
 ];
 
-const TEAM: Array<{ img: string; alt: string }> = [
-  { img: "/case-studies/ivo-witrina.avif", alt: "Founder" },
-  { img: "/people/fabian-analytics.png", alt: "Fabian, analytics" },
-  { img: "/case-studies/milena-wespa.avif", alt: "CFO" },
-  { img: "/people/sofia-campaign-manager.png", alt: "Sofia, campaign manager" },
-  { img: "/case-studies/amir-qubinets.avif", alt: "Founder" },
-  { img: "/people/roberta-go-to-market.png", alt: "Roberta, go-to-market" },
-  { img: "/case-studies/vikram-minka.avif", alt: "CPO" },
-  { img: "/people/mikai-marketing-manager.png", alt: "Mikai, marketing manager" },
-  { img: "/case-studies/petar-curic.jpg", alt: "CEO" },
-  { img: "/people/thomas.png", alt: "Thomas" },
-];
-
-const URL_TEXT = "yourwebsite.com";
-
-const CHAT_PROMPTS = [
-  "Which Meta ads are converting the best?",
-  "How many leads did we get this month?",
-  "How many signups did we have this month?",
-  "Tell me more about my competitors' ads.",
-  "Let's comment on a few LinkedIn posts.",
-  "What are the latest trends for us this week?",
+/* the team portraits; their alt texts are hero.team.portraits, same order */
+const TEAM: Array<{ img: string }> = [
+  { img: "/case-studies/ivo-witrina.avif" },
+  { img: "/people/fabian-analytics.png" },
+  { img: "/case-studies/milena-wespa.avif" },
+  { img: "/people/sofia-campaign-manager.png" },
+  { img: "/case-studies/amir-qubinets.avif" },
+  { img: "/people/roberta-go-to-market.png" },
+  { img: "/case-studies/vikram-minka.avif" },
+  { img: "/people/mikai-marketing-manager.png" },
+  { img: "/case-studies/petar-curic.jpg" },
+  { img: "/people/thomas.png" },
 ];
 
 const CHAT_MODELS = [
@@ -292,26 +239,28 @@ function buildParticles(count: number): P[] {
 
 /* the AI Assistant chat that rests on top of the brain in scene 1 */
 function HeroChat() {
+  const copy = useT("home").hero.chat;
+  const prompts = copy.prompts;
   const [text, setText] = useState("");
   const [model, setModel] = useState(0);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const raf = requestAnimationFrame(() => setText(CHAT_PROMPTS[0]));
+      const raf = requestAnimationFrame(() => setText(prompts[0]));
       return () => cancelAnimationFrame(raf);
     }
     let prompt = 0;
     let chars = 0;
     let timer: ReturnType<typeof setTimeout>;
     const tick = () => {
-      const full = CHAT_PROMPTS[prompt];
+      const full = prompts[prompt];
       if (chars < full.length) {
         chars += 1;
         setText(full.slice(0, chars));
         timer = setTimeout(tick, 42);
       } else {
         timer = setTimeout(() => {
-          prompt = (prompt + 1) % CHAT_PROMPTS.length;
+          prompt = (prompt + 1) % prompts.length;
           chars = 0;
           setText("");
           setModel(prompt % CHAT_MODELS.length);
@@ -321,14 +270,14 @@ function HeroChat() {
     };
     timer = setTimeout(tick, 700);
     return () => clearTimeout(timer);
-  }, []);
+  }, [prompts]);
 
   return (
     <div className="rounded-card bg-raised/95 p-4 shadow-raised ring-1 ring-line backdrop-blur-sm">
       <div className="flex items-start gap-3">
         <CheckLoader dotColor="var(--color-foreground)" className="mt-0.5 shrink-0" />
         <div className="min-w-0 flex-1">
-          <p className="text-label text-muted">AI Assistant</p>
+          <p className="text-label text-muted">{copy.label}</p>
           <p className="mt-1.5 min-h-6 text-[15px] font-medium leading-snug">
             {text}
             <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse rounded bg-accent align-middle" />
@@ -336,10 +285,10 @@ function HeroChat() {
         </div>
       </div>
       <div className="mt-2.5 flex items-center justify-end gap-1.5 text-[11px] text-muted">
-        Model:
+        {copy.model}
         <Image
           src={CHAT_MODELS[model].src}
-          alt={`${CHAT_MODELS[model].name} model in the Checkgrow AI marketing assistant`}
+          alt={fmt(copy.modelAlt, { name: CHAT_MODELS[model].name })}
           width={14}
           height={14}
           className="size-3.5"
@@ -352,8 +301,8 @@ function HeroChat() {
 
 /* tooltip body: the animated mark + the bullet's value, typewritten */
 function TipContent({ index }: { index: number }) {
-  const tip = TIPS[index];
-  const text = tip.text;
+  const node = useT("home").hero.knowledge.nodes[index];
+  const text = node.tip;
   const [chars, setChars] = useState(0);
 
   useEffect(() => {
@@ -384,9 +333,9 @@ function TipContent({ index }: { index: number }) {
           <CheckLoader dotColor="var(--color-foreground)" className="origin-top-left scale-[0.7]" />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="text-label text-muted">{NODES[index]}</p>
+          <p className="text-label text-muted">{node.label}</p>
           <p className="mt-1 min-h-9 text-sm font-medium leading-snug">
-            {tipSegments(tip).map((seg, i) => {
+            {tipSegments({ text, marks: node.marks }).map((seg, i) => {
               const take = Math.max(0, Math.min(seg.text.length, chars - seg.offset));
               if (take === 0) return null;
               const slice = seg.text.slice(0, take);
@@ -407,6 +356,9 @@ function TipContent({ index }: { index: number }) {
 }
 
 export function HeroV2() {
+  const home = useT("home");
+  const copy = home.hero;
+  const website = copy.onboarding.website;
   const wrapRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const introCopyRef = useRef<HTMLDivElement>(null);
@@ -538,8 +490,8 @@ export function HeroV2() {
         })) : undefined,
       });
     };
-    const labelPos = NODES.map(() => ({ x: 0, y: 0 }));
-    const labelO = NODES.map(() => 0);
+    const labelPos = LABEL_LAYOUT.map(() => ({ x: 0, y: 0 }));
+    const labelO = LABEL_LAYOUT.map(() => 0);
 
     const resize = () => {
       const nw = wrap.clientWidth;
@@ -558,8 +510,8 @@ export function HeroV2() {
       isNarrow = w < 375;
       canvas.width = w * dpr;
       canvas.height = h * dpr;
-      canvas.style.width = `${w}px`;
-      canvas.style.height = `${h}px`;
+      canvas.style.width = w + "px";
+      canvas.style.height = h + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       S = Math.min(w, h) * (isMobile ? 0.34 : 0.4);
       cxA = isMobile ? w * 0.5 : w * 0.7;
@@ -635,7 +587,7 @@ export function HeroV2() {
 
       /* bullet cluster: organic drift + cursor parallax, staggered
          organic appearance */
-      for (let i = 0; i < NODES.length; i++) {
+      for (let i = 0; i < LABEL_LAYOUT.length; i++) {
         const L = LABEL_LAYOUT[i];
         const di = rand01((i + 1) * 127.1);
         labelO[i] =
@@ -695,7 +647,7 @@ export function HeroV2() {
 
       /* breathing particle halos around the visible bullets */
       if (labelsA > 0.01) {
-        for (let i = 0; i < NODES.length; i++) {
+        for (let i = 0; i < LABEL_LAYOUT.length; i++) {
           if (labelO[i] < 0.02) continue;
           const L = LABEL_LAYOUT[i];
           const orbitR = L.s === "xl" ? 58 : L.s === "lg" ? 50 : 42;
@@ -796,8 +748,8 @@ export function HeroV2() {
 
       /* scroll-scrubbed typing */
       if (typedRef.current) {
-        const chars = Math.round(ramp(p, 0.18, 0.26) * URL_TEXT.length);
-        const txt = URL_TEXT.slice(0, chars);
+        const chars = Math.round(ramp(p, 0.18, 0.26) * website.length);
+        const txt = website.slice(0, chars);
         if (typedRef.current.textContent !== txt) typedRef.current.textContent = txt;
       }
 
@@ -935,7 +887,7 @@ export function HeroV2() {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerleave", onLeave);
     };
-  }, [stableVhRef, staticHero]);
+  }, [stableVhRef, staticHero, website]);
 
   return (
     <section
@@ -961,30 +913,27 @@ export function HeroV2() {
           <div className="hero-intro-wrap wrap w-full">
             <div ref={introCopyRef} className="hero-intro-copy max-w-xl lg:max-w-2xl">
               <p className="hero-intro-label text-label flex items-center gap-2.5 text-muted">
-                AI Native Growth Marketing
+                {copy.label}
               </p>
               <h1 className="hero-intro-title text-display mt-6 text-balance">
-                The go-to-market engine that learns your{" "}
+                {copy.title.before}{" "}
                 <span className="relative whitespace-nowrap">
                   <RotatingWord />
                 </span>
-                .
+                {copy.title.after}
               </h1>
               <p className="hero-intro-body mt-7 max-w-xl text-lg leading-relaxed text-muted">
-                Growth shouldn&apos;t depend on who&apos;s in the room.
-                Checkgrow keeps everything your company knows in one growth
-                operating system: learning, improving, and working for every
-                team. It turns knowledge into customers and recognition.
+                {copy.body}
               </p>
               <div className="hero-intro-trust mt-8">
-                <Trustpilot />
+                <Trustpilot copy={home.trustpilot} />
               </div>
               <div className="hero-intro-form mt-6">
                 <Link
                   href="/book-a-demo"
                   className="inline-flex min-h-12 items-center justify-center rounded-full bg-foreground px-7 text-base font-medium text-canvas transition-colors duration-200 hover:bg-accent max-sm:w-full"
                 >
-                  Book a demo
+                  {copy.bookDemo}
                 </Link>
               </div>
             </div>
@@ -1008,7 +957,7 @@ export function HeroV2() {
             <div ref={l2Ref} className="pointer-events-none absolute inset-0" style={{ opacity: 0 }}>
               <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
                 <h2 className="text-h1 text-balance">
-                  Start onboarding your brand.
+                  {copy.onboarding.title}
                 </h2>
                 <div className="mt-6 flex min-h-12 w-full max-w-xs items-center rounded-full bg-raised px-5 shadow-soft ring-1 ring-line sm:max-w-sm">
                   <span className="text-base font-medium">
@@ -1028,9 +977,9 @@ export function HeroV2() {
                 className="absolute left-1/2 top-1/2 w-full px-6 text-center"
                 style={{ opacity: 0, transform: "translate(-50%, -50%)" }}
               >
-                <h2 className="text-h2 text-balance">Build your context</h2>
+                <h2 className="text-h2 text-balance">{copy.knowledge.title}</h2>
               </div>
-              {NODES.map((n, i) => (
+              {copy.knowledge.nodes.map(({ label: n }, i) => (
                 <div
                   key={n}
                   ref={(el) => {
@@ -1081,7 +1030,7 @@ export function HeroV2() {
                   </span>
                 </div>
               ))}
-              {PLATFORM_WORDS.map((word, i) => (
+              {copy.platform.words.map((word, i) => (
                 <h3
                   key={word}
                   ref={(el) => { wordRefs.current[i] = el; }}
@@ -1091,7 +1040,7 @@ export function HeroV2() {
                   {word}
                 </h3>
               ))}
-              {PLATFORM_DETAILS.map((detail, i) => (
+              {copy.platform.details.map((detail, i) => (
                 <span
                   key={detail}
                   ref={(el) => { detailRefs.current[i] = el; }}
@@ -1115,13 +1064,13 @@ export function HeroV2() {
                       letterSpacing: "-0.045em",
                     }}
                   >
-                    One learning brain, one team, compounding growth.
+                    {copy.team.title}
                   </h2>
                   <Link
                     href="/book-a-demo"
                     className="mt-5 inline-flex min-h-12 max-w-full items-center justify-center rounded-full bg-foreground px-5 text-sm font-medium text-canvas transition-colors duration-200 hover:bg-accent max-[374px]:px-3 max-[374px]:text-xs"
                   >
-                    Book a demo
+                    {copy.bookDemo}
                   </Link>
                 </div>
               </div>
@@ -1136,7 +1085,7 @@ export function HeroV2() {
                 >
                   <Image
                     src={m.img}
-                    alt={m.alt}
+                    alt={copy.team.portraits[i]}
                     width={48}
                     height={48}
                     className="size-11 rounded-full object-cover shadow-raised ring-2 ring-line max-[374px]:size-8 sm:size-12"
@@ -1150,7 +1099,7 @@ export function HeroV2() {
               ref={hintRef}
               className="hero-scroll-hint pointer-events-none absolute inset-x-0 bottom-6 hidden flex-col items-center gap-1.5 text-muted lg:flex"
             >
-              <span className="text-label">Scroll</span>
+              <span className="text-label">{copy.scroll}</span>
               <svg width="12" height="8" viewBox="0 0 12 8" aria-hidden className="animate-bounce">
                 <path
                   d="M1.5 1.5 L6 6 L10.5 1.5"

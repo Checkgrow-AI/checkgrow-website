@@ -2,7 +2,9 @@
 
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { motion } from "motion/react";
-import { currencies, type Currency } from "@/lib/pricingCurrency";
+import { useT } from "@/i18n/client";
+import { fmt } from "@/i18n/format";
+import { currencies, currencyName, type Currency } from "@/lib/pricingCurrency";
 
 type Props = {
   value: Currency;
@@ -19,8 +21,11 @@ export function CurrencySelect({ value, ratesReady, onChange }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const listId = useId();
-  const selected = currencies.find(({ code }) => code === value)!;
-  const enabled = currencies.filter(({ code }) => ratesReady || code === "EUR");
+  const t = useT("pricing").currencyMenu;
+  /* names in the visitor's language (pricing dictionary) */
+  const options = currencies.map((currency) => ({ ...currency, name: currencyName(currency.code, t.names) }));
+  const selected = options.find(({ code }) => code === value)!;
+  const enabled = options.filter(({ code }) => ratesReady || code === "EUR");
   const activeCode = ratesReady ? active : "EUR";
 
   useEffect(() => {
@@ -96,7 +101,7 @@ export function CurrencySelect({ value, ratesReady, onChange }: Props) {
         id="pricing-currency"
         type="button"
         role="combobox"
-        aria-label={`Display currency: ${selected.name} (${value})`}
+        aria-label={fmt(t.trigger, { name: selected.name, code: value })}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={open ? listId : undefined}
@@ -117,13 +122,13 @@ export function CurrencySelect({ value, ratesReady, onChange }: Props) {
         <motion.ul
           id={listId}
           role="listbox"
-          aria-label="Display currency"
+          aria-label={t.label}
           initial={{ opacity: 0, y: above ? 4 : -4 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.15, ease: "easeOut" }}
           className={`absolute left-0 z-50 w-64 max-w-[calc(100vw-48px)] rounded-card bg-raised p-1.5 shadow-raised ring-1 ring-line ${above ? "bottom-full mb-2" : "top-full mt-2"}`}
         >
-          {currencies.map((currency) => {
+          {options.map((currency) => {
             const disabled = currency.code !== "EUR" && !ratesReady;
             const isSelected = currency.code === value;
             const isActive = currency.code === activeCode;

@@ -576,3 +576,14 @@ body {
   from { transform: scaleY(0); }
   to { transform: scaleY(1); }
 }
+
+/* Translations (docs/i18n.md). German compounds and long French or
+   Portuguese words must break, never push the page sideways. Scoped by
+   language, so English renders exactly as before. Hyphenation follows
+   <html lang>; German headings hyphenate as in print (body text does not). */
+:is(:lang(de), :lang(fr), :lang(pt-BR)) :is(h1, h2, h3, h4, button, [role="tab"], dt, th, td, figcaption) {
+  overflow-wrap: break-word;
+}
+:lang(de) :is(h1, h2, h3, h4) {
+  hyphens: auto;
+}

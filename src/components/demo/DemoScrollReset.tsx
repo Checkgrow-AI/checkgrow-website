@@ -1,12 +1,15 @@
 "use client";
 
 import { useLayoutEffect } from "react";
+import { useLocalePath } from "@/i18n/client";
 
 /* Next's automatic scroll handling can preserve an existing position.
    Every arrival at the booking page should start with its heading, regardless
    of which CTA or router.push brought the visitor here. Keep form-step
    scrolling and the scroll restoration of all other pages untouched. */
 export function DemoScrollReset() {
+  /* the booking page in the visitor's language ("/book-a-demo", "/de/book-a-demo") */
+  const bookPath = useLocalePath()("/book-a-demo");
   useLayoutEffect(() => {
     let frame = 0;
     const toTop = () => window.scrollTo({ top: 0, left: 0, behavior: "instant" });
@@ -26,14 +29,14 @@ export function DemoScrollReset() {
       const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("a[href]") : null;
       if (!link || link.hasAttribute("download") || (link.target && link.target !== "_self")) return;
       const target = new URL(link.href, window.location.href);
-      if (target.origin === window.location.origin && target.pathname.replace(/\/$/, "") === "/book-a-demo" && !target.hash) reset();
+      if (target.origin === window.location.origin && target.pathname.replace(/\/$/, "") === bookPath && !target.hash) reset();
     };
     document.addEventListener("click", onClick);
     return () => {
       cancelAnimationFrame(frame);
       document.removeEventListener("click", onClick);
     };
-  }, []);
+  }, [bookPath]);
 
   return null;
 }

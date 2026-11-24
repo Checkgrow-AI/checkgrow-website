@@ -10,7 +10,7 @@ The approved Tutorials editorial design now serves a News hub. It keeps the exis
 - `/tutorials` and `/tutorials/:slug`: permanent 308 redirects to the matching News routes. Nested media URLs do not redirect.
 - Sitemap, canonicals, social metadata, structured data and `llms.txt` use the News routes.
 
-Tutorial media and typed content remain reusable. Add tutorial records in `src/lib/tutorials.ts`; the News catalogue includes them automatically. Category definitions, catalogue records and security copy are in `src/lib/news.ts`. Keep the shared article template and video player rather than adding page-specific duplicates. Future security releases need their own dated content record and rendering selection before adding them to the catalogue; do not reuse the October article for a new date.
+Tutorial media and typed content remain reusable. Add tutorial records in `src/i18n/dictionaries/<lang>/tutorials.ts` for all four languages (types and helpers in `src/lib/tutorials.ts`); the News catalogue includes them automatically. Category definitions, catalogue records and security copy are in `src/lib/news.ts`. Keep the shared article template and video player rather than adding page-specific duplicates. Future security releases need their own dated content record and rendering selection before adding them to the catalogue; do not reuse the October article for a new date.
 
 ## Security editorial review, 2 October 2026
 

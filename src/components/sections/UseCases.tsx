@@ -1,20 +1,25 @@
-import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
 import { FeatureStory } from "@/components/features/FeatureStory";
-import { features, homeFeatures, featurePath } from "@/lib/features";
+import { LocalLink as Link } from "@/i18n/client";
+import { fmt } from "@/i18n/format";
+import { getT } from "@/i18n/server";
+import { featuresOf, homeFeaturesOf, featurePath } from "@/lib/features";
 
 export function UseCases() {
+  const copy = getT("features");
+  const t = copy.home;
+  const features = featuresOf(copy);
+  const homeFeatures = homeFeaturesOf(features);
   return (
     <section className="border-t border-line bg-surface py-24 md:py-32" id="use-cases">
       <div className="wrap">
         <Reveal className="max-w-2xl">
-          <p className="text-label text-muted">In practice</p>
+          <p className="text-label text-muted">{t.eyebrow}</p>
           <h2 className="text-h1 mt-6 text-balance">
-            What a week inside Checkgrow looks like.
+            {t.title}
           </h2>
           <p className="mt-6 text-lg leading-relaxed text-muted">
-            Six features, one shared brain. Watch each one work in three
-            steps, grounded in your knowledge and feeding the next.
+            {t.intro}
           </p>
         </Reveal>
 
@@ -29,10 +34,10 @@ export function UseCases() {
             href={featurePath()}
             className="inline-flex min-h-12 items-center gap-2 rounded-full border border-control-line px-7 text-sm font-semibold text-foreground transition-colors duration-200 hover:border-muted hover:bg-raised"
           >
-            See all features <span aria-hidden>→</span>
+            {t.seeAll} <span aria-hidden>→</span>
           </Link>
           <p className="text-sm text-muted">
-            {features.length} features, from Content and Social Media to Sales.
+            {fmt(t.count, { n: features.length })}
           </p>
         </Reveal>
       </div>

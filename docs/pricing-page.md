@@ -12,7 +12,7 @@ Reference patterns reviewed: [Linear pricing](https://linear.app/pricing) and [N
 
 ## Synchronisation contract
 
-- `src/lib/pricing.ts` owns plans, allowances, CTAs, annual discount, price formatting, pricing description and pricing FAQs.
+- `src/lib/pricing.ts` owns plan ids, prices, allowances, annual discount and price formatting; plan names, descriptions, CTA labels and the pricing FAQs live in the `pricing` and `faq` dictionaries (`src/i18n/dictionaries/<lang>/`), in all four languages. Prices written in FAQ answers are checked against each language by `pnpm i18n:check` (figures).
 - Both pages render `Pricing`. `standalone` changes the opening spacing, heading level and quick links only. The dedicated page renders its opening content immediately, without waiting for a scroll reveal.
 - Both pages' FAQs use `pricingFaqItems`; the dedicated page uses that same data in FAQ structured data and Markdown.
 - Customer logos reuse `LogoMarquee`; the quote reads `testimonials`; results read non-draft entries in `successStories`. Keep measurement periods, context and links attached to customer figures.

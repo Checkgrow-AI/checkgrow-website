@@ -1,0 +1,58 @@
+/* Shared chrome: header, footer, language selector and suggestion,
+   skip links, not-found pages. */
+export const common = {
+  nav: {
+    homeLabel: "Checkgrow home",
+    links: {
+      platform: "Platform",
+      solution: "Solution",
+      stories: "Real stories",
+      features: "Features",
+      pricing: "Pricing",
+      faq: "FAQ",
+    },
+    bookDemo: "Book a demo",
+    openMenu: "Open menu",
+    closeMenu: "Close menu",
+  },
+  skipToContent: "Skip to content",
+  language: {
+    label: "Language",
+    choose: "Choose language",
+    suggestion: "This page is available in English.",
+    switchTo: "Switch to English",
+    dismiss: "Dismiss",
+  },
+  footer: {
+    tagline: "AI Native Growth Marketing. One system where knowledge, research, execution and measurement connect and compound.",
+    links: {
+      platform: "Platform",
+      solution: "Solution",
+      stories: "Real stories",
+      features: "Features",
+      sales: "Sales",
+      pricing: "Pricing",
+      faq: "FAQ",
+      useCases: "Use cases",
+      successStories: "Success stories",
+      news: "News",
+      bookDemo: "Book a demo",
+      documentation: "Documentation",
+      changelog: "Changelog",
+    },
+    copyright: "© Copyright Checkgrow · checkgrow.com",
+    backedBy: "Backed by",
+    euAlt: "Co-funded by the European Union",
+    privacyPolicy: "Privacy Policy",
+    terms: "Terms of Service",
+    privacySettings: "Privacy Settings",
+    legal:
+      "Checkgrow d.o.o., registered in Zagreb, Croatia, VAT ID: HR16006061302, operates in accordance with applicable Croatian and European Union regulations. We do not collect, process, or store any personal or business data without explicit user consent or a lawful basis as defined under the General Data Protection Regulation (GDPR). All integrations and authentications are handled securely through authorised providers, and we do not store passwords or access third-party accounts without proper permission. All rights, obligations, data usage terms, payment conditions, and compliance details are fully outlined in our Terms and Conditions and Privacy Policy. By using the Checkgrow platform, you acknowledge and agree to these policies.",
+  },
+  notFound: {
+    title: "Page not found",
+    body: "This page does not exist or has moved. Start from the homepage, or browse News for our latest guides and customer stories.",
+    home: "Go to the homepage",
+    browseNews: "Browse News",
+  },
+} as const;

@@ -1,25 +1,32 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
-import { successStories } from "@/lib/successStories";
-import { testimonials } from "@/lib/testimonials";
+import { LocalLink as Link } from "@/i18n/client";
+import { fmt } from "@/i18n/format";
+import { getT } from "@/i18n/server";
+import { publishedStories } from "@/lib/successStories";
+import type { Testimonial } from "@/lib/testimonials";
 
 /* Published customer evidence only. Keep quotes, figures, context and
    attribution tied to the same records used by Real stories and News. */
-const stories = successStories.filter((story) => !story.draft && ["Cuixmala", "Barner"].includes(story.company));
-const testimonial = testimonials.find((item) => item.id === "sophia-ahrel")!;
+const STORY_COMPANIES = ["Cuixmala", "Barner"];
+const TESTIMONIAL_ID = "sophia-ahrel";
+/* every story lists its facts as Industry, Location, Market, Period covered */
+const PERIOD_FACT = 3;
 
 export function CustomerProof() {
+  const t = getT("pricing").proof;
+  const stories = publishedStories(getT("stories").items).filter((story) => !story.draft && STORY_COMPANIES.includes(story.company));
+  const testimonial: Testimonial = getT("testimonials").items.find((item) => item.id === TESTIMONIAL_ID)!;
   return (
     <section id="customer-results" className="py-16 md:py-24" aria-labelledby="pricing-proof-title">
       <div className="wrap">
         <Reveal className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="max-w-xl">
-            <p className="text-label text-muted">The work behind the numbers</p>
-            <h2 id="pricing-proof-title" className="text-h2 mt-6 text-balance">Real teams. Documented results.</h2>
+            <p className="text-label text-muted">{t.eyebrow}</p>
+            <h2 id="pricing-proof-title" className="text-h2 mt-6 text-balance">{t.title}</h2>
           </div>
           <Link href="/news?category=success-stories" className="inline-flex min-h-11 items-center gap-3 self-start whitespace-nowrap text-sm text-muted underline underline-offset-4 transition-colors hover:text-foreground md:self-auto">
-            Explore customer stories <span aria-hidden>↗</span>
+            {t.explore} <span aria-hidden>↗</span>
           </Link>
         </Reveal>
 
@@ -52,16 +59,16 @@ export function CustomerProof() {
                   </div>
                   <p className="mt-5 text-h2 text-accent">{story.heroStats[0].value}</p>
                   <p className="mt-2 max-w-md text-base leading-relaxed text-muted">{story.heroStats[0].label}.</p>
-                  <p className="mt-3 text-xs leading-relaxed text-muted">{story.about.facts.find((fact) => fact.label === "Period covered")?.value}</p>
+                  <p className="mt-3 text-xs leading-relaxed text-muted">{story.about.facts[PERIOD_FACT]?.value}</p>
                   <Link href={`/news/${story.slug}`} className="mt-4 inline-flex min-h-11 items-center gap-3 text-sm font-medium underline underline-offset-4 transition-colors hover:text-accent">
-                    Read the {story.company} story <span aria-hidden>↗</span>
+                    {fmt(t.readStory, { company: story.company })} <span aria-hidden>↗</span>
                   </Link>
                 </article>
               </Reveal>
             ))}
           </div>
         </div>
-        <p className="mt-6 max-w-3xl text-xs leading-relaxed text-muted">Customer results reflect individual engagements and the periods shown. They are not a guarantee of future performance. Read each story for the approach, measurement and context.</p>
+        <p className="mt-6 max-w-3xl text-xs leading-relaxed text-muted">{t.disclaimer}</p>
       </div>
     </section>
   );

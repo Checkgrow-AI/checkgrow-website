@@ -10,6 +10,7 @@
 
 import { DEMO_MINUTES, DEMO_TIME_ZONE } from "./demo";
 import { googleApi } from "./google";
+import { localeInfo, type Locale } from "@/i18n/config";
 
 const TO = process.env.DEMO_LEAD_EMAIL_TO || "sales@checkgrow.com";
 
@@ -30,6 +31,8 @@ export type LeadEmail = {
   meetUrl?: string;
   problem?: string;
   campaign?: string;
+  /* the visitor's site language; English leads keep the email unchanged */
+  language?: Locale;
 };
 
 const esc = (v: string) =>
@@ -86,6 +89,7 @@ export async function sendLeadEmail(lead: LeadEmail) {
     ["Goals", lead.goals.length ? lead.goals.join("; ") : "not given"],
     ["Visitor time zone", lead.visitorTimeZone || "unknown"],
   );
+  if (lead.language && lead.language !== "en") rows.push(["Language", localeInfo[lead.language].name]);
   if (lead.meetUrl) rows.push(["Google Meet", lead.meetUrl]);
   if (lead.eventUrl) rows.push(["Calendar event", lead.eventUrl]);
   if (lead.problem) rows.push(["Problem", lead.problem]);

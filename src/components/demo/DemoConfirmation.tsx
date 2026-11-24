@@ -7,8 +7,10 @@
    GTM) fires here, once per booking. */
 
 import { useEffect, useMemo, useSyncExternalStore } from "react";
-import Link from "next/link";
 import { motion } from "motion/react";
+import { LocalLink as Link, useLang, useT } from "@/i18n/client";
+import { localeInfo } from "@/i18n/config";
+import { fmt } from "@/i18n/format";
 import { DEMO_MINUTES } from "@/lib/demo";
 import { DEMO_BOOKING_KEY, saveDemoBooking, type DemoBookingSummary } from "@/lib/demoBooking";
 import { DemoIcon, type DemoIconName } from "./DemoIcons";
@@ -41,6 +43,10 @@ const enter = (delay: number) => ({
 });
 
 export function DemoConfirmation() {
+  const t = useT("demo").confirmation;
+  const lang = useLang();
+  /* English keeps en-GB dates and times ("Monday 24 November", 14:00) */
+  const intlTag = lang === "en" ? "en-GB" : localeInfo[lang].tag;
   const raw = useSyncExternalStore(noSubscribe, readRaw, () => null);
   const booking = useMemo(() => parse(raw), [raw]);
 
@@ -61,19 +67,19 @@ export function DemoConfirmation() {
     const tz = booking.timeZone || undefined;
     const start = new Date(booking.slot);
     const end = new Date(start.getTime() + DEMO_MINUTES * 60_000);
-    day = new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: tz }).format(start);
-    const hm = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: tz });
+    day = new Intl.DateTimeFormat(intlTag, { weekday: "long", day: "numeric", month: "long", timeZone: tz }).format(start);
+    const hm = new Intl.DateTimeFormat(intlTag, { hour: "2-digit", minute: "2-digit", timeZone: tz });
     time = `${hm.format(start)}–${hm.format(end)}`;
   }
 
   const prep: { icon: DemoIconName; title: string; body: string }[] = [
     {
       icon: "radar",
-      title: "Competitor scan",
-      body: site ? `Who competes with ${site}, and how they market.` : "Who you compete with, and how they market.",
+      title: t.prep.competitors.title,
+      body: site ? fmt(t.prep.competitors.bodyNamed, { site }) : t.prep.competitors.body,
     },
-    { icon: "browser", title: "Website and conversion review", body: "Where visitors drop off, and what to fix first." },
-    { icon: "spark", title: "Your AI growth strategy", body: "A first plan and report, ready to walk through together." },
+    { icon: "browser", title: t.prep.website.title, body: t.prep.website.body },
+    { icon: "spark", title: t.prep.strategy.title, body: t.prep.strategy.body },
   ];
 
   return (
@@ -101,14 +107,13 @@ export function DemoConfirmation() {
         </motion.span>
 
         <motion.p className="text-label mt-8 text-accent" {...enter(0.15)}>
-          Demo confirmed
+          {t.eyebrow}
         </motion.p>
         <motion.h1 id="confirm-title" className="text-h1 mt-4 text-balance" {...enter(0.22)}>
-          {nice ? `You're booked, ${nice}.` : "Your demo is booked."}
+          {nice ? fmt(t.titleNamed, { name: nice }) : t.title}
         </motion.h1>
         <motion.p className="mt-5 max-w-xl text-lg leading-relaxed text-muted" {...enter(0.3)}>
-          Thank you for your time. We can&apos;t wait to show you Checkgrow
-          running on your own business.
+          {t.thanks}
         </motion.p>
 
         <motion.div className={styles.confirmCard} {...enter(0.38)}>
@@ -124,6 +129,7 @@ export function DemoConfirmation() {
               </li>
               <li>
                 <DemoIcon name="video" className="shrink-0 text-accent" />
+                {/* i18n-allow: product name, the same in every language */}
                 <span>Google Meet</span>
               </li>
             </ul>
@@ -133,11 +139,12 @@ export function DemoConfirmation() {
             <span>
               {booking ? (
                 <>
-                  The calendar invite and Meet link are on their way to{" "}
-                  <span className="text-foreground">{booking.email}</span>.
+                  {t.inviteTo.before}{" "}
+                  <span className="text-foreground">{booking.email}</span>
+                  {t.inviteTo.after}
                 </>
               ) : (
-                "Check your inbox: the calendar invite and Google Meet link are on their way."
+                t.inviteGeneric
               )}
             </span>
           </p>
@@ -145,7 +152,7 @@ export function DemoConfirmation() {
       </div>
 
       <motion.div className="mx-auto mt-16 max-w-4xl" {...enter(0.48)}>
-        <h2 className="text-label text-center text-muted">Before the call, we prepare</h2>
+        <h2 className="text-label text-center text-muted">{t.prepTitle}</h2>
         <ul className={styles.prepRow}>
           {prep.map((p) => (
             <li key={p.title} className={styles.prepItem}>
@@ -160,13 +167,13 @@ export function DemoConfirmation() {
             href="/features"
             className="inline-flex min-h-12 items-center rounded-full bg-foreground px-7 text-sm font-medium text-canvas transition-colors duration-200 hover:bg-accent"
           >
-            Explore the features
+            {t.exploreFeatures}
           </Link>
           <Link
             href="/"
             className="inline-flex min-h-12 items-center rounded-full px-5 text-sm font-medium text-muted transition-colors duration-200 hover:text-foreground"
           >
-            Back to the homepage
+            {t.backHome}
           </Link>
         </div>
       </motion.div>

@@ -4,6 +4,8 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Reveal } from "@/components/Reveal";
 import { problemCardState, problemTools } from "@/lib/problemCards";
+import { useT } from "@/i18n/client";
+import { fmt } from "@/i18n/format";
 import styles from "./Problem.module.css";
 
 const columnsQuery = "(min-width: 640px)";
@@ -16,6 +18,8 @@ function subscribeColumns(callback: () => void) {
 }
 
 export function Problem() {
+  const t = useT("home").problem;
+  const tools = problemTools(t.tools);
   const [active, setActive] = useState<string | null>(null);
   const triggers = useRef<Record<string, HTMLButtonElement | null>>({});
   const columns = useSyncExternalStore(subscribeColumns, getColumns, getServerColumns);
@@ -39,25 +43,22 @@ export function Problem() {
     <section id="the-problem" aria-labelledby="problem-title" className="py-24 md:py-32">
       <div className={`wrap ${styles.layout}`}>
         <Reveal>
-          <p className="text-label text-muted">The problem</p>
+          <p className="text-label text-muted">{t.label}</p>
           <h2 id="problem-title" className="text-h1 mt-6 max-w-md">
-            Every marketing tool starts from zero.
+            {t.title}
           </h2>
           <p className="mt-6 max-w-md text-lg leading-relaxed text-muted">
-            Five tools means explaining your business five times, then again
-            for every new campaign, hire and AI prompt. Nothing carries
-            forward. Nothing remembers what actually worked. You shouldn&apos;t
-            need a data analyst to read your own funnel.
+            {t.body}
           </p>
           <p className="mt-4 text-sm text-muted">
-            Tap a tool to see what really goes wrong inside it.
+            {t.hint}
           </p>
         </Reveal>
 
         <div className={styles.board}>
           {([0, 1] as const).map(column => (
             <div key={column} className={styles.column} data-problem-column={column}>
-              {problemTools.filter(tool => tool.column === column).map(tool => {
+              {tools.filter(tool => tool.column === column).map(tool => {
                 const { expanded, covered, top, height } = problemCardState(tool, active, columns);
                 return (
                   <motion.article
@@ -78,7 +79,7 @@ export function Problem() {
                         id={`problem-toggle-${tool.id}`}
                         type="button"
                         className={styles.trigger}
-                        aria-label={`${expanded ? "Close " : ""}${tool.name}`}
+                        aria-label={expanded ? fmt(t.close, { name: tool.name }) : tool.name}
                         aria-describedby={`problem-context-${tool.id}`}
                         aria-expanded={expanded}
                         aria-controls={`problem-details-${tool.id}`}

@@ -54,7 +54,7 @@ The listing and social images use supplied `checkgrow-bg-05-cobalt-sky` artwork.
 
 ## Add another tutorial
 
-1. Add a typed record to `src/lib/tutorials.ts`, with a unique slug, publication date, original copy, steps and two video records (short, then full).
+1. Add a record to `src/i18n/dictionaries/en/tutorials.ts` and its translations in `pt-BR/`, `de/` and `fr/` (types in `src/lib/tutorials.ts`), with a unique slug, publication date, original copy, steps and two video records (short, then full).
 2. Place the cover, `social.webp` (1200×630), posters, captions and compressed recordings in `public/tutorials/<slug>/`. Set exact paths and rounded duration seconds in the record. Keep each recording below 15 MB.
 3. The News listing, static article route at `/news/<slug>`, canonical, structured data and sitemap derive from that record automatically. Add a descriptive article link to `public/llms.txt`.
 4. Run typecheck, lint, all tests and the production build. Preview the new article on desktop and phone, play both videos, check captions, anchors and the existing early-access link. Publishing remains a separate approved action.

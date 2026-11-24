@@ -1,5 +1,6 @@
-export const PLATFORM_WORDS = ["Marketing", "Operations", "Sales", "Research", "Report"];
-export const PLATFORM_DETAILS = ["Campaigns", "Social Media", "Website", "Leads", "Competitors", "Conversions", "AI Agents", "Insights"];
+/* The platform scene's five capability words and eight feature labels are
+   copy (`home` dictionary: hero.platform.words / details); the layout
+   below places five words and eight details, in that order. */
 
 type Size = { width: number; height: number };
 type Point = { x: number; y: number; visible: boolean };

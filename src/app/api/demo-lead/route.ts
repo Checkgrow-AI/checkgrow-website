@@ -55,6 +55,7 @@ export async function POST(req: Request) {
       visitorTimeZone: typeof body.timeZone === "string" ? body.timeZone.slice(0, 64) : "",
       campaign: [lead.last?.utm_source, lead.last?.utm_medium, lead.last?.utm_campaign].filter(Boolean).join(" / "),
       problem: `Leads webhook: ${forward.deliveryError}`,
+      language: lead.language,
     })
       .then(() => ({ emailed: true }))
       .catch((err: unknown) => {

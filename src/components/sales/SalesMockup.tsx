@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { salesMockups, type SalesMockupKey } from "./salesMockups.generated";
+import { useMockupHtml } from "@/i18n/client";
 
 /* One animated Sales screen. The design is a fixed 1080×1080 board whose
    card sits 36px in; we show just the card (1008px) and scale it to the
@@ -17,6 +18,8 @@ export function SalesMockup({ id, label, className = "" }: { id: SalesMockupKey;
   const [playing, setPlaying] = useState(false);
   const [reduced, setReduced] = useState(false);
   const mockup = salesMockups[id];
+  /* mockup text in the page's language: the sales page provides the table */
+  const html = useMockupHtml(mockup.html);
 
   useEffect(() => {
     const el = ref.current;
@@ -49,7 +52,7 @@ export function SalesMockup({ id, label, className = "" }: { id: SalesMockupKey;
         aria-hidden
         className="absolute left-0 top-0 origin-top-left"
         style={{ width: 1080, height: 1080, transform: `scale(${scale}) translate(-${INSET}px, -${INSET}px)` }}
-        dangerouslySetInnerHTML={{ __html: mockup.html }}
+        dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>
   );

@@ -7,6 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Checkgrow",
     short_name: "Checkgrow",
+    // i18n-allow: the web app manifest is one file for every language (browsers read it, no page shows it)
     description: "The growth brain for scale-ups and enterprise: knowledge, campaigns, content and sales in one loop.",
     start_url: "/",
     display: "browser",
