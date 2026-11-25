@@ -14,7 +14,7 @@ export const pricing: Localized<typeof source> = {
     "eyebrow": "Preise",
     "title": "Die Plattform, alle Marken oder das ganze Team.",
     "intro": "Jeder Plan läuft auf demselben Firmen-Brain. Wählen Sie eine Marke, alle Marken oder unsere Spezialisten, die Ihr Wachstum mit Ihnen vorantreiben.",
-    "bookDemo": "Demo buchen",
+    "bookDemo": "Mit uns sprechen",
     "optionsLabel": "Preisoptionen",
     "billingLabel": "Abrechnungszeitraum",
     "monthly": "Monatlich",
@@ -50,7 +50,7 @@ export const pricing: Localized<typeof source> = {
       "name": "Business",
       "audience": "Für eine Marke",
       "description": "Die komplette Plattform für eine Marke, mit Platz für das ganze Team.",
-      "cta": "Demo buchen",
+      "cta": "Mit uns sprechen",
       "ctaNote": "Keine Kreditkarte nötig",
       "specs": [
         {
@@ -84,7 +84,7 @@ export const pricing: Localized<typeof source> = {
       "name": "Agency",
       "audience": "Für Agenturen und Multi-Brand-Teams",
       "description": "Jede Marke und jeder Kunde im eigenen Workspace, mit unserem Team an Ihrer Seite.",
-      "cta": "Demo buchen",
+      "cta": "Mit uns sprechen",
       "ctaNote": "Keine Kreditkarte nötig",
       "specs": [
         {
@@ -231,7 +231,7 @@ export const pricing: Localized<typeof source> = {
     "fullStackNote": "Ohne Nutzerlizenzen, Mehrverbrauch und die Zeit, alle Tools miteinander zu verbinden.",
     "from": "Ab {price}/Monat",
     "checkgrowBody": "Ein Betriebssystem, eine verlässliche Datenbasis und eine Rechnung.",
-    "bookDemo": "Demo buchen",
+    "bookDemo": "Mit uns sprechen",
     "footnote": "Drittanbieter-Tools sind Beispiele ihrer Kategorie. Die Preise sind typische monatliche Listenpreise vergleichbarer Pläne. Geschätzte Werte ohne Nachkommastellen in {currency}; Checkgrow rechnet weiterhin in EUR ab.",
     "rows": {
       "brandKnowledge": {

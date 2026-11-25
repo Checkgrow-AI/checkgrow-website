@@ -7,7 +7,7 @@ export const home: Localized<typeof source> = {
     title: { before: "O motor de go-to-market que aprende", after: "." },
     rotatingWords: ["seu produto", "seus compradores", "seu mercado", "seus canais"],
     body: "Crescer não pode depender de quem está na sala. A Checkgrow reúne tudo o que sua empresa sabe em um só sistema operacional de growth, que aprende, melhora e trabalha para cada equipe. Ela transforma conhecimento em clientes e reconhecimento.",
-    bookDemo: "Agendar uma demo",
+    bookDemo: "Fale com a gente",
     chat: {
       label: "Assistente de IA",
       model: "Modelo:",
@@ -118,7 +118,7 @@ export const home: Localized<typeof source> = {
     restart: "Reiniciar o filme da plataforma",
     mute: "Silenciar o filme da plataforma",
     unmute: "Ativar o som do filme da plataforma",
-    bookDemo: "Agendar uma demo",
+    bookDemo: "Fale com a gente",
   },
   problem: {
     label: "O problema",
@@ -210,7 +210,7 @@ export const home: Localized<typeof source> = {
         body: "Grandes empresas e scale-ups estão pedindo para hospedar a Checkgrow por conta própria, e construímos a plataforma para isso. O conhecimento da sua empresa fica estruturado e pronto para qualquer modelo de IA que você escolher, dentro do seu perímetro de segurança e sob as suas próprias regras de soberania de dados. Sem ficar preso a um fornecedor ou a um modelo.",
       },
     },
-    bookDemo: "Agendar uma demo",
+    bookDemo: "Fale com a gente",
     compare: "Compare a Checkgrow com o stack de growth típico",
   },
   caseStudies: {
@@ -225,7 +225,7 @@ export const home: Localized<typeof source> = {
       body: "Veja a Checkgrow executar um go-to-market real de ponta a ponta: 2 minutos e 41 segundos, uma tomada, sem cortes.",
       watch: "Assista à nossa demo",
       hide: "Ocultar a demo",
-      bookDemo: "Agendar uma demo",
+      bookDemo: "Fale com a gente",
       badge: "2:41 · demo real, sem cortes",
       question: "Seu marketing está difícil e você ainda tem dúvidas?",
     },
@@ -278,7 +278,7 @@ export const home: Localized<typeof source> = {
       label: "Para grandes empresas",
       title: "Sistemas de IA sob medida que impulsionam o crescimento de grandes empresas.",
       body: "Equipes grandes recebem o mesmo sistema de growth, moldado ao jeito como já trabalham: um núcleo de conhecimento que alimenta cada campanha, agente e relatório. Cada vez mais, grandes empresas e scale-ups pedem para hospedá-lo por conta própria: construímos implantações self-hosted e desenvolvidas sob medida para o seu stack, os seus requisitos de segurança e a sua escala, com o conhecimento da empresa estruturado para qualquer modelo de IA e mantido sob a sua soberania de dados.",
-      bookDemo: "Agendar uma demo",
+      bookDemo: "Fale com a gente",
     },
   },
   faqLink: "Ver todas as perguntas",
@@ -286,7 +286,7 @@ export const home: Localized<typeof source> = {
     logoAlt: "Logo da plataforma de growth marketing Checkgrow",
     title: "Hoje é fácil criar produtos. A Checkgrow facilita vendê-los.",
     body: "Agende uma demo de 30 minutos sobre a sua empresa, seus concorrentes e seu site. Saia com a Checkgrow configurada e um plano claro do que fazer em seguida.",
-    bookDemo: "Agendar uma demo",
+    bookDemo: "Fale com a gente",
   },
   scrollRail: {
     goTo: "Ir para {label}",
@@ -297,7 +297,7 @@ export const home: Localized<typeof source> = {
       "use-cases": "Funcionalidades",
       pricing: "Preços",
       faq: "FAQ",
-      waitlist: "Agendar uma demo",
+      waitlist: "Fale com a gente",
     },
   },
   flow: {

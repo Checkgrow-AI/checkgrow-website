@@ -178,7 +178,9 @@ for (const abs of walk(SRC)) {
       const parts = [node.head.text, ...node.templateSpans.map((s) => s.literal.text)];
       const raw = parts.join(" {} ");
       const glued = parts.join("");
-      if (!/^[/#?.]/.test(glued.trim()) && looksLikeProse(raw) && !allowed(node)) err("hardcoded", `${file}:${line(node)}`, `template "${raw.slice(0, 70)}"`);
+      /* copy has words separated by spaces in its own text; selectors,
+         paths and ids built with ${} do not */
+      if (!/^[/#?.]/.test(glued.trim()) && /\p{L}{2,}\s+\p{L}/u.test(glued) && looksLikeProse(raw) && !allowed(node)) err("hardcoded", `${file}:${line(node)}`, `template "${raw.slice(0, 70)}"`);
     }
     ts.forEachChild(node, visit);
   };

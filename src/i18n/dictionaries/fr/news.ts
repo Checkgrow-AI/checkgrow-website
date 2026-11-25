@@ -43,7 +43,7 @@ export const news: Localized<typeof source> = {
     securityByline: "Bilan de sécurité",
     contentsLabel: "Sur cette page",
     faqLink: "FAQ",
-    bookDemo: "Réserver une démo",
+    bookDemo: "Parlons-en",
   },
   tutorial: {
     contents: { shortVideo: "Présentation courte", steps: "Pas à pas", fullVideo: "Présentation complète" },

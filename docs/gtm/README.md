@@ -16,7 +16,7 @@ code.
 | `consent_status` (`ucCategory.marketing`) | Usercentrics load and every consent change | Usercentrics |
 | `demo_form_start` | first answer on /book-a-demo | `src/lib/track.ts` |
 | `demo_form_step` (`form_step`, `form_step_number`) | each question / the calendar shown | form |
-| **`lead_submitted`** (`event_id`, `lead_challenges`, `lead_ad_spend`, `lead_ai_team`) | **Conversion 1**: "Request demo" accepted by `/api/demo-lead` | form |
+| **`lead_submitted`** (`event_id`, `lead_challenges`, `lead_ad_spend`, `lead_ai_team`) | **Conversion 1**: "Send" (contact step) accepted by `/api/demo-lead` | form |
 | **`demo_booked`** (`event_id`) | **Conversion 2**: calendar booking confirmed, on /demo-confirmation | confirmation page |
 
 Conversions wait (max 4 s) for `consent_status`, so consent is known when they

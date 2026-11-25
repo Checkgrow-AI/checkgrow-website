@@ -13,7 +13,7 @@ export const sales = {
     eyebrow: "Checkgrow Sales",
     title: "The best go-to-market teams run sales on Checkgrow.",
     intro: "An AI Sales Brain that learns how your company sells, scales consistent outreach across every rep, and keeps every conversation in one history your leadership can follow.",
-    bookDemo: "Book a demo",
+    bookDemo: "Talk to us",
     seeHow: "See how it works",
   },
   film: {
@@ -225,7 +225,7 @@ export const sales = {
   cta: {
     title: "Sales that compounds starts here.",
     body: "See Checkgrow Sales on your own ICP, accounts and voice in a 30-minute demo with our team.",
-    bookDemo: "Book a demo",
+    bookDemo: "Talk to us",
   },
   schema: {
     product: "Checkgrow Sales",

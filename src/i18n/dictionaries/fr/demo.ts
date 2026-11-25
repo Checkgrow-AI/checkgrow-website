@@ -3,14 +3,14 @@ import type { demo as source } from "../en/demo";
 
 export const demo: Localized<typeof source> = {
   meta: {
-    title: "Réserver une démo | Checkgrow",
+    title: "Parlons-en | Checkgrow",
     description:
       "Réservez une démo Checkgrow de 30 minutes. Repartez avec votre entreprise configurée, une stratégie de croissance IA offerte et la plateforme prête à l’emploi, plus une analyse de vos concurrents, un audit de votre site et un accès gratuit de 30 jours.",
     /* schema.org WebPage name */
-    schemaName: "Réserver une démo Checkgrow",
+    schemaName: "Échanger avec Checkgrow",
   },
   page: {
-    eyebrow: "Réserver une démo",
+    eyebrow: "Parlons-en",
     title: "Voyez votre moteur de croissance tourner en 30 minutes.",
     lead: "Une session en direct sur votre entreprise, vos concurrents et votre site. Vous repartez avec Checkgrow configuré et un plan clair pour la suite.",
     perksLabel: "Ce que la démo vous apporte",
@@ -48,40 +48,34 @@ export const demo: Localized<typeof source> = {
     stepOf: "Étape {n} sur {total} · {name}",
     phases: {
       questions: "Personnalisez votre démo",
-      time: "Choisissez un créneau",
+      time: "Réservez votre échange",
     },
     phaseLength: {
-      questions: "60 s",
+      questions: "30 s",
       time: "{n} min",
     },
     intro: {
       questions:
         "Vos réponses préparent votre onboarding : nous réalisons l’analyse de vos concurrents, l’audit de votre site et votre stratégie IA avant l’appel.",
-      time: "Choisissez le créneau qui vous convient. L’invitation et le lien visio vous seront envoyés par e-mail.",
+      time: "Choisissez le créneau qui vous convient le mieux. L’invitation et le lien visio arrivent aussitôt par e-mail.",
     },
     continue: "Continuer",
     back: "Retour",
     challenges: {
       title: "Que voulez-vous améliorer en priorité ?",
-      groups: {
-        growth: { label: "Croissance", tag: "Pipeline" },
-        ai: { label: "Opérations IA", tag: "Équipe" },
-      },
-      /* keyed by the id sent to the API */
+      /* the dropdown's empty choice */
+      placeholder: "Choisissez votre objectif principal",
+      /* keyed by the id sent to the API; the first option is the general one */
       labels: {
-        leads: "Obtenir plus de leads",
-        conversion: "Un site qui convertit",
-        cac: "Réduire mon CAC",
-        ads: "De meilleures campagnes Google, Meta ou LinkedIn",
+        "growth-ops": "Optimiser mes opérations de growth marketing",
+        leads: "Générer plus de leads qualifiés",
+        ads: "Réduire mon CAC avec de meilleures publicités Google, Meta ou LinkedIn",
+        conversion: "Convertir plus de visiteurs du site en leads",
         outreach: "Améliorer ma prospection commerciale",
-        creatives: "Plus de créations, et de meilleure qualité",
-        content: "Produire plus de contenus",
-        geo: "Améliorer mon référencement GEO ou SEO",
-        agents: "Une force d’agents IA pour mon équipe",
-        compliance: "Mieux encadrer l’usage de l’IA",
+        content: "Produire plus de contenus et de visuels de qualité",
+        geo: "Mieux me positionner sur Google et la recherche IA (SEO et GEO)",
+        agents: "Intégrer des agents IA à mon équipe, en toute sécurité",
       },
-      limitReached: "{max} maximum : désélectionnez-en un pour changer.",
-      selected: "{n} sur {max} sélectionnés",
     },
     spend: {
       title: "Combien dépensez-vous en publicité chaque mois ?",
@@ -93,51 +87,6 @@ export const demo: Localized<typeof source> = {
       /* screen readers: "~€10.000 per month" */
       valueText: "{amount} par mois",
       noAds: "Pas encore de publicité active",
-    },
-    team: {
-      title: "Combien de personnes utilisent l’IA dans votre entreprise ?",
-      /* keyed by the id sent to the API */
-      options: {
-        "1": "Moi uniquement",
-        "2-5": "2 à 5 personnes",
-        "6-20": "6 à 20 personnes",
-        "21-50": "21 à 50 personnes",
-        "51-100": "51 à 100 personnes",
-        "100+": "Plus de 100 personnes",
-      },
-    },
-    goals: {
-      title: "Quels sont vos objectifs pour cette année ?",
-      inputLabel: "Ajouter un objectif",
-      placeholder: "Ex. : ouvrir le marché allemand",
-      placeholderFull: "Cinq objectifs ajoutés",
-      add: "Ajouter",
-      listLabel: "Vos objectifs",
-      remove: "Retirer {goal}",
-      suggested: "Suggestions pour vous",
-      skip: "Passer pour l’instant",
-      /* suggestions follow the challenges picked, then the general ones;
-         a goal shared by two challenges must be written identically */
-      suggestions: {
-        byChallenge: {
-          leads: ["Doubler les leads qualifiés", "Construire un pipeline prévisible"],
-          conversion: ["Augmenter le taux de conversion du site", "Corriger les fuites du tunnel de conversion"],
-          cac: ["Réduire le CAC de 30 %", "Développer les publicités de façon rentable"],
-          ads: ["Développer les publicités de façon rentable", "Toucher les décideurs sur LinkedIn"],
-          outreach: ["Décrocher plus de rendez-vous commerciaux", "Personnaliser la prospection à grande échelle"],
-          content: ["Publier du contenu chaque semaine", "Développer la portée organique"],
-          creatives: ["Lancer de nouvelles créations chaque semaine", "Trouver les créations publicitaires gagnantes"],
-          geo: ["Être cité dans les réponses des IA", "Être en première page de Google"],
-          agents: ["Piloter le marketing avec des agents IA", "Automatiser le reporting hebdomadaire"],
-          compliance: ["Gouvernance et conformité de l’IA", "Déployer l’IA dans toute l’équipe"],
-        },
-        general: [
-          "Se lancer sur un nouveau marché",
-          "Augmenter le chiffre d’affaires cette année",
-          "Prendre de l’avance sur nos concurrents",
-          "Lancer un nouveau produit",
-        ],
-      },
     },
     contact: {
       title: "Où devons-nous envoyer votre invitation ?",
@@ -155,7 +104,7 @@ export const demo: Localized<typeof source> = {
         link: "Politique de confidentialité",
         after: ".",
       },
-      submit: "Demander une démo",
+      submit: "Envoyer",
       sending: "Envoi…",
     },
     /* validation messages (same rules in every language) */
@@ -175,11 +124,13 @@ export const demo: Localized<typeof source> = {
       failed: "Nous n’avons pas pu réserver ce créneau. Merci de réessayer.",
     },
     time: {
+      /* heading of the calendar step: invite the visitor to finish */
+      title: "Dernière étape : réservez votre échange avec nous",
       loading: "Chargement des créneaux disponibles",
       loadError: "Impossible de charger le calendrier.",
       loadErrorHint: "Vos réponses sont enregistrées ici. Réessayez dans un instant.",
       retry: "Réessayer",
-      confirm: "Confirmer la démo",
+      confirm: "Réserver mon échange",
       confirming: "Réservation…",
       tailoredFor: "Personnalisée pour",
       edit: "Modifier",

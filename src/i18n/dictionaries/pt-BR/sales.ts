@@ -12,7 +12,7 @@ export const sales: Localized<typeof source> = {
     eyebrow: "Checkgrow Sales",
     title: "As melhores equipes de go-to-market vendem com a Checkgrow.",
     intro: "Um Sales Brain com IA que aprende como a sua empresa vende, escala uma prospecção consistente entre todos os vendedores e mantém cada conversa em um só histórico que a liderança pode acompanhar.",
-    bookDemo: "Agendar uma demo",
+    bookDemo: "Fale com a gente",
     seeHow: "Veja como funciona",
   },
   film: {
@@ -223,7 +223,7 @@ export const sales: Localized<typeof source> = {
   cta: {
     title: "Vendas que se multiplicam começam aqui.",
     body: "Veja a Checkgrow Sales com o seu próprio ICP, suas contas e seu tom de voz em uma demo de 30 minutos com nosso time.",
-    bookDemo: "Agendar uma demo",
+    bookDemo: "Fale com a gente",
   },
   schema: {
     product: "Checkgrow Sales",

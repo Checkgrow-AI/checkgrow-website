@@ -195,6 +195,43 @@
   transition: box-shadow 160ms var(--ease-standard);
 }
 
+/* the main-goal dropdown (ChallengeSelect): the trigger is styled as an
+   input and wraps a long goal onto a second line; the chevron sits over it */
+.select {
+  padding-right: 44px;
+  cursor: pointer;
+}
+
+.listbox {
+  border-radius: var(--radius-card);
+  background: var(--color-raised);
+  box-shadow: inset 0 0 0 1px var(--color-control-line), 0 18px 48px -18px rgb(0 0 0 / 0.35);
+  color: var(--color-foreground);
+}
+
+.listboxActive {
+  background: var(--color-tint);
+}
+
+/* until a goal is chosen the field reads as a prompt, clearly not an
+   answer: dashed outline, no fill, muted text; it firms up once chosen */
+.selectEmpty {
+  color: var(--color-muted);
+  background: transparent;
+  box-shadow: none;
+  outline: 1.5px dashed color-mix(in srgb, var(--color-accent) 60%, transparent);
+  outline-offset: -1.5px;
+}
+
+.selectEmpty:hover {
+  outline-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-tint) 45%, transparent);
+}
+
+.selectEmpty:focus-visible {
+  outline: 1.5px solid var(--color-accent);
+}
+
 .input::placeholder {
   color: var(--color-muted);
 }
@@ -556,4 +593,11 @@
 /* an odd number of answer cards: the last one spans the row */
 .cardGrid > :last-child:nth-child(odd) {
   grid-column: 1 / -1;
+}
+
+/* phones: the €100.000 label would collide with €1.000.000+ */
+@media (max-width: 479px) {
+  .ticks span:nth-child(3) {
+    display: none;
+  }
 }

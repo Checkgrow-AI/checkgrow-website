@@ -54,9 +54,9 @@ test('mobile booking shortcut and machine-readable contact use the demo flow', (
   assert.match(rail, /id: "waitlist", href: "\/book-a-demo"/);
   assert.match(rail, /router\.push\(lp\(s\.href\)\)/);
   const home = readFileSync(new URL('../src/i18n/dictionaries/en/home.ts', import.meta.url), 'utf8');
-  assert.match(home, /waitlist: "Book a demo"/);
+  assert.match(home, /waitlist: "Talk to us"/);
   const markdown = readFileSync(new URL('../src/lib/markdown.ts', import.meta.url), 'utf8');
-  assert.match(markdown, /Book a demo or talk to our team \(all plans\): \$\{BOOK_DEMO\}/);
+  assert.match(markdown, /Talk to us \(all plans\): \$\{BOOK_DEMO\}/);
   assert.doesNotMatch(markdown, /SALES_CALENDAR|calendar\.app\.google/);
   const security = readFileSync(new URL('../src/components/news/SecurityArticle.tsx', import.meta.url), 'utf8');
   assert.match(security, /<Link href="\/book-a-demo">\{t\.contact\.link\}/);

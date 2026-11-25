@@ -1,17 +1,16 @@
-/* Book a demo and the demo confirmation (English source). See docs/i18n.md.
-   Ids sent to the APIs (challenges, AI team sizes) are object keys here and
-   never translate; only the labels do. Goal suggestions are sent as the
-   text the visitor picked, so they are written for the reader. */
+/* Talk to us (/book-a-demo) and the demo confirmation (English source).
+   See docs/i18n.md. Ids sent to the APIs (challenges) are
+   object keys here and never translate; only the labels do. */
 export const demo = {
   meta: {
-    title: "Book a demo | Checkgrow",
+    title: "Talk to us | Checkgrow",
     description:
       "Book a 30-minute Checkgrow demo. Leave with your company onboarded, a free AI growth strategy and the platform ready to run, plus competitor research, a website review and a 30-day free seat.",
     /* schema.org WebPage name */
-    schemaName: "Book a Checkgrow demo",
+    schemaName: "Talk to Checkgrow",
   },
   page: {
-    eyebrow: "Book a demo",
+    eyebrow: "Talk to us",
     title: "See your growth engine running in 30 minutes.",
     lead: "A live session on your own company, competitors and website. You leave with Checkgrow set up and a clear plan for what to do next.",
     perksLabel: "What you get from the demo",
@@ -49,40 +48,34 @@ export const demo = {
     stepOf: "Step {n} of {total} · {name}",
     phases: {
       questions: "Tailor your demo",
-      time: "Pick a time",
+      time: "Book your call",
     },
     phaseLength: {
-      questions: "60 sec",
+      questions: "30 sec",
       time: "{n} min",
     },
     intro: {
       questions:
         "Your answers set up your onboarding: we prepare your competitor scan, website review and AI strategy before the call.",
-      time: "Choose a slot that suits you. The invite and video link follow by email.",
+      time: "Pick the time that suits you best. The invite and video link arrive by email right away.",
     },
     continue: "Continue",
     back: "Back",
     challenges: {
       title: "What do you want to fix first?",
-      groups: {
-        growth: { label: "Growth", tag: "Pipeline" },
-        ai: { label: "AI operations", tag: "Team" },
-      },
-      /* keyed by the id sent to the API */
+      /* the dropdown's empty choice */
+      placeholder: "Choose your main goal",
+      /* keyed by the id sent to the API; the first option is the general one */
       labels: {
-        leads: "Get more leads",
-        conversion: "A website that converts",
-        cac: "Reduce my CAC",
-        ads: "Better Google, Meta or LinkedIn campaigns",
+        "growth-ops": "Optimise my growth marketing operations",
+        leads: "Get more qualified leads",
+        ads: "Lower my CAC with better Google, Meta or LinkedIn ads",
+        conversion: "Turn more website visitors into leads",
         outreach: "Improve my sales outreach",
-        creatives: "More and better creatives",
-        content: "Generate more content",
-        geo: "Improve my GEO or SEO ranking",
-        agents: "AI agentic force for my team",
-        compliance: "Better compliance with AI",
+        content: "Create more and better content and creatives",
+        geo: "Rank higher on Google and AI search (SEO and GEO)",
+        agents: "Bring AI agents into my team, safely",
       },
-      limitReached: "Up to {max}: deselect one to swap.",
-      selected: "{n} of {max} selected",
     },
     spend: {
       title: "How much do you spend on ads each month?",
@@ -94,51 +87,6 @@ export const demo = {
       /* screen readers: "~€10.000 per month" */
       valueText: "{amount} per month",
       noAds: "No active ads yet",
-    },
-    team: {
-      title: "How many people use AI in your company?",
-      /* keyed by the id sent to the API */
-      options: {
-        "1": "Just me",
-        "2-5": "2–5 people",
-        "6-20": "6–20 people",
-        "21-50": "21–50 people",
-        "51-100": "51–100 people",
-        "100+": "100+ people",
-      },
-    },
-    goals: {
-      title: "What are your goals for this year?",
-      inputLabel: "Add a goal",
-      placeholder: "e.g. Open the German market",
-      placeholderFull: "Five goals added",
-      add: "Add goal",
-      listLabel: "Your goals",
-      remove: "Remove {goal}",
-      suggested: "Suggested for you",
-      skip: "Skip for now",
-      /* suggestions follow the challenges picked, then the general ones;
-         a goal shared by two challenges must be written identically */
-      suggestions: {
-        byChallenge: {
-          leads: ["Double qualified leads", "Build a predictable pipeline"],
-          conversion: ["Lift website conversion rate", "Fix drop-offs in the funnel"],
-          cac: ["Cut CAC by 30%", "Scale ads profitably"],
-          ads: ["Scale ads profitably", "Reach decision-makers on LinkedIn"],
-          outreach: ["Book more sales meetings", "Personalise outreach at scale"],
-          content: ["Publish content every week", "Grow organic reach"],
-          creatives: ["Ship fresh creatives every week", "Find winning ad creatives"],
-          geo: ["Get cited in AI answers", "Rank on page one of Google"],
-          agents: ["Run marketing with AI agents", "Automate weekly reporting"],
-          compliance: ["AI governance and compliance", "Roll AI out to the whole team"],
-        },
-        general: [
-          "Launch in a new market",
-          "Grow revenue this year",
-          "Outpace our competitors",
-          "Launch a new product",
-        ],
-      },
     },
     contact: {
       title: "Where should we send your invite?",
@@ -156,7 +104,7 @@ export const demo = {
         link: "Privacy Policy",
         after: ".",
       },
-      submit: "Request demo",
+      submit: "Send",
       sending: "Sending…",
     },
     /* validation messages (same rules in every language) */
@@ -176,11 +124,13 @@ export const demo = {
       failed: "We couldn't book that slot. Please try again.",
     },
     time: {
+      /* heading of the calendar step: invite the visitor to finish */
+      title: "Last step: book your call with us",
       loading: "Loading available times",
       loadError: "We couldn't load the calendar.",
       loadErrorHint: "Your answers are saved here. Try again in a moment.",
       retry: "Try again",
-      confirm: "Confirm demo",
+      confirm: "Book my call",
       confirming: "Booking…",
       tailoredFor: "Tailored for",
       edit: "Edit",

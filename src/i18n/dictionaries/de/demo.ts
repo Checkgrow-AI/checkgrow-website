@@ -3,13 +3,13 @@ import type { demo as source } from "../en/demo";
 
 export const demo: Localized<typeof source> = {
   meta: {
-    title: "Demo buchen | Checkgrow",
+    title: "Mit uns sprechen | Checkgrow",
     description:
       "Buchen Sie eine 30-minütige Checkgrow-Demo. Danach ist Ihr Unternehmen eingerichtet, die Plattform einsatzbereit und Ihre kostenlose KI-Growth-Strategie fertig – plus Wettbewerbsanalyse, Website-Review und 30 Tagen kostenlosem Zugang.",
-    schemaName: "Checkgrow-Demo buchen",
+    schemaName: "Mit Checkgrow sprechen",
   },
   page: {
-    eyebrow: "Demo buchen",
+    eyebrow: "Mit uns sprechen",
     title: "Erleben Sie Ihre Growth-Engine in 30 Minuten.",
     lead: "Eine Live-Session am Beispiel Ihres eigenen Unternehmens, Ihrer Wettbewerber und Ihrer Website. Danach ist Checkgrow eingerichtet, und Sie haben einen klaren Plan für die nächsten Schritte.",
     perksLabel: "Was Ihnen die Demo bringt",
@@ -44,39 +44,34 @@ export const demo: Localized<typeof source> = {
     stepOf: "Schritt {n} von {total} · {name}",
     phases: {
       questions: "Demo anpassen",
-      time: "Termin wählen",
+      time: "Gespräch buchen",
     },
     phaseLength: {
-      questions: "60 Sek.",
+      questions: "30 Sek.",
       time: "{n} Min.",
     },
     intro: {
       questions:
         "Ihre Antworten bereiten Ihr Onboarding vor: Wir erstellen Ihren Wettbewerbsscan, Ihr Website-Review und Ihre KI-Strategie schon vor dem Termin.",
-      time: "Wählen Sie einen passenden Termin. Einladung und Videolink folgen per E-Mail.",
+      time: "Wählen Sie den Termin, der Ihnen am besten passt. Einladung und Videolink kommen sofort per E-Mail.",
     },
     continue: "Weiter",
     back: "Zurück",
     challenges: {
       title: "Was möchten Sie zuerst angehen?",
-      groups: {
-        growth: { label: "Wachstum", tag: "Pipeline" },
-        ai: { label: "KI im Betrieb", tag: "Team" },
-      },
+      /* the dropdown's empty choice */
+      placeholder: "Ihr wichtigstes Ziel auswählen",
+      /* keyed by the id sent to the API; the first option is the general one */
       labels: {
-        leads: "Mehr Leads gewinnen",
-        conversion: "Eine Website, die konvertiert",
-        cac: "Meinen CAC senken",
-        ads: "Bessere Google-, Meta- oder LinkedIn-Kampagnen",
+        "growth-ops": "Mein Growth-Marketing effizienter aufstellen",
+        leads: "Mehr qualifizierte Leads gewinnen",
+        ads: "CAC senken mit besseren Google-, Meta- oder LinkedIn-Anzeigen",
+        conversion: "Mehr Website-Besucher zu Leads machen",
         outreach: "Meinen Sales-Outreach verbessern",
-        creatives: "Mehr und bessere Creatives",
-        content: "Mehr Inhalte erstellen",
-        geo: "Mein GEO- oder SEO-Ranking verbessern",
-        agents: "KI-Agenten für mein Team",
-        compliance: "Bessere Compliance mit KI",
+        content: "Mehr und bessere Inhalte und Creatives erstellen",
+        geo: "Besser ranken bei Google und in der KI-Suche (SEO und GEO)",
+        agents: "KI-Agenten sicher ins Team bringen",
       },
-      limitReached: "Maximal {max}: Wählen Sie eine Option ab, um zu tauschen.",
-      selected: "{n} von {max} ausgewählt",
     },
     spend: {
       title: "Wie viel geben Sie monatlich für Anzeigen aus?",
@@ -87,48 +82,6 @@ export const demo: Localized<typeof source> = {
       more: "Mehr",
       valueText: "{amount} pro Monat",
       noAds: "Noch keine aktiven Anzeigen",
-    },
-    team: {
-      title: "Wie viele Personen nutzen in Ihrem Unternehmen KI?",
-      options: {
-        "1": "Nur ich",
-        "2-5": "2–5 Personen",
-        "6-20": "6–20 Personen",
-        "21-50": "21–50 Personen",
-        "51-100": "51–100 Personen",
-        "100+": "100+ Personen",
-      },
-    },
-    goals: {
-      title: "Was sind Ihre Ziele für dieses Jahr?",
-      inputLabel: "Ziel hinzufügen",
-      placeholder: "z. B. den deutschen Markt erschließen",
-      placeholderFull: "Fünf Ziele hinzugefügt",
-      add: "Ziel hinzufügen",
-      listLabel: "Ihre Ziele",
-      remove: "{goal} entfernen",
-      suggested: "Vorschläge für Sie",
-      skip: "Vorerst überspringen",
-      suggestions: {
-        byChallenge: {
-          leads: ["Qualifizierte Leads verdoppeln", "Eine planbare Pipeline aufbauen"],
-          conversion: ["Conversion-Rate der Website steigern", "Abbrüche im Funnel beheben"],
-          cac: ["CAC um 30 % senken", "Anzeigen profitabel skalieren"],
-          ads: ["Anzeigen profitabel skalieren", "Entscheider auf LinkedIn erreichen"],
-          outreach: ["Mehr Sales-Meetings buchen", "Outreach in großem Stil personalisieren"],
-          content: ["Jede Woche Inhalte veröffentlichen", "Organische Reichweite steigern"],
-          creatives: ["Jede Woche neue Creatives liefern", "Erfolgreiche Anzeigen-Creatives finden"],
-          geo: ["In KI-Antworten zitiert werden", "Auf Seite eins bei Google ranken"],
-          agents: ["Marketing mit KI-Agenten betreiben", "Wöchentliches Reporting automatisieren"],
-          compliance: ["KI-Governance und Compliance", "KI im ganzen Team einführen"],
-        },
-        general: [
-          "In einem neuen Markt starten",
-          "Umsatz in diesem Jahr steigern",
-          "Unsere Wettbewerber überholen",
-          "Ein neues Produkt einführen",
-        ],
-      },
     },
     contact: {
       title: "Wohin dürfen wir Ihre Einladung senden?",
@@ -145,7 +98,7 @@ export const demo: Localized<typeof source> = {
         link: "Datenschutzerklärung",
         after: ".",
       },
-      submit: "Demo anfragen",
+      submit: "Senden",
       sending: "Wird gesendet …",
     },
     errors: {
@@ -164,11 +117,13 @@ export const demo: Localized<typeof source> = {
       failed: "Wir konnten diesen Termin nicht buchen. Bitte versuchen Sie es erneut.",
     },
     time: {
+      /* heading of the calendar step: invite the visitor to finish */
+      title: "Letzter Schritt: Buchen Sie Ihr Gespräch mit uns",
       loading: "Verfügbare Termine werden geladen",
       loadError: "Der Kalender konnte nicht geladen werden.",
       loadErrorHint: "Ihre Antworten bleiben hier gespeichert. Versuchen Sie es gleich noch einmal.",
       retry: "Erneut versuchen",
-      confirm: "Demo bestätigen",
+      confirm: "Gespräch buchen",
       confirming: "Wird gebucht …",
       tailoredFor: "Zugeschnitten auf",
       edit: "Bearbeiten",

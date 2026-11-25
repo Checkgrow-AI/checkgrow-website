@@ -11,7 +11,7 @@ export const home = {
     title: { before: "The go-to-market engine that learns your", after: "." },
     rotatingWords: ["product", "buyers", "market", "channels"],
     body: "Growth shouldn't depend on who's in the room. Checkgrow keeps everything your company knows in one growth operating system: learning, improving, and working for every team. It turns knowledge into customers and recognition.",
-    bookDemo: "Book a demo",
+    bookDemo: "Talk to us",
     chat: {
       label: "AI Assistant",
       model: "Model:",
@@ -129,7 +129,7 @@ export const home = {
     restart: "Restart the platform film",
     mute: "Mute the platform film",
     unmute: "Unmute the platform film",
-    bookDemo: "Book a demo",
+    bookDemo: "Talk to us",
   },
   problem: {
     label: "The problem",
@@ -225,7 +225,7 @@ export const home = {
         body: "Enterprises and scale-ups are asking to self-host Checkgrow, and we build for it. Your company knowledge stays structured and ready for any AI model you choose, inside your own security perimeter and under your own data-sovereignty rules. No lock-in to a vendor or a model.",
       },
     },
-    bookDemo: "Book a demo",
+    bookDemo: "Talk to us",
     compare: "Compare Checkgrow with the typical growth stack",
   },
   caseStudies: {
@@ -241,7 +241,7 @@ export const home = {
       body: "Watch Checkgrow run a real go-to-market end to end: 2 minutes 41 seconds, one take, no cuts.",
       watch: "Watch our demo review",
       hide: "Hide the demo",
-      bookDemo: "Book a demo",
+      bookDemo: "Talk to us",
       badge: "2:41 · real demo, no cuts",
       question: "Struggling with your marketing and still questioning?",
     },
@@ -296,7 +296,7 @@ export const home = {
       label: "For enterprises",
       title: "Enterprise custom AI systems that drive growth.",
       body: "Large teams get the same growth system, shaped around how they already work: one knowledge core feeding every campaign, agent and report. Enterprises and scale-ups increasingly ask to self-host it: we build self-hosted, custom-developed setups that fit your stack, your security requirements and your scale, with your company knowledge structured for any AI model and kept under your own data sovereignty.",
-      bookDemo: "Book a demo",
+      bookDemo: "Talk to us",
     },
   },
   faqLink: "See all questions",
@@ -304,7 +304,7 @@ export const home = {
     logoAlt: "Checkgrow growth marketing platform logo",
     title: "Products are easy to build now. Checkgrow makes them easier to sell.",
     body: "Book a 30-minute demo on your own company, competitors and website. Leave with Checkgrow set up and a clear plan for what to do next.",
-    bookDemo: "Book a demo",
+    bookDemo: "Talk to us",
   },
   scrollRail: {
     goTo: "Go to {label}",
@@ -316,7 +316,7 @@ export const home = {
       "use-cases": "Features",
       pricing: "Pricing",
       faq: "FAQ",
-      waitlist: "Book a demo",
+      waitlist: "Talk to us",
     },
   },
   flow: {

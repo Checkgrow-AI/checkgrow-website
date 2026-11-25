@@ -1,12 +1,14 @@
 # Book a demo
 
-`/book-a-demo`: two-step booking. Step 1 asks five qualification questions; step 2 shows live free times and books the chosen slot into the **demo calendar**. A time is only offered when it is free in the demo calendar **and** in Bruno's own calendar. Every lead is emailed to **sales@checkgrow.com**.
+`/book-a-demo` (every CTA reads **Talk to us**; the URL stays so ad links keep working): two-step booking. Step 1 is one qualification screen (main goal from a dropdown of eight, monthly ad spend) followed by contact details; step 2 shows live free times and books the chosen slot into the **demo calendar**. A time is only offered when it is free in the demo calendar **and** in Bruno's own calendar. Every lead is emailed to **sales@checkgrow.com**.
 
-- Page: `src/app/book-a-demo/`. Form: `src/components/demo/`. Options and goal suggestions: `src/lib/demo.ts`.
+- Page: `src/app/[lang]/book-a-demo/`. Form: `src/components/demo/` (goal dropdown: `ChallengeSelect.tsx`). Option ids: `src/lib/demo.ts`; labels in `src/i18n/dictionaries/<lang>/demo.ts`.
+- Answers reach the APIs as ids: `challenges` (one id, sent as a one-item list) and `adSpend`/`noActiveAds`. The API still accepts the earlier forms' payloads (up to three challenges with the retired ids `cac`, `creatives`, `compliance`; `companySize` or `aiTeam`; goals) from a page opened before a deploy, and passes a company size on to the webhook as `company_size` when one arrives.
+- GTM: `demo_form_step` now reports `qualify` (1), `contact` (2), `time` (3). `lead_submitted` carries `lead_challenges` and `lead_ad_spend`; `lead_ai_team` is no longer sent (the question was removed).
 - Google auth (one token for Calendar and Gmail): `src/lib/google.ts`. Availability and booking: `src/lib/demoAvailability.ts`. Lead email: `src/lib/leadEmail.ts` (all server only).
 - `GET /api/demo-slots` returns free slot start times only.
-- `POST /api/demo-lead` runs on **Request demo** (contact step, before the calendar): validates every answer and sends the lead to the Checkgrow leads webhook (`DEMO_REQUEST_WEBHOOK_URL`, status `new`). If the webhook fails, the lead is emailed to sales ("not in the CRM yet") instead; the visitor goes on to the calendar either way.
-- `POST /api/demo-request` runs on **Confirm demo**: validates again, re-checks the slot with Google, creates the calendar event, emails sales and sends the lead to the webhook again with the booking in `notes` (the webhook updates the lead by email; `status` is not resent).
+- `POST /api/demo-lead` runs on **Send** (contact step, before the calendar): validates every answer and sends the lead to the Checkgrow leads webhook (`DEMO_REQUEST_WEBHOOK_URL`, status `new`). If the webhook fails, the lead is emailed to sales ("not in the CRM yet") instead; the visitor goes on to the calendar either way.
+- `POST /api/demo-request` runs on **Book my call**: validates again, re-checks the slot with Google, creates the calendar event, emails sales and sends the lead to the webhook again with the booking in `notes` (the webhook updates the lead by email; `status` is not resent).
 - Shared validation, webhook mapping (`email, phone, first_name, last_name, website, notes, source, language, page_url, referrer, utm_*`) and audit log: `src/lib/demoLead.ts`. Campaign attribution comes from `src/lib/attribution.ts` as hidden fields: kept in memory before consent, in the `cg_attr_*` cookies only after consent.
 - The website field follows the work email's domain until the visitor edits it.
 - Tracking: dataLayer events only (`lead_submitted`, `demo_booked`, …); tags live in GTM. See `docs/gtm/README.md`.

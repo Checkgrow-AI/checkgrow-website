@@ -17,8 +17,8 @@ export const features: Localized<typeof source> = {
     intro: "Chaque fonctionnalité de Checkgrow s’appuie sur le même cerveau de l’entreprise. Découvrez-les à l’œuvre en trois étapes, des connaissances et de la recherche jusqu’aux campagnes, aux créations et aux ventes.",
     indexTitle: "Toutes les fonctionnalités",
     ctaTitle: "Une plateforme. Toutes les fonctionnalités connectées.",
-    ctaBody: "Réservez une démo et mettez tout le système au travail, avec un onboarding par notre équipe pour configurer votre Centre de connaissances.",
-    bookDemo: "Réserver une démo",
+    ctaBody: "Contactez-nous et mettez tout le système au travail, avec un onboarding par notre équipe pour configurer votre Centre de connaissances.",
+    bookDemo: "Parlons-en",
     explore: "Voir les actualités et tutoriels",
   },
   home: {

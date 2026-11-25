@@ -14,7 +14,7 @@ export const pricing: Localized<typeof source> = {
     eyebrow: "Tarifs",
     title: "La plateforme, vos marques ou toute l’équipe.",
     intro: "Chaque offre repose sur le même cerveau de l’entreprise. Choisissez une marque, toutes vos marques, ou nos spécialistes pour piloter la croissance avec vous.",
-    bookDemo: "Réserver une démo",
+    bookDemo: "Parlons-en",
     optionsLabel: "Options tarifaires",
     billingLabel: "Fréquence de facturation",
     monthly: "Mensuel",
@@ -50,7 +50,7 @@ export const pricing: Localized<typeof source> = {
       name: "Business",
       audience: "Pour une seule marque",
       description: "La plateforme complète pour une marque, avec de la place pour toute l’équipe.",
-      cta: "Réserver une démo",
+      cta: "Parlons-en",
       ctaNote: "Sans carte bancaire",
       specs: [
         {
@@ -84,7 +84,7 @@ export const pricing: Localized<typeof source> = {
       name: "Agency",
       audience: "Pour les agences et équipes multimarques",
       description: "Chaque marque et chaque client dans son propre espace de travail, avec notre équipe à vos côtés.",
-      cta: "Réserver une démo",
+      cta: "Parlons-en",
       ctaNote: "Sans carte bancaire",
       specs: [
         {
@@ -231,7 +231,7 @@ export const pricing: Localized<typeof source> = {
     fullStackNote: "Hors utilisateurs supplémentaires, dépassements et temps passé à faire tenir tous les outils ensemble.",
     from: "Dès {price}/mois",
     checkgrowBody: "Un seul système d’exploitation, une seule source de vérité, une seule facture.",
-    bookDemo: "Réserver une démo",
+    bookDemo: "Parlons-en",
     footnote: "Les outils tiers sont des exemples par catégorie. Les prix correspondent aux tarifs mensuels publics habituels pour des offres comparables. Estimations arrondies en {currency} ; la facturation Checkgrow reste en EUR.",
     rows: {
       brandKnowledge: {

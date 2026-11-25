@@ -1,17 +1,16 @@
 "use client";
 
-/* Book a demo: a two-step booking form.
-     Step 1 · Tailor your demo: five quick questions, one at a time
-       (challenges → ad spend → AI team → goals → contact). Taps
-       auto-advance where a single answer is enough.
+/* Talk to us (/book-a-demo): a two-step booking form.
+     Step 1 · Tailor your demo: one qualification screen (main goal from a
+       dropdown, monthly ad spend), then contact details.
      Step 2 · Pick a time: month calendar and slots in the visitor's
        own time zone, read live from the team calendar (/api/demo-slots).
    Every answer travels with the booking so the team arrives with the
    competitor scan, website review and AI strategy already prepared.
    Two conversions, each a dataLayer event for GTM (see lib/track.ts):
-     · "Request demo" on the contact step posts the lead to
-       /api/demo-lead (leads webhook) → lead_submitted
-     · "Confirm demo" posts to /api/demo-request (calendar booking,
+     · "Send" on the contact step posts the lead to /api/demo-lead
+       (leads webhook) → lead_submitted
+     · "Book my call" posts to /api/demo-request (calendar booking,
        webhook update) and moves to /demo-confirmation → demo_booked
    Campaign attribution (lib/attribution.ts cookies) rides along in
    hidden fields on the contact step. */
@@ -23,18 +22,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "motion/react";
 import { isCompanyEmail } from "@/lib/freeEmailDomains";
 import {
-  aiTeamOptions,
-  challengeGroups,
+  challengeIds,
   challengeLabel,
   DEMO_MINUTES,
   describeSpend,
   formatSpend,
-  MAX_CHALLENGES,
-  MAX_GOALS,
   spendStops,
-  suggestGoals,
 } from "@/lib/demo";
 import { DemoIcon } from "./DemoIcons";
+import { ChallengeSelect } from "./ChallengeSelect";
 import { saveDemoBooking } from "@/lib/demoBooking";
 import { FoundersNote } from "./FoundersNote";
 import { ATTRIBUTION_FIELDS, readAttribution, type Attribution } from "@/lib/attribution";
@@ -75,7 +71,7 @@ const contactSchema = (e: FormCopy["errors"]) =>
   });
 type Contact = z.infer<ReturnType<typeof contactSchema>>;
 
-const questions = ["challenges", "spend", "team", "goals", "contact"] as const;
+const questions = ["qualify", "contact"] as const;
 type Question = (typeof questions)[number];
 type Step = Question | "time";
 
@@ -129,17 +125,14 @@ export function DemoBookingForm() {
   const t = useT("demo").form;
   const lang = useLang();
   const lp = useLocalePath();
-  const [step, setStep] = useState<Step>("challenges");
-  const [challenges, setChallenges] = useState<string[]>([]);
+  const [step, setStep] = useState<Step>("qualify");
+  /* one main goal (a challenge id), sent as a one-item list as before */
+  const [challenge, setChallenge] = useState<string | null>(null);
   const [spendIndex, setSpendIndex] = useState(spendStops.indexOf(10_000));
   const [noAds, setNoAds] = useState(false);
-  const [aiTeam, setAiTeam] = useState<string | null>(null);
-  const [goals, setGoals] = useState<string[]>([]);
-  const [goalDraft, setGoalDraft] = useState("");
   const [slot, setSlot] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  const [challengeHint, setChallengeHint] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const advanceTimer = useRef<number | null>(null);
   /* the website the email last filled in: while the field still holds
@@ -206,10 +199,6 @@ export function DemoBookingForm() {
     const top = panelRef.current?.getBoundingClientRect().top ?? 0;
     if (top < 0) panelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
-  const goSoon = (next: Step) => {
-    if (advanceTimer.current) window.clearTimeout(advanceTimer.current);
-    advanceTimer.current = window.setTimeout(() => go(next), 260);
-  };
   const back = () => {
     if (step === "time") return go("contact");
     if (qIndex > 0) go(questions[qIndex - 1]);
@@ -219,26 +208,6 @@ export function DemoBookingForm() {
     if (startedRef.current) return;
     startedRef.current = true;
     track("demo_form_start", { form_name: "book_a_demo" });
-  };
-
-  const toggleChallenge = (id: string) => {
-    markStarted();
-    setChallengeHint(false);
-    setChallenges((cur) => {
-      if (cur.includes(id)) return cur.filter((c) => c !== id);
-      if (cur.length >= MAX_CHALLENGES) {
-        setChallengeHint(true);
-        return cur;
-      }
-      return [...cur, id];
-    });
-  };
-
-  const addGoal = (goal: string) => {
-    const g = goal.trim().slice(0, 80);
-    if (!g || goals.length >= MAX_GOALS) return;
-    if (goals.some((x) => x.toLowerCase() === g.toLowerCase())) return;
-    setGoals([...goals, g]);
   };
 
   /* the work email usually names the company: keep its website in step */
@@ -256,11 +225,9 @@ export function DemoBookingForm() {
 
   const answers = () => ({
     ...getValues(),
-    challenges,
+    challenges: challenge ? [challenge] : [],
     adSpend: noAds ? null : spendStops[spendIndex],
     noActiveAds: noAds,
-    aiTeam,
-    goals,
     timeZone: tz,
     language: lang,
     attribution,
@@ -290,9 +257,8 @@ export function DemoBookingForm() {
             trackAfterConsent("lead_submitted", {
               form_name: "book_a_demo",
               event_id: eventId,
-              lead_challenges: challenges.join(","),
+              lead_challenges: challenge,
               lead_ad_spend: noAds ? 0 : spendStops[spendIndex],
-              lead_ai_team: aiTeam,
             });
           }
         }
@@ -408,289 +374,133 @@ export function DemoBookingForm() {
       <div className={`px-5 py-6 sm:px-7 ${styles.body}`}>
         <AnimatePresence mode="wait" initial={false}>
           <motion.div key={step} {...slide}>
-            {step === "challenges" && (
+            {step === "qualify" && (
               <div>
-                <QuestionHead title={t.challenges.title} />
-                <div className="mt-5 space-y-5">
-                  {challengeGroups.map((group) => (
-                    <div key={group.id}>
-                      <p className="mb-2.5 flex items-center gap-2 text-sm font-medium">
-                        <span className="rounded-sm bg-tint px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-brand-strong">
-                          {t.challenges.groups[group.id].tag}
-                        </span>
-                        {t.challenges.groups[group.id].label}
-                      </p>
-                      <div className={`grid grid-cols-2 gap-2 ${styles.cardGrid}`}>
-                        {group.items.map((item) => {
-                          const on = challenges.includes(item.id);
-                          return (
-                            <button
-                              key={item.id}
-                              type="button"
-                              aria-pressed={on}
-                              onClick={() => toggleChallenge(item.id)}
-                              className={`${styles.option} ${on ? styles.optionOn : ""}`}
-                            >
-                              <DemoIcon
-                                name={item.icon}
-                                className={`shrink-0 ${on ? "text-accent" : "text-muted"}`}
-                              />
-                              <span className="min-w-0 text-left">{t.challenges.labels[item.id]}</span>
-                              <span className={styles.tick} aria-hidden>
-                                <DemoIcon name="check" size={12} />
-                              </span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <Footer>
-                  <p
-                    className={`text-sm ${challengeHint ? "text-accent" : "text-muted"}`}
-                    aria-live="polite"
-                  >
-                    {challengeHint
-                      ? fmt(t.challenges.limitReached, { max: MAX_CHALLENGES })
-                      : fmt(t.challenges.selected, { n: challenges.length, max: MAX_CHALLENGES })}
-                  </p>
-                  <button
-                    type="button"
-                    className={primaryBtn} data-qa="form-next"
-                    disabled={!challenges.length}
-                    onClick={() => go("spend")}
-                  >
-                    {t.continue} <DemoIcon name="arrowRight" size={16} />
-                  </button>
-                </Footer>
-              </div>
-            )}
-
-            {step === "spend" && (
-              <div>
-                <QuestionHead title={t.spend.title} />
-                <div
-                  className={`mt-6 rounded-card bg-raised p-5 ring-1 ring-line transition-opacity duration-200 ${
-                    noAds ? "opacity-45" : ""
-                  }`}
-                >
-                  <div className="flex items-end justify-between gap-3">
-                    <p className="tabular-nums" aria-live="polite">
-                      <span className="block text-sm text-muted">
-                        {spendIndex === 0 || spendIndex === spendStops.length - 1 ? t.spend.monthly : t.spend.around}
-                      </span>
-                      <span className="text-h2">{formatSpend(spendStops[spendIndex])}</span>
-                      <span className="ml-1.5 text-base text-muted">{t.spend.perMonth}</span>
+                <div className="space-y-7">
+                  {/* 1 · main goal */}
+                  <div>
+                    <p id="demo-challenge-label" className="text-xl font-semibold tracking-tight sm:text-2xl">
+                      {t.challenges.title}
                     </p>
-                    <div className="flex gap-1.5">
-                      <button
-                        type="button"
-                        aria-label={t.spend.less}
-                        disabled={spendIndex === 0}
-                        onClick={() => {
-                          setNoAds(false);
-                          setSpendIndex((i) => Math.max(0, i - 1));
+                    <div className="mt-4">
+                      <ChallengeSelect
+                        value={challenge}
+                        options={challengeIds.map((id) => ({ id, label: t.challenges.labels[id] }))}
+                        placeholder={t.challenges.placeholder}
+                        labelledBy="demo-challenge-label"
+                        onChange={(id) => {
+                          markStarted();
+                          setChallenge(id);
                         }}
-                        className={styles.nudge}
-                      >
-                        <span aria-hidden>−</span>
-                      </button>
-                      <button
-                        type="button"
-                        aria-label={t.spend.more}
-                        disabled={spendIndex === spendStops.length - 1}
-                        onClick={() => {
-                          setNoAds(false);
-                          setSpendIndex((i) => Math.min(spendStops.length - 1, i + 1));
-                        }}
-                        className={styles.nudge}
-                      >
-                        <span aria-hidden>+</span>
-                      </button>
+                      />
                     </div>
                   </div>
-                  <label htmlFor="demo-spend" className="sr-only">
-                    {t.spend.monthly}
-                  </label>
-                  <input
-                    id="demo-spend"
-                    type="range"
-                    min={0}
-                    max={spendStops.length - 1}
-                    step={1}
-                    value={spendIndex}
-                    aria-valuetext={fmt(t.spend.valueText, { amount: describeSpend(spendStops[spendIndex]) })}
-                    onChange={(e) => {
-                      setNoAds(false);
-                      setSpendIndex(Number(e.target.value));
-                    }}
-                    className={styles.range}
-                    style={
-                      {
-                        "--fill": `${(spendIndex / (spendStops.length - 1)) * 100}%`,
-                      } as React.CSSProperties
-                    }
-                  />
-                  <div className={styles.ticks} aria-hidden>
-                    {[0, 10_000, 100_000, 1_000_000].map((v) => (
-                      <span
-                        key={v}
-                        style={{ "--at": spendStops.indexOf(v) / (spendStops.length - 1) } as React.CSSProperties}
-                      >
-                        {formatSpend(v)}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  aria-pressed={noAds}
-                  onClick={() => {
-                    setNoAds(true);
-                    goSoon("team");
-                  }}
-                  className={`${styles.option} ${styles.optionWide} ${noAds ? styles.optionOn : ""} mt-3 w-full`}
-                >
-                  <DemoIcon name="close" className={noAds ? "text-accent" : "text-muted"} />
-                  <span className="text-left">{t.spend.noAds}</span>
-                  <span className={styles.tick} aria-hidden>
-                    <DemoIcon name="check" size={12} />
-                  </span>
-                </button>
-                <Footer onBack={back}>
-                  <button type="button" className={primaryBtn} data-qa="form-next" onClick={() => go("team")}>
-                    {t.continue} <DemoIcon name="arrowRight" size={16} />
-                  </button>
-                </Footer>
-              </div>
-            )}
 
-            {step === "team" && (
-              <div>
-                <QuestionHead title={t.team.title} />
-                <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3" role="radiogroup">
-                  {aiTeamOptions.map((o) => {
-                    const on = aiTeam === o.id;
-                    return (
-                      <button
-                        key={o.id}
-                        type="button"
-                        role="radio"
-                        aria-checked={on}
-                        onClick={() => {
-                          setAiTeam(o.id);
-                          goSoon("goals");
-                        }}
-                        className={`${styles.option} ${styles.optionCentred} ${on ? styles.optionOn : ""}`}
-                      >
-                        <span>{t.team.options[o.id]}</span>
-                        <span className={styles.tick} aria-hidden>
-                          <DemoIcon name="check" size={12} />
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-                <Footer onBack={back}>
-                  <button
-                    type="button"
-                    className={primaryBtn} data-qa="form-next"
-                    disabled={!aiTeam}
-                    onClick={() => go("goals")}
-                  >
-                    {t.continue} <DemoIcon name="arrowRight" size={16} />
-                  </button>
-                </Footer>
-              </div>
-            )}
-
-            {step === "goals" && (
-              <div>
-                <QuestionHead title={t.goals.title} />
-                <form
-                  className="mt-5 flex gap-2"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    addGoal(goalDraft);
-                    setGoalDraft("");
-                  }}
-                >
-                  <label htmlFor="demo-goal" className="sr-only">
-                    {t.goals.inputLabel}
-                  </label>
-                  <input
-                    id="demo-goal"
-                    value={goalDraft}
-                    onChange={(e) => setGoalDraft(e.target.value)}
-                    maxLength={80}
-                    disabled={goals.length >= MAX_GOALS}
-                    placeholder={
-                      goals.length >= MAX_GOALS ? t.goals.placeholderFull : t.goals.placeholder
-                    }
-                    className={styles.input}
-                  />
-                  <button
-                    type="submit"
-                    aria-label={t.goals.add}
-                    disabled={!goalDraft.trim() || goals.length >= MAX_GOALS}
-                    className="flex size-12 shrink-0 items-center justify-center rounded-full bg-raised text-foreground ring-1 ring-control-line transition-colors duration-200 hover:bg-brand-strong hover:ring-brand-strong disabled:opacity-40 disabled:hover:bg-raised disabled:hover:ring-control-line"
-                  >
-                    <DemoIcon name="plus" size={18} />
-                  </button>
-                </form>
-
-                {goals.length > 0 && (
-                  <ul className="mt-4 flex flex-wrap gap-2" aria-label={t.goals.listLabel}>
-                    <AnimatePresence initial={false}>
-                      {goals.map((g) => (
-                        <motion.li
-                          key={g}
-                          layout
-                          initial={{ opacity: 0, scale: 0.9 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.9 }}
-                          transition={{ duration: 0.18 }}
-                          className="flex items-center gap-1 rounded-full bg-brand-strong py-1.5 pl-3.5 pr-1.5 text-sm font-medium text-white"
-                        >
-                          {g}
+                  {/* 2 · monthly ad spend */}
+                  <div>
+                    <p className="text-base font-semibold">{t.spend.title}</p>
+                    <div
+                      className={`mt-3 rounded-card bg-raised px-5 pb-4 pt-4 ring-1 ring-line transition-opacity duration-200 ${
+                        noAds ? "opacity-45" : ""
+                      }`}
+                    >
+                      <div className="flex items-end justify-between gap-3">
+                        <p className="tabular-nums" aria-live="polite">
+                          <span className="block text-sm text-muted">
+                            {spendIndex === 0 || spendIndex === spendStops.length - 1 ? t.spend.monthly : t.spend.around}
+                          </span>
+                          <span className="text-2xl font-semibold tracking-tight">{formatSpend(spendStops[spendIndex])}</span>
+                          <span className="ml-1.5 text-base text-muted">{t.spend.perMonth}</span>
+                        </p>
+                        <div className="flex gap-1.5">
                           <button
                             type="button"
-                            aria-label={fmt(t.goals.remove, { goal: g })}
-                            onClick={() => setGoals(goals.filter((x) => x !== g))}
-                            className="flex size-6 items-center justify-center rounded-full hover:bg-white/15"
+                            aria-label={t.spend.less}
+                            disabled={spendIndex === 0}
+                            onClick={() => {
+                              markStarted();
+                              setNoAds(false);
+                              setSpendIndex((i) => Math.max(0, i - 1));
+                            }}
+                            className={styles.nudge}
                           >
-                            <DemoIcon name="close" size={13} />
+                            <span aria-hidden>−</span>
                           </button>
-                        </motion.li>
-                      ))}
-                    </AnimatePresence>
-                  </ul>
-                )}
-
-                {goals.length < MAX_GOALS && (
-                  <div className="mt-5">
-                    <p className="text-label text-muted">{t.goals.suggested}</p>
-                    <div className="mt-2.5 flex flex-wrap gap-2">
-                      {suggestGoals(challenges, goals, t.goals.suggestions).map((g) => (
-                        <button
-                          key={g}
-                          type="button"
-                          onClick={() => addGoal(g)}
-                          data-qa="goal-suggestion"
-                          className="inline-flex min-h-10 items-center gap-1.5 rounded-full px-3.5 text-sm text-foreground ring-1 ring-line transition-colors duration-200 hover:bg-raised hover:ring-control-line"
-                        >
-                          <DemoIcon name="plus" size={14} className="text-accent" />
-                          {g}
-                        </button>
-                      ))}
+                          <button
+                            type="button"
+                            aria-label={t.spend.more}
+                            disabled={spendIndex === spendStops.length - 1}
+                            onClick={() => {
+                              markStarted();
+                              setNoAds(false);
+                              setSpendIndex((i) => Math.min(spendStops.length - 1, i + 1));
+                            }}
+                            className={styles.nudge}
+                          >
+                            <span aria-hidden>+</span>
+                          </button>
+                        </div>
+                      </div>
+                      <label htmlFor="demo-spend" className="sr-only">
+                        {t.spend.monthly}
+                      </label>
+                      <input
+                        id="demo-spend"
+                        type="range"
+                        min={0}
+                        max={spendStops.length - 1}
+                        step={1}
+                        value={spendIndex}
+                        aria-valuetext={fmt(t.spend.valueText, { amount: describeSpend(spendStops[spendIndex]) })}
+                        onChange={(e) => {
+                          markStarted();
+                          setNoAds(false);
+                          setSpendIndex(Number(e.target.value));
+                        }}
+                        className={styles.range}
+                        style={
+                          {
+                            "--fill": `${(spendIndex / (spendStops.length - 1)) * 100}%`,
+                          } as React.CSSProperties
+                        }
+                      />
+                      <div className={styles.ticks} aria-hidden>
+                        {[0, 10_000, 100_000, 1_000_000].map((v) => (
+                          <span
+                            key={v}
+                            style={{ "--at": spendStops.indexOf(v) / (spendStops.length - 1) } as React.CSSProperties}
+                          >
+                            {formatSpend(v)}
+                          </span>
+                        ))}
+                      </div>
                     </div>
+                    <button
+                      type="button"
+                      aria-pressed={noAds}
+                      onClick={() => {
+                        markStarted();
+                        setNoAds((v) => !v);
+                      }}
+                      className={`${styles.option} ${styles.optionWide} ${noAds ? styles.optionOn : ""} mt-2 w-full`}
+                    >
+                      <DemoIcon name="close" className={noAds ? "text-accent" : "text-muted"} />
+                      <span className="text-left">{t.spend.noAds}</span>
+                      <span className={styles.tick} aria-hidden>
+                        <DemoIcon name="check" size={12} />
+                      </span>
+                    </button>
                   </div>
-                )}
-                <Footer onBack={back}>
-                  <button type="button" className={primaryBtn} data-qa="form-next" onClick={() => go("contact")}>
-                    {goals.length ? t.continue : t.goals.skip}{" "}
-                    <DemoIcon name="arrowRight" size={16} />
+                </div>
+                <Footer>
+                  <span />
+                  <button
+                    type="button"
+                    className={primaryBtn} data-qa="form-next"
+                    disabled={!challenge}
+                    onClick={() => go("contact")}
+                  >
+                    {t.continue} <DemoIcon name="arrowRight" size={16} />
                   </button>
                 </Footer>
               </div>
@@ -796,6 +606,13 @@ export function DemoBookingForm() {
               </form>
             )}
 
+            {/* the calendar step opens with an invitation to finish: book the call now */}
+            {step === "time" && (
+              <div className="mb-5">
+                <QuestionHead title={t.time.title} />
+              </div>
+            )}
+
             {step === "time" && slotsState.status !== "ready" && (
               <div>
                 {slotsState.status === "loading" ? (
@@ -841,10 +658,10 @@ export function DemoBookingForm() {
                 intlTag={intlTagOf(lang)}
                 t={t.time}
                 summary={[
-                  ...challenges.map((id) => challengeLabel(id, t.challenges.labels)),
+                  ...(challenge ? [challengeLabel(challenge, t.challenges.labels)] : []),
                   noAds ? t.time.noAds : fmt(t.time.spendPerMonth, { amount: describeSpend(spendStops[spendIndex]) }),
                 ]}
-                onEdit={() => go("challenges")}
+                onEdit={() => go("qualify")}
                 footer={
                   <Footer onBack={back}>
                     <button

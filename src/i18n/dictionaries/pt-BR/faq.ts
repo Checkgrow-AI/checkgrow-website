@@ -65,7 +65,7 @@ export const faq: Localized<typeof source> = {
         {
           "anchor": "how-do-i-get-started",
           "q": "Como eu começo?",
-          "a": "Agende uma demo: mostramos a Checkgrow funcionando com a sua própria marca e ajudamos você a escolher um plano, sem precisar de cartão de crédito. A mesma página de agendamento coloca você em contato com nosso time para qualquer plano, inclusive Growth e Enterprise."
+          "a": "Fale com a gente: mostramos a Checkgrow funcionando com a sua própria marca e ajudamos você a escolher um plano, sem precisar de cartão de crédito. A mesma página de agendamento coloca você em contato com nosso time para qualquer plano, inclusive Growth e Enterprise."
         },
         {
           "anchor": "how-does-checkgrow-learn-about-my-company",
@@ -252,7 +252,7 @@ export const faq: Localized<typeof source> = {
     "topics": "Temas do FAQ",
     "stillTitle": "Ainda tem alguma dúvida?",
     "stillBody": "Veja a Checkgrow com a sua própria marca em uma demo ou leia os guias passo a passo na nossa documentação.",
-    "bookDemo": "Agendar uma demo",
+    "bookDemo": "Fale com a gente",
     "docs": "Ler a documentação"
   }
 };

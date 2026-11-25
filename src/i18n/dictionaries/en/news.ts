@@ -31,7 +31,7 @@ export const news = {
     securityByline: "Security update",
     contentsLabel: "On this page",
     faqLink: "FAQ",
-    bookDemo: "Book a demo",
+    bookDemo: "Talk to us",
   },
   tutorial: {
     contents: { shortVideo: "Short walkthrough", steps: "Step by step", fullVideo: "Full walkthrough" },

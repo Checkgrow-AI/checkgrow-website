@@ -5,7 +5,7 @@ export const seo: Localized<typeof source> = {
   site: {
     title: "Checkgrow · Die Go-to-Market-Engine, die Ihr Unternehmen kennenlernt",
     description:
-      "Checkgrow ist eine Growth-Marketing-Plattform, die Wissen, Kampagnen und Reporting verbindet, damit Teams schneller wachsen. Buchen Sie eine Demo.",
+      "Checkgrow ist eine Growth-Marketing-Plattform, die Wissen, Kampagnen und Reporting verbindet, damit Teams schneller wachsen. Sprechen Sie mit uns.",
     appCategory: "Marketing-Software",
     keywords: [
       "KI-Growth-Marketing-Plattform",
@@ -30,7 +30,7 @@ export const seo: Localized<typeof source> = {
     twitterDescription: "Ein System, in dem Wissen, Recherche, Umsetzung und Messung ineinandergreifen und aufeinander aufbauen.",
   },
   socialImageAlt:
-    "Checkgrow: das Growth-Brain für Scale-ups und Großunternehmen. Wissen, Kampagnen, Inhalte und Vertrieb in einem Kreislauf. Demo buchen, Onboarding inklusive.",
+    "Checkgrow: das Growth-Brain für Scale-ups und Großunternehmen. Wissen, Kampagnen, Inhalte und Vertrieb in einem Kreislauf. Sprechen Sie mit uns – Onboarding inklusive.",
   organization: {
     description:
       "KI-natives Growth-Marketing. Checkgrow verbindet Unternehmenswissen, Marktforschung, Marketing-Umsetzung und Messung in einem System.",

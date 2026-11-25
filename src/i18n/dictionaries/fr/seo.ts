@@ -5,7 +5,7 @@ export const seo: Localized<typeof source> = {
   site: {
     title: "Checkgrow · Le moteur go-to-market qui apprend votre métier",
     description:
-      "Checkgrow est une plateforme de growth marketing qui relie connaissances, campagnes et reporting pour faire grandir vos équipes plus vite. Réservez une démo.",
+      "Checkgrow est une plateforme de growth marketing qui relie connaissances, campagnes et reporting pour faire grandir vos équipes plus vite. Parlons-en.",
     appCategory: "Logiciel marketing",
     keywords: [
       "plateforme de growth marketing IA",
@@ -31,7 +31,7 @@ export const seo: Localized<typeof source> = {
     twitterDescription: "Un seul système où connaissances, recherche, exécution et mesure se connectent et se renforcent.",
   },
   socialImageAlt:
-    "Checkgrow : le cerveau de croissance des scale-ups et des grandes entreprises. Connaissances, campagnes, contenus et ventes dans une même boucle. Réservez une démo, onboarding offert.",
+    "Checkgrow : le cerveau de croissance des scale-ups et des grandes entreprises. Connaissances, campagnes, contenus et ventes dans une même boucle. Parlons-en, onboarding offert.",
   organization: {
     description:
       "Le growth marketing nativement IA. Checkgrow relie les connaissances de l’entreprise, les études de marché, l’exécution marketing et la mesure dans un seul système.",

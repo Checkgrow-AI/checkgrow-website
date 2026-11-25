@@ -7,7 +7,7 @@ export const home: Localized<typeof source> = {
     title: { before: "Die Go-to-Market-Engine, die", after: " kennenlernt." },
     rotatingWords: ["Ihr Produkt", "Ihre Kunden", "Ihren Markt", "Ihre Kanäle"],
     body: "Wachstum sollte nicht davon abhängen, wer gerade im Raum sitzt. Checkgrow bündelt alles, was Ihr Unternehmen weiß, in einem Betriebssystem für Wachstum: Es lernt, wird besser und arbeitet für jedes Team. So werden aus Wissen Kunden und Bekanntheit.",
-    bookDemo: "Demo buchen",
+    bookDemo: "Mit uns sprechen",
     chat: {
       label: "KI-Assistent",
       model: "Modell:",
@@ -118,7 +118,7 @@ export const home: Localized<typeof source> = {
     restart: "Plattformfilm neu starten",
     mute: "Plattformfilm stummschalten",
     unmute: "Ton des Plattformfilms einschalten",
-    bookDemo: "Demo buchen",
+    bookDemo: "Mit uns sprechen",
   },
   problem: {
     label: "Das Problem",
@@ -210,7 +210,7 @@ export const home: Localized<typeof source> = {
         body: "Großunternehmen und Scale-ups wollen Checkgrow selbst hosten – und wir bauen genau dafür. Ihr Unternehmenswissen bleibt strukturiert und bereit für jedes KI-Modell Ihrer Wahl – innerhalb Ihres eigenen Sicherheitsperimeters und nach Ihren eigenen Regeln zur Datensouveränität. Kein Lock-in bei einem Anbieter oder einem Modell.",
       },
     },
-    bookDemo: "Demo buchen",
+    bookDemo: "Mit uns sprechen",
     compare: "Checkgrow mit dem typischen Growth-Stack vergleichen",
   },
   caseStudies: {
@@ -225,7 +225,7 @@ export const home: Localized<typeof source> = {
       body: "Sehen Sie, wie Checkgrow ein echtes Go-to-Market von Anfang bis Ende umsetzt: 2 Minuten 41 Sekunden, ein Take, ohne Schnitt.",
       watch: "Demo-Review ansehen",
       hide: "Demo ausblenden",
-      bookDemo: "Demo buchen",
+      bookDemo: "Mit uns sprechen",
       badge: "2:41 · echte Demo, ohne Schnitt",
       question: "Ihr Marketing hakt und Sie zweifeln noch?",
     },
@@ -278,7 +278,7 @@ export const home: Localized<typeof source> = {
       label: "Für Großunternehmen",
       title: "Individuelle KI-Systeme, die Großunternehmen wachsen lassen.",
       body: "Große Teams bekommen dasselbe Growth-System, zugeschnitten auf ihre bestehende Arbeitsweise: ein Wissenskern, der jede Kampagne, jeden Agenten und jeden Report speist. Immer mehr Großunternehmen und Scale-ups möchten es selbst hosten: Wir entwickeln selbst gehostete, individuelle Setups, die zu Ihrem Stack, Ihren Sicherheitsanforderungen und Ihrer Größe passen – mit Ihrem Unternehmenswissen strukturiert für jedes KI-Modell und unter Ihrer eigenen Datensouveränität.",
-      bookDemo: "Demo buchen",
+      bookDemo: "Mit uns sprechen",
     },
   },
   faqLink: "Alle Fragen ansehen",
@@ -286,7 +286,7 @@ export const home: Localized<typeof source> = {
     logoAlt: "Logo der Growth-Marketing-Plattform Checkgrow",
     title: "Produkte zu bauen ist heute leicht. Checkgrow macht es leichter, sie zu verkaufen.",
     body: "Buchen Sie eine 30-minütige Demo am Beispiel Ihres eigenen Unternehmens, Ihrer Wettbewerber und Ihrer Website. Danach ist Checkgrow eingerichtet, und Sie haben einen klaren Plan für die nächsten Schritte.",
-    bookDemo: "Demo buchen",
+    bookDemo: "Mit uns sprechen",
   },
   scrollRail: {
     goTo: "Zu {label}",
@@ -297,7 +297,7 @@ export const home: Localized<typeof source> = {
       "use-cases": "Funktionen",
       pricing: "Preise",
       faq: "FAQ",
-      waitlist: "Demo buchen",
+      waitlist: "Mit uns sprechen",
     },
   },
   flow: {

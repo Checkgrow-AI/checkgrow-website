@@ -356,7 +356,7 @@ function DemoCard({ copy, showBookCta = true }: { copy: CaseStudiesCopy["demo"];
 }
 
 /* `afterBooking`: the demo confirmation page mirrors this section without
-   its top rule and without the "Book a demo" button (already booked). */
+   its top rule and without the "Talk to us" button (already booked). */
 export function CaseStudies({ afterBooking = false, copy, items }: {
   afterBooking?: boolean;
   copy: CaseStudiesCopy;

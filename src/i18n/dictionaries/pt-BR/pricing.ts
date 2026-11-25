@@ -14,7 +14,7 @@ export const pricing: Localized<typeof source> = {
     "eyebrow": "Preços",
     "title": "A plataforma, as marcas ou o time completo.",
     "intro": "Todos os planos rodam sobre o mesmo cérebro da empresa. Escolha uma marca, todas as marcas ou nossos especialistas conduzindo o growth com você.",
-    "bookDemo": "Agendar uma demo",
+    "bookDemo": "Fale com a gente",
     "optionsLabel": "Opções de preço",
     "billingLabel": "Frequência de cobrança",
     "monthly": "Mensal",
@@ -50,7 +50,7 @@ export const pricing: Localized<typeof source> = {
       "name": "Business",
       "audience": "Para uma única marca",
       "description": "A plataforma completa para uma única marca, com espaço para toda a equipe.",
-      "cta": "Agendar uma demo",
+      "cta": "Fale com a gente",
       "ctaNote": "Sem cartão de crédito",
       "specs": [
         {
@@ -84,7 +84,7 @@ export const pricing: Localized<typeof source> = {
       "name": "Agency",
       "audience": "Para agências e equipes com várias marcas",
       "description": "Cada marca e cada cliente no seu próprio workspace, com nosso time ao seu lado.",
-      "cta": "Agendar uma demo",
+      "cta": "Fale com a gente",
       "ctaNote": "Sem cartão de crédito",
       "specs": [
         {
@@ -231,7 +231,7 @@ export const pricing: Localized<typeof source> = {
     "fullStackNote": "Antes de usuários extras, excedentes e do tempo gasto costurando todas as ferramentas.",
     "from": "A partir de {price}/mês",
     "checkgrowBody": "Um sistema operacional, uma fonte única da verdade e uma só fatura.",
-    "bookDemo": "Agendar uma demo",
+    "bookDemo": "Fale com a gente",
     "footnote": "As ferramentas de terceiros são exemplos de cada categoria. Os preços são valores de tabela mensais típicos de planos comparáveis. Estimativas em números inteiros em {currency}; a cobrança da Checkgrow continua em EUR.",
     "rows": {
       "brandKnowledge": {

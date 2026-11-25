@@ -63,7 +63,7 @@ const categories: Localized<Categories> = [
       {
         anchor: "how-do-i-get-started",
         q: "Comment démarrer ?",
-        a: "Réservez une démo : nous vous présentons Checkgrow sur votre propre marque et vous aidons à choisir une offre, sans carte bancaire. La même page de réservation vous met en relation avec notre équipe pour toutes les offres, y compris Growth et Enterprise.",
+        a: "Contactez-nous : nous vous présentons Checkgrow sur votre propre marque et vous aidons à choisir une offre, sans carte bancaire. La même page de réservation vous met en relation avec notre équipe pour toutes les offres, y compris Growth et Enterprise.",
       },
       {
         anchor: "how-does-checkgrow-learn-about-my-company",
@@ -255,7 +255,7 @@ export const faq: Localized<typeof source> = {
     topics: "Thèmes de la FAQ",
     stillTitle: "Encore une question ?",
     stillBody: "Découvrez Checkgrow sur votre propre marque lors d’une démo, ou lisez les guides pas à pas de notre documentation.",
-    bookDemo: "Réserver une démo",
+    bookDemo: "Parlons-en",
     docs: "Lire la documentation",
   },
 };

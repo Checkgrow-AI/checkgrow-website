@@ -1,22 +1,38 @@
-/* Book a demo: every option the qualification form offers and the goal
-   suggestions it derives from the visitor's answers. Shared by the page
-   and the API. Live availability is server-only: demoAvailability.ts. */
+/* Talk to us (/book-a-demo): every option the qualification step offers
+   (main goal and monthly ad spend).
+   Shared by the page and the API. Live availability is server-only:
+   demoAvailability.ts. */
 
 export const DEMO_TIME_ZONE = "Europe/Zagreb";
 export const DEMO_MINUTES = 30;
 
-export type ChallengeId =
-  | "leads"
-  | "conversion"
-  | "cac"
-  | "ads"
-  | "outreach"
-  | "creatives"
-  | "content"
-  | "geo"
-  | "agents"
-  | "compliance";
+/* What the visitor wants to fix first: one main goal, picked from a
+   dropdown. The first option is the general one. Ids are what the APIs
+   and the sales team receive; labels come from the demo dictionary
+   (demo.form.challenges.labels). */
+export const challengeIds = [
+  "growth-ops",
+  "leads",
+  "ads",
+  "conversion",
+  "outreach",
+  "content",
+  "geo",
+  "agents",
+] as const;
+export type ChallengeId = (typeof challengeIds)[number];
 
+/* ids from the earlier ten-card form, merged into today's options; the
+   API still accepts them from a page opened before the change */
+export const LEGACY_CHALLENGES: Readonly<Record<string, ChallengeId>> = {
+  cac: "ads",
+  creatives: "content",
+  compliance: "agents",
+};
+
+export const MAX_CHALLENGES = 1;
+
+/* icon names the page's icon set accepts (DemoIcons) */
 export type ChallengeIcon =
   | "magnet"
   | "funnel"
@@ -28,37 +44,6 @@ export type ChallengeIcon =
   | "geo"
   | "spark"
   | "shield";
-
-export type ChallengeGroupId = "growth" | "ai";
-
-/* ids and icons only: labels come from the demo dictionary (demo.form.challenges) */
-export const challengeGroups: {
-  id: ChallengeGroupId;
-  items: { id: ChallengeId; icon: ChallengeIcon }[];
-}[] = [
-  {
-    id: "growth",
-    items: [
-      { id: "leads", icon: "magnet" },
-      { id: "conversion", icon: "funnel" },
-      { id: "cac", icon: "coins" },
-      { id: "ads", icon: "meta" },
-      { id: "outreach", icon: "send" },
-      { id: "creatives", icon: "image" },
-      { id: "content", icon: "pen" },
-      { id: "geo", icon: "geo" },
-    ],
-  },
-  {
-    id: "ai",
-    items: [
-      { id: "agents", icon: "spark" },
-      { id: "compliance", icon: "shield" },
-    ],
-  },
-];
-
-export const MAX_CHALLENGES = 3;
 
 export const challengeLabel = (id: string, labels: Readonly<Record<ChallengeId, string>>) =>
   labels[id as ChallengeId] ?? id;
@@ -82,8 +67,10 @@ export const formatSpend = (value: number) =>
 export const describeSpend = (value: number) =>
   value === 0 || value >= 1_000_000 ? formatSpend(value) : `~${formatSpend(value)}`;
 
-/* ids only: labels come from the demo dictionary (demo.form.team.options) */
-export const aiTeamOptions = [
+/* Company size is no longer asked. A page opened before that change may
+   still send one of these ids (as companySize, or aiTeam even earlier);
+   the API accepts it and passes it on. */
+export const companySizeOptions = [
   { id: "1" },
   { id: "2-5" },
   { id: "6-20" },
@@ -91,27 +78,8 @@ export const aiTeamOptions = [
   { id: "51-100" },
   { id: "100+" },
 ] as const;
-export type AiTeamId = (typeof aiTeamOptions)[number]["id"];
+export type CompanySizeId = (typeof companySizeOptions)[number]["id"];
 
-/* Goal suggestions follow the first answer: the visitor taps rather
-   than types. Order matters; the first suggestions shown are the ones
-   tied to the challenges picked, then the general ones. The goal texts
-   are copy (demo.form.goals.suggestions); a picked goal is sent as the
-   text the visitor saw. */
-export type GoalSuggestions = {
-  byChallenge: Readonly<Record<ChallengeId, readonly string[]>>;
-  general: readonly string[];
-};
-
+/* goals are no longer asked; the API still accepts them from a page
+   opened before the change */
 export const MAX_GOALS = 5;
-
-export function suggestGoals(challenges: string[], picked: string[], copy: GoalSuggestions) {
-  const out: string[] = [];
-  for (const id of challenges) {
-    for (const goal of copy.byChallenge[id as ChallengeId] ?? []) {
-      if (!out.includes(goal)) out.push(goal);
-    }
-  }
-  for (const goal of copy.general) if (!out.includes(goal)) out.push(goal);
-  return out.filter((g) => !picked.includes(g)).slice(0, 6);
-}

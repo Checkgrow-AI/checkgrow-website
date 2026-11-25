@@ -28,7 +28,7 @@ export const useCases: Localized<typeof source> = {
     back: "Tous les cas d’usage",
     eyebrow: "Cas d’usage · {feature}",
     builtFor: "Conçu pour",
-    bookDemo: "Réserver une démo",
+    bookDemo: "Parlons-en",
     seeHow: "Voir comment ça marche",
     onThisPage: "Sur cette page",
     sections: {

@@ -12,7 +12,7 @@ export const sales: Localized<typeof source> = {
     eyebrow: "Checkgrow Sales",
     title: "Die besten Go-to-Market-Teams verkaufen mit Checkgrow.",
     intro: "Ein KI-Sales-Brain, das lernt, wie Ihr Unternehmen verkauft, konsistenten Outreach über alle Vertriebler skaliert und jedes Gespräch in einem Verlauf festhält, den Ihre Führung jederzeit nachvollziehen kann.",
-    bookDemo: "Demo buchen",
+    bookDemo: "Mit uns sprechen",
     seeHow: "So funktioniert es",
   },
   film: {
@@ -223,7 +223,7 @@ export const sales: Localized<typeof source> = {
   cta: {
     title: "Vertrieb, der mit jedem Gespräch besser wird, beginnt hier.",
     body: "Sehen Sie Checkgrow Sales mit Ihrem eigenen ICP, Ihren Accounts und Ihrer Stimme – in einer 30-minütigen Demo mit unserem Team.",
-    bookDemo: "Demo buchen",
+    bookDemo: "Mit uns sprechen",
   },
   schema: {
     product: "Checkgrow Sales",

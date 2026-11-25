@@ -18,8 +18,8 @@ export const features = {
     "intro": "Every Checkgrow feature reads from the same company brain. See each one at work in three steps, from knowledge and research to campaigns, creatives and sales.",
     "indexTitle": "All features",
     "ctaTitle": "One platform. Every feature connected.",
-    "ctaBody": "Book a demo and put the whole system to work, with onboarding from our team to set up your Knowledge Centre.",
-    "bookDemo": "Book a demo",
+    "ctaBody": "Talk to us and put the whole system to work, with onboarding from our team to set up your Knowledge Centre.",
+    "bookDemo": "Talk to us",
     "explore": "Explore News and tutorials"
   },
   "home": {

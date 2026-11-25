@@ -3,13 +3,13 @@ import type { demo as source } from "../en/demo";
 
 export const demo: Localized<typeof source> = {
   meta: {
-    title: "Agende uma demo | Checkgrow",
+    title: "Fale com a gente | Checkgrow",
     description:
       "Agende uma demo de 30 minutos da Checkgrow. Saia com o onboarding da sua empresa feito, uma estratégia de growth com IA gratuita e a plataforma pronta para rodar, além de uma análise de concorrentes, uma revisão do seu site e 30 dias de acesso grátis.",
-    schemaName: "Agende uma demo da Checkgrow",
+    schemaName: "Fale com a Checkgrow",
   },
   page: {
-    eyebrow: "Agendar uma demo",
+    eyebrow: "Fale com a gente",
     title: "Veja o seu motor de growth funcionando em 30 minutos.",
     lead: "Uma sessão ao vivo sobre a sua empresa, seus concorrentes e seu site. Você sai com a Checkgrow configurada e um plano claro do que fazer em seguida.",
     perksLabel: "O que você leva da demo",
@@ -44,39 +44,34 @@ export const demo: Localized<typeof source> = {
     stepOf: "Passo {n} de {total} · {name}",
     phases: {
       questions: "Personalize sua demo",
-      time: "Escolha um horário",
+      time: "Agende sua conversa",
     },
     phaseLength: {
-      questions: "60 s",
+      questions: "30 s",
       time: "{n} min",
     },
     intro: {
       questions:
         "Suas respostas preparam o seu onboarding: montamos a análise de concorrentes, a revisão do site e a estratégia de IA antes da conversa.",
-      time: "Escolha o horário que for melhor para você. O convite e o link da videochamada chegam por e-mail.",
+      time: "Escolha o horário que funciona melhor para você. O convite e o link da videochamada chegam na hora por e-mail.",
     },
     continue: "Continuar",
     back: "Voltar",
     challenges: {
       title: "O que você quer resolver primeiro?",
-      groups: {
-        growth: { label: "Crescimento", tag: "Pipeline" },
-        ai: { label: "Operações com IA", tag: "Equipe" },
-      },
+      /* the dropdown's empty choice */
+      placeholder: "Escolha seu objetivo principal",
+      /* keyed by the id sent to the API; the first option is the general one */
       labels: {
-        leads: "Gerar mais leads",
-        conversion: "Um site que converte",
-        cac: "Reduzir meu CAC",
-        ads: "Campanhas melhores no Google, Meta ou LinkedIn",
+        "growth-ops": "Otimizar minha operação de growth marketing",
+        leads: "Gerar mais leads qualificados",
+        ads: "Reduzir meu CAC com anúncios melhores no Google, Meta ou LinkedIn",
+        conversion: "Converter mais visitantes do site em leads",
         outreach: "Melhorar minha prospecção de vendas",
-        creatives: "Mais criativos, e melhores",
-        content: "Produzir mais conteúdo",
-        geo: "Melhorar meu ranking em GEO ou SEO",
-        agents: "Agentes de IA trabalhando para o meu time",
-        compliance: "Mais conformidade no uso de IA",
+        content: "Criar mais e melhores conteúdos e criativos",
+        geo: "Subir no Google e nas buscas com IA (SEO e GEO)",
+        agents: "Trazer agentes de IA para o meu time, com segurança",
       },
-      limitReached: "Até {max}: desmarque uma opção para trocar.",
-      selected: "{n} de {max} selecionadas",
     },
     spend: {
       title: "Quanto você investe em anúncios por mês?",
@@ -87,48 +82,6 @@ export const demo: Localized<typeof source> = {
       more: "Mais",
       valueText: "{amount} por mês",
       noAds: "Ainda sem anúncios ativos",
-    },
-    team: {
-      title: "Quantas pessoas usam IA na sua empresa?",
-      options: {
-        "1": "Só eu",
-        "2-5": "2–5 pessoas",
-        "6-20": "6–20 pessoas",
-        "21-50": "21–50 pessoas",
-        "51-100": "51–100 pessoas",
-        "100+": "100+ pessoas",
-      },
-    },
-    goals: {
-      title: "Quais são as suas metas para este ano?",
-      inputLabel: "Adicionar uma meta",
-      placeholder: "ex.: Entrar no mercado dos EUA",
-      placeholderFull: "Cinco metas adicionadas",
-      add: "Adicionar meta",
-      listLabel: "Suas metas",
-      remove: "Remover {goal}",
-      suggested: "Sugestões para você",
-      skip: "Pular por enquanto",
-      suggestions: {
-        byChallenge: {
-          leads: ["Dobrar os leads qualificados", "Construir um pipeline previsível"],
-          conversion: ["Aumentar a taxa de conversão do site", "Corrigir os pontos de abandono do funil"],
-          cac: ["Reduzir o CAC em 30%", "Escalar anúncios com lucro"],
-          ads: ["Escalar anúncios com lucro", "Alcançar tomadores de decisão no LinkedIn"],
-          outreach: ["Agendar mais reuniões de vendas", "Personalizar a prospecção em escala"],
-          content: ["Publicar conteúdo toda semana", "Aumentar o alcance orgânico"],
-          creatives: ["Lançar criativos novos toda semana", "Encontrar os criativos que vencem"],
-          geo: ["Ser citado nas respostas de IA", "Aparecer na primeira página do Google"],
-          agents: ["Rodar o marketing com agentes de IA", "Automatizar o relatório semanal"],
-          compliance: ["Governança e conformidade em IA", "Levar a IA para toda a equipe"],
-        },
-        general: [
-          "Entrar em um novo mercado",
-          "Aumentar a receita este ano",
-          "Superar nossos concorrentes",
-          "Lançar um novo produto",
-        ],
-      },
     },
     contact: {
       title: "Para onde enviamos o seu convite?",
@@ -145,7 +98,7 @@ export const demo: Localized<typeof source> = {
         link: "Política de Privacidade",
         after: ".",
       },
-      submit: "Solicitar demo",
+      submit: "Enviar",
       sending: "Enviando…",
     },
     errors: {
@@ -164,11 +117,13 @@ export const demo: Localized<typeof source> = {
       failed: "Não conseguimos reservar esse horário. Tente de novo.",
     },
     time: {
+      /* heading of the calendar step: invite the visitor to finish */
+      title: "Último passo: agende sua conversa com a gente",
       loading: "Carregando os horários disponíveis",
       loadError: "Não conseguimos carregar a agenda.",
       loadErrorHint: "Suas respostas estão salvas aqui. Tente de novo em instantes.",
       retry: "Tentar de novo",
-      confirm: "Confirmar demo",
+      confirm: "Agendar minha conversa",
       confirming: "Agendando…",
       tailoredFor: "Personalizada para",
       edit: "Editar",

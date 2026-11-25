@@ -29,7 +29,7 @@ export const useCases = {
     back: "All use cases",
     eyebrow: "Use case · {feature}",
     builtFor: "Built for",
-    bookDemo: "Book a demo",
+    bookDemo: "Talk to us",
     seeHow: "See how it works",
     onThisPage: "On this page",
     /* section labels, shared by the table of contents */

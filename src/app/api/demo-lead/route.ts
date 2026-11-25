@@ -50,7 +50,7 @@ export async function POST(req: Request) {
       website: lead.website,
       challenges: d.challenges,
       adSpend: d.spend,
-      aiTeam: d.aiTeam,
+      companySize: d.companySize,
       goals: lead.goals,
       visitorTimeZone: typeof body.timeZone === "string" ? body.timeZone.slice(0, 64) : "",
       campaign: [lead.last?.utm_source, lead.last?.utm_medium, lead.last?.utm_campaign].filter(Boolean).join(" / "),

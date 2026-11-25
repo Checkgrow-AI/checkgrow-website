@@ -77,7 +77,7 @@ const contact = () =>
   join(
     "## Contact",
     list([
-      `Book a demo or talk to our team (all plans): ${BOOK_DEMO}`,
+      `Talk to us (all plans): ${BOOK_DEMO}`,
       "Email: bruno@checkgrow.com",
       `Trustpilot reviews: https://www.trustpilot.com/review/checkgrow.com`,
     ]),
@@ -159,7 +159,7 @@ function homeBody() {
 function salesBody() {
   return join(
     salesHero.intro,
-    `Book a demo: ${BOOK_DEMO}`,
+    `Talk to us: ${BOOK_DEMO}`,
     "## Three modules, one Sales Brain",
     ...salesModules.map((m, i) =>
       join(
@@ -411,7 +411,7 @@ export function renderLlmsTxt() {
     "## Optional",
     list([
       `[Full site content in one file](${SITE_URL}/llms-full.txt): every page above in markdown.`,
-      `[Book a demo](${BOOK_DEMO})`,
+      `[Talk to us](${BOOK_DEMO})`,
       `[Sitemap](${SITE_URL}/sitemap.xml)`,
     ]),
   ) + "\n";

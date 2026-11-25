@@ -23,7 +23,7 @@ export type LeadEmail = {
   website: string;
   challenges: string[];
   adSpend: string;
-  aiTeam: string;
+  companySize: string;
   goals: string[];
   slot?: string;
   visitorTimeZone: string;
@@ -85,8 +85,8 @@ export async function sendLeadEmail(lead: LeadEmail) {
     ["Website", site],
     ["Wants to fix", lead.challenges.join(", ")],
     ["Monthly ad spend", lead.adSpend],
-    ["People using AI", lead.aiTeam],
-    ["Goals", lead.goals.length ? lead.goals.join("; ") : "not given"],
+    ...(lead.companySize ? ([["Company size", lead.companySize]] as [string, string][]) : []),
+    ...(lead.goals.length ? ([["Goals", lead.goals.join("; ")]] as [string, string][]) : []),
     ["Visitor time zone", lead.visitorTimeZone || "unknown"],
   );
   if (lead.language && lead.language !== "en") rows.push(["Language", localeInfo[lead.language].name]);

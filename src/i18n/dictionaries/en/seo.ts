@@ -6,7 +6,7 @@ export const seo = {
   site: {
     title: "Checkgrow · The go-to-market engine that learns your business",
     description:
-      "Checkgrow is a growth marketing platform connecting knowledge, campaigns and reporting to help teams grow faster. Book a demo and grow your team.",
+      "Checkgrow is a growth marketing platform connecting knowledge, campaigns and reporting to help teams grow faster. Talk to us and grow your team.",
     appCategory: "Marketing software",
     keywords: [
       "AI growth marketing platform",
@@ -32,7 +32,7 @@ export const seo = {
     twitterDescription: "One system where knowledge, research, execution and measurement connect and compound.",
   },
   socialImageAlt:
-    "Checkgrow: the growth brain for scale-ups and enterprise. Knowledge, campaigns, content and sales in one loop. Book a demo with free onboarding.",
+    "Checkgrow: the growth brain for scale-ups and enterprise. Knowledge, campaigns, content and sales in one loop. Talk to us about free onboarding.",
   organization: {
     description:
       "AI Native Growth Marketing. Checkgrow connects company knowledge, market research, marketing execution and measurement in one system.",

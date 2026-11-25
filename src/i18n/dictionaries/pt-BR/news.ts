@@ -26,7 +26,7 @@ export const news: Localized<typeof source> = {
     securityByline: "Atualização de segurança",
     contentsLabel: "Nesta página",
     faqLink: "FAQ",
-    bookDemo: "Agendar uma demo",
+    bookDemo: "Fale com a gente",
   },
   tutorial: {
     contents: { shortVideo: "Tour rápido", steps: "Passo a passo", fullVideo: "Tour completo" },

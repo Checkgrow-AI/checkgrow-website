@@ -14,14 +14,14 @@ import { appendFile, mkdir } from "fs/promises";
 import path from "path";
 import { isCompanyEmail } from "./freeEmailDomains";
 import {
-  aiTeamOptions,
-  challengeGroups,
+  challengeIds as CHALLENGE_IDS,
   challengeLabel,
-  type AiTeamId,
+  companySizeOptions,
+  type CompanySizeId,
   DEMO_MINUTES,
   DEMO_TIME_ZONE,
   describeSpend,
-  MAX_CHALLENGES,
+  LEGACY_CHALLENGES,
   MAX_GOALS,
   spendStops,
 } from "./demo";
@@ -43,7 +43,8 @@ export type DemoLead = {
   challenges: string[];
   adSpend: number | null;
   noActiveAds: boolean;
-  aiTeam: string;
+  /* only from a page opened before the question was removed */
+  companySize: string | null;
   goals: string[];
   first: Touch | null;
   last: Touch | null;
@@ -54,8 +55,14 @@ export type DemoLead = {
   language: Locale;
 };
 
-const challengeIds = new Set<string>(challengeGroups.flatMap((g) => g.items.map((i) => i.id)));
-const teamIds = new Set<string>(aiTeamOptions.map((o) => o.id));
+const challengeIds = new Set<string>(CHALLENGE_IDS);
+const sizeIds = new Set<string>(companySizeOptions.map((o) => o.id));
+/* sales-facing English label for a company size id */
+const sizeLabel = (id: CompanySizeId) => (id === "1" ? "Just me" : `${id.replace("-", "–")} people`);
+
+/* a page opened before the one-step form may still send up to three
+   challenges (with retired ids) and "aiTeam"; both are accepted */
+const MAX_ACCEPTED_CHALLENGES = 3;
 export const text = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 const url = (v: unknown) => {
   const s = text(v, 500);
@@ -79,16 +86,24 @@ export function parseDemoLead(body: Record<string, unknown>): { lead: DemoLead }
   if (!/^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(\/\S*)?$/i.test(website)) return { error: "Invalid website" };
 
   const challenges = Array.isArray(body.challenges)
-    ? [...new Set(body.challenges.filter((c): c is string => typeof c === "string" && challengeIds.has(c)))]
+    ? [
+        ...new Set(
+          body.challenges
+            .filter((c): c is string => typeof c === "string")
+            .map((c) => LEGACY_CHALLENGES[c] ?? c)
+            .filter((c) => challengeIds.has(c)),
+        ),
+      ]
     : [];
-  if (!challenges.length || challenges.length > MAX_CHALLENGES) return { error: "Pick up to three challenges" };
+  if (!challenges.length || challenges.length > MAX_ACCEPTED_CHALLENGES) return { error: "Pick what you want to fix first" };
 
   const noActiveAds = body.noActiveAds === true;
   const adSpend = noActiveAds ? null : (body.adSpend as number);
   if (!noActiveAds && !spendStops.includes(adSpend as number)) return { error: "Invalid ad spend" };
 
-  const aiTeam = typeof body.aiTeam === "string" && teamIds.has(body.aiTeam) ? body.aiTeam : null;
-  if (!aiTeam) return { error: "Invalid AI team size" };
+  /* optional: no longer asked, but kept when an older page sends it */
+  const rawSize = typeof body.companySize === "string" ? body.companySize : body.aiTeam;
+  const companySize = typeof rawSize === "string" && sizeIds.has(rawSize) ? rawSize : null;
 
   const goals = Array.isArray(body.goals)
     ? body.goals.map((g) => text(g, 80)).filter(Boolean).slice(0, MAX_GOALS)
@@ -106,7 +121,7 @@ export function parseDemoLead(body: Record<string, unknown>): { lead: DemoLead }
       challenges,
       adSpend,
       noActiveAds,
-      aiTeam,
+      companySize,
       goals,
       first: cleanTouch(attribution.first),
       last: cleanTouch(attribution.last),
@@ -124,8 +139,9 @@ export function describeLead(lead: DemoLead) {
     name: `${lead.firstName} ${lead.lastName}`,
     challenges: lead.challenges.map((id) => challengeLabel(id, englishCopy.form.challenges.labels)),
     spend: lead.noActiveAds ? "No active ads" : `${describeSpend(lead.adSpend as number)} / month`,
-    aiTeam: englishCopy.form.team.options[lead.aiTeam as AiTeamId] ?? lead.aiTeam,
-    goals: lead.goals.length ? lead.goals.join("; ") : "not given",
+    companySize: lead.companySize ? sizeLabel(lead.companySize as CompanySizeId) : "",
+    /* only from a page opened before goals were removed */
+    goals: lead.goals.length ? lead.goals.join("; ") : "",
   };
 }
 
@@ -186,8 +202,8 @@ export function leadNotes(lead: DemoLead, stage: LeadStage) {
     "",
     `Wants to fix: ${d.challenges.join(", ")}`,
     `Monthly ad spend: ${d.spend}`,
-    `People using AI: ${d.aiTeam}`,
-    `Goals: ${d.goals}`,
+    d.companySize ? `Company size: ${d.companySize}` : "",
+    d.goals ? `Goals: ${d.goals}` : "",
     "",
     `Last touch: ${touchLine(lead.last)}`,
     `First touch: ${touchLine(lead.first)}`,
@@ -206,6 +222,7 @@ export function leadWebhookPayload(lead: DemoLead, stage: LeadStage) {
     first_name: lead.firstName,
     last_name: lead.lastName,
     website: site,
+    company_size: lead.companySize ?? "",
     notes: leadNotes(lead, stage),
     source: LEAD_SOURCE,
     language: lead.language,

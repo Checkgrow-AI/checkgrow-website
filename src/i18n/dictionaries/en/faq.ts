@@ -69,7 +69,7 @@ export const faq = {
         {
           "anchor": "how-do-i-get-started",
           "q": "How do I get started?",
-          "a": "Book a demo: we walk you through Checkgrow on your own brand and help you choose a plan, with no credit card required. The same booking page connects you with our team for every plan, including Growth and Enterprise."
+          "a": "Talk to us: we walk you through Checkgrow on your own brand and help you choose a plan, with no credit card required. The same booking page connects you with our team for every plan, including Growth and Enterprise."
         },
         {
           "anchor": "how-does-checkgrow-learn-about-my-company",
@@ -256,7 +256,7 @@ export const faq = {
     "topics": "FAQ topics",
     "stillTitle": "Still have a question?",
     "stillBody": "See Checkgrow on your own brand in a demo, or read the step-by-step guides in our documentation.",
-    "bookDemo": "Book a demo",
+    "bookDemo": "Talk to us",
     "docs": "Read the documentation"
   }
 } as const;

@@ -18,6 +18,8 @@
 
 import { chromium } from "playwright";
 import { writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 const base = process.argv[2];
 const arg = (k) => process.argv.find((a) => a.startsWith(`--${k}=`))?.split("=")[1];
@@ -113,21 +115,17 @@ const step = async (name, fn) => {
   try {
     await fn();
   } catch (e) {
-    await page.screenshot({ path: `${out ?? "flow"}-${name}-failed.png` }).catch(() => {});
+    /* next to --out, or in the system temp folder: never in the repository */
+    await page.screenshot({ path: `${out ?? join(tmpdir(), "checkgrow-flow")}-${name}-failed.png` }).catch(() => {});
     fail(`step "${name}" failed: ${e.message.split("\n")[0]}`);
   }
   record.steps.push(name);
   await page.waitForTimeout(700);
 };
-await step("challenges", async () => {
-  await page.locator("button[aria-pressed]").first().click();
-  await page.locator("button[aria-pressed]").nth(3).click();
-  await primary().click();
-});
-await step("spend", async () => primary().click());
-await step("team", async () => page.locator('[role="radiogroup"] [role="radio"]').nth(1).click());
-await step("goals", async () => {
-  await page.locator('[data-qa="goal-suggestion"]').first().click();
+await step("qualify", async () => {
+  /* one screen: main goal (dropdown), ad spend (left at its default) */
+  await page.locator('[data-qa="challenge-select"]').click();
+  await page.locator('[role="listbox"] [role="option"][data-value="ads"]').click();
   await primary().click();
 });
 await step("contact", async () => {
@@ -165,7 +163,7 @@ const checks = {
   "cookies follow consent": consent ? record.cookiesAfterLanding.length === 2 : record.cookiesAfterLanding.length === 0,
   "lead carries attribution": lead.attribution?.last?.utm_source === "linkedin" && lead.attribution?.last?.gclid === "TEST-GCLID-123",
   "booking carries attribution": book.attribution?.last?.utm_campaign === "q4_demo",
-  "lead answers are language-neutral ids": Array.isArray(lead.challenges) && lead.challenges.every((c) => /^[a-z0-9+-]+$/.test(c)) && /^[a-z0-9+-]+$/.test(lead.aiTeam ?? ""),
+  "lead answers are language-neutral ids": JSON.stringify(lead.challenges) === '["ads"]' && lead.companySize === undefined && lead.aiTeam === undefined && lead.goals === undefined,
   "landing page recorded": (lead.attribution?.last?.landing_page ?? "").includes(`${landingLocale}/pricing?`),
   "stays in language": record.bookPath === `${locale}/book-a-demo` && record.confirmationPath === `${locale}/demo-confirmation`,
   "events in order": ["demo_form_start", "lead_submitted", "demo_booked"].every((e) => record.events.includes(e)),

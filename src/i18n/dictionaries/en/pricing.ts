@@ -15,7 +15,7 @@ export const pricing = {
     "eyebrow": "Pricing",
     "title": "The platform, the brands, or the whole team.",
     "intro": "Every plan runs on the same company brain. Choose one brand, every brand, or our specialists running growth with you.",
-    "bookDemo": "Book a demo",
+    "bookDemo": "Talk to us",
     "optionsLabel": "Pricing options",
     "billingLabel": "Billing frequency",
     "monthly": "Monthly",
@@ -51,7 +51,7 @@ export const pricing = {
       "name": "Business",
       "audience": "For a single brand",
       "description": "The complete platform for a single brand, with room for the whole team.",
-      "cta": "Book a demo",
+      "cta": "Talk to us",
       "ctaNote": "No credit card required",
       "specs": [
         {
@@ -85,7 +85,7 @@ export const pricing = {
       "name": "Agency",
       "audience": "For agencies and multi-brand teams",
       "description": "Every brand and client in its own workspace, with our team in your corner.",
-      "cta": "Book a demo",
+      "cta": "Talk to us",
       "ctaNote": "No credit card required",
       "specs": [
         {
@@ -232,7 +232,7 @@ export const pricing = {
     "fullStackNote": "Before seats, overages and the time spent stitching every tool together.",
     "from": "From {price}/mo",
     "checkgrowBody": "One operating system, one source of truth and one bill.",
-    "bookDemo": "Book a demo",
+    "bookDemo": "Talk to us",
     "footnote": "Third-party tools are category examples. Prices are typical monthly list prices for comparable plans. Whole-number estimates in {currency}; Checkgrow billing remains in EUR.",
     "rows": {
       "brandKnowledge": {

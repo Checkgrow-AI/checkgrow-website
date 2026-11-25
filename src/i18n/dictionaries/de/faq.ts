@@ -65,7 +65,7 @@ export const faq: Localized<typeof source> = {
         {
           "anchor": "how-do-i-get-started",
           "q": "Wie fange ich an?",
-          "a": "Buchen Sie eine Demo: Wir zeigen Ihnen Checkgrow mit Ihrer eigenen Marke und helfen Ihnen bei der Wahl des passenden Plans, ganz ohne Kreditkarte. Über dieselbe Buchungsseite erreichen Sie unser Team für jeden Plan, auch für Growth und Enterprise."
+          "a": "Sprechen Sie mit uns: Wir zeigen Ihnen Checkgrow mit Ihrer eigenen Marke und helfen Ihnen bei der Wahl des passenden Plans, ganz ohne Kreditkarte. Über dieselbe Buchungsseite erreichen Sie unser Team für jeden Plan, auch für Growth und Enterprise."
         },
         {
           "anchor": "how-does-checkgrow-learn-about-my-company",
@@ -252,7 +252,7 @@ export const faq: Localized<typeof source> = {
     "topics": "FAQ-Themen",
     "stillTitle": "Noch Fragen?",
     "stillBody": "Sehen Sie Checkgrow in einer Demo mit Ihrer eigenen Marke, oder lesen Sie die Schritt-für-Schritt-Anleitungen in unserer Dokumentation.",
-    "bookDemo": "Demo buchen",
+    "bookDemo": "Mit uns sprechen",
     "docs": "Zur Dokumentation"
   }
 };
