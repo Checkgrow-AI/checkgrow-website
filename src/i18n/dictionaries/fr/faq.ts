@@ -154,7 +154,7 @@ const categories: Localized<Categories> = [
       {
         anchor: "which-plan-is-right-for-my-team",
         q: "Quelle offre convient à mon équipe ?",
-        a: "Business : la plateforme complète pour une marque, avec de la place pour toute l’équipe. Agency : chaque marque et chaque client dans son propre espace de travail, avec notre équipe à vos côtés. Growth : nos spécialistes gèrent vos publicités, vos rapports et le suivi, aux côtés de votre équipe. Enterprise : votre plateforme de croissance, sur votre infrastructure, à vos couleurs.",
+        a: "Business : la plateforme complète pour une marque et une équipe de 5 utilisateurs maximum. Agency : chaque marque et chaque client dans son propre espace de travail, avec notre équipe à vos côtés. Growth : nos spécialistes gèrent vos publicités, vos rapports et le suivi, aux côtés de votre équipe. Enterprise : votre plateforme de croissance, sur votre infrastructure, à vos couleurs.",
       },
       {
         anchor: "what-is-the-difference-between-the-business-and-agency-plans",
@@ -179,7 +179,7 @@ const categories: Localized<Categories> = [
       {
         anchor: "how-many-people-can-use-checkgrow",
         q: "Combien de personnes peuvent utiliser Checkgrow ?",
-        a: "Business : utilisateurs illimités. Agency : utilisateurs illimités. Growth : utilisateurs illimités. Enterprise : utilisateurs illimités. Réunissez marketing, ventes et direction dans le même système.",
+        a: "Business : jusqu’à 5 utilisateurs, dont 2 admins maximum. Agency : jusqu’à 10 utilisateurs, dont 4 admins maximum. Growth : utilisateurs illimités. Enterprise : utilisateurs illimités. Réunissez marketing, ventes et direction dans le même système.",
       },
       {
         anchor: "how-does-annual-billing-work",

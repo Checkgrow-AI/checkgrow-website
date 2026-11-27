@@ -50,7 +50,7 @@ export const pricing = {
     "business": {
       "name": "Business",
       "audience": "For a single brand",
-      "description": "The complete platform for a single brand, with room for the whole team.",
+      "description": "The complete platform for a single brand and a team of up to 5 users.",
       "cta": "Talk to us",
       "ctaNote": "No credit card required",
       "specs": [
@@ -62,7 +62,8 @@ export const pricing = {
           "note": "Top up anytime"
         },
         {
-          "value": "Unlimited"
+          "value": "Up to 5 users",
+          "note": "Max. 2 admins"
         },
         {
           "value": "Self-serve"
@@ -96,7 +97,8 @@ export const pricing = {
           "note": "Shared pool · top up anytime"
         },
         {
-          "value": "Unlimited"
+          "value": "Up to 10 users",
+          "note": "Max. 4 admins"
         },
         {
           "value": "Self-serve"

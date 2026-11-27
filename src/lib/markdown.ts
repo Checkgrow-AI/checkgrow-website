@@ -395,7 +395,7 @@ export function renderLlmsTxt() {
     "> Checkgrow is an AI native growth marketing platform: a go-to-market engine that learns your product, buyers, market and channels. One company brain, structured for marketing and growth, feeds strategy, content, campaigns, sales intelligence and reporting, and every result feeds back in. Plans from €499 per month.",
     list([
       "Built for CMOs, enterprise marketing teams, marketing and sales operations, growth teams, agencies and founders.",
-      "Plans: Business €499/month (1 brand), Agency €997/month (unlimited brands), Growth €4,997/month (dedicated growth team, up to 3 ad accounts), Enterprise custom (white-label, self-hosted). Prices exclude VAT.",
+      "Plans: Business €499/month (1 brand, up to 5 users with max. 2 admins), Agency €997/month (unlimited brands, up to 10 users with max. 4 admins), Growth €4,997/month (dedicated growth team, up to 3 ad accounts), Enterprise custom (white-label, self-hosted). Prices exclude VAT.",
       "Integrates GA4, Google Ads, Meta Ads, Instagram, LinkedIn, Notion, n8n and webhooks; works across OpenAI, Google Gemini, Anthropic Claude and Perplexity with no model lock-in.",
       "Customers own their data; enterprises can self-host for data sovereignty.",
       "Every link below is markdown: each page is available at its URL plus .md (/index.md for the homepage), or by requesting the page with Accept: text/markdown.",

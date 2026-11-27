@@ -49,7 +49,7 @@ export const pricing: Localized<typeof source> = {
     "business": {
       "name": "Business",
       "audience": "Para uma única marca",
-      "description": "A plataforma completa para uma única marca, com espaço para toda a equipe.",
+      "description": "A plataforma completa para uma única marca e uma equipe de até 5 usuários.",
       "cta": "Fale com a gente",
       "ctaNote": "Sem cartão de crédito",
       "specs": [
@@ -61,7 +61,8 @@ export const pricing: Localized<typeof source> = {
           "note": "Recarregue quando quiser"
         },
         {
-          "value": "Ilimitados"
+          "value": "Até 5 usuários",
+          "note": "Máx. 2 admins"
         },
         {
           "value": "Autoatendimento"
@@ -95,7 +96,8 @@ export const pricing: Localized<typeof source> = {
           "note": "Saldo compartilhado · recarregue quando quiser"
         },
         {
-          "value": "Ilimitados"
+          "value": "Até 10 usuários",
+          "note": "Máx. 4 admins"
         },
         {
           "value": "Autoatendimento"

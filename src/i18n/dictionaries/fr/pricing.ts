@@ -49,7 +49,7 @@ export const pricing: Localized<typeof source> = {
     business: {
       name: "Business",
       audience: "Pour une seule marque",
-      description: "La plateforme complète pour une marque, avec de la place pour toute l’équipe.",
+      description: "La plateforme complète pour une marque et une équipe de 5 utilisateurs maximum.",
       cta: "Parlons-en",
       ctaNote: "Sans carte bancaire",
       specs: [
@@ -61,7 +61,8 @@ export const pricing: Localized<typeof source> = {
           note: "Recharge à tout moment",
         },
         {
-          value: "Illimités",
+          value: "Jusqu’à 5 utilisateurs",
+          note: "2 admins maximum",
         },
         {
           value: "En autonomie",
@@ -95,7 +96,8 @@ export const pricing: Localized<typeof source> = {
           note: "Pot commun · recharge à tout moment",
         },
         {
-          value: "Illimités",
+          value: "Jusqu’à 10 utilisateurs",
+          note: "4 admins maximum",
         },
         {
           value: "En autonomie",

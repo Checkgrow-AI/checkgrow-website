@@ -49,7 +49,7 @@ export const pricing: Localized<typeof source> = {
     "business": {
       "name": "Business",
       "audience": "Für eine Marke",
-      "description": "Die komplette Plattform für eine Marke, mit Platz für das ganze Team.",
+      "description": "Die komplette Plattform für eine Marke und ein Team von bis zu 5 Nutzern.",
       "cta": "Mit uns sprechen",
       "ctaNote": "Keine Kreditkarte nötig",
       "specs": [
@@ -61,7 +61,8 @@ export const pricing: Localized<typeof source> = {
           "note": "Jederzeit aufstockbar"
         },
         {
-          "value": "Unbegrenzt"
+          "value": "Bis zu 5 Nutzer",
+          "note": "Max. 2 Admins"
         },
         {
           "value": "Self-Service"
@@ -95,7 +96,8 @@ export const pricing: Localized<typeof source> = {
           "note": "Gemeinsamer Pool · jederzeit aufstockbar"
         },
         {
-          "value": "Unbegrenzt"
+          "value": "Bis zu 10 Nutzer",
+          "note": "Max. 4 Admins"
         },
         {
           "value": "Self-Service"
